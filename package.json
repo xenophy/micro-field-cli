@@ -19,5 +19,6 @@
     "microfield": "./bin/microfield.js"
   },
   "dependencies": {
+      "async": "0.9.0"
   }
 }

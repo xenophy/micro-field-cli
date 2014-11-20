@@ -1,0 +1,23 @@
+{
+  "name": "microfield",
+  "version": "0.0.1",
+  "description": "CLI for MicroField SDK.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/xenophy/micro-field-cli.git"
+  },
+  "keywords": [
+    "microfield"
+  ],
+  "author": "Xenophy",
+  "license": "GPL3",
+  "bin": {
+    "microfield": "./bin/microfield.js"
+  },
+  "dependencies": {
+  }
+}

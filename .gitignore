@@ -9,4 +9,7 @@
 npm-debug.log
 node_modules
 
+### MicroField CLI ###
+coverage.html
+
 # EOF

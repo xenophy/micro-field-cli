@@ -16,7 +16,7 @@
   "author": "Xenophy",
   "license": "GPL3",
   "bin": {
-    "microfield": "./bin/microfield.js"
+    "microfield": "./bin/application.js"
   },
   "config": {
       "blanket": {
@@ -27,6 +27,7 @@
   "dependencies": {
       "async": ">=0.9.0",
       "blanket": ">=1.1.6",
+      "cli-framework": ">=0.0.1",
       "mkdirp": ">=0.5.0",
       "node-class": ">=0.3.12",
       "power-assert": ">=0.10.0",

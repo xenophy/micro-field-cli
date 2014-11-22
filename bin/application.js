@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /*
@@ -7,10 +9,18 @@ Copyright (c) 2014 Xenophy.CO.,LTD All rights Reserved.
 http://www.xenophy.com
 */
 
-/**
- * module.exports
- */
-module.exports = require('./CLI');
+(function() {
+
+    "use strict";
+
+    var CLI = require('cli-Framework');
+
+    CLI.application({
+
+
+    });
+
+})();
 
 /*
  * Local variables:

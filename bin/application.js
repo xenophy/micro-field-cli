@@ -9,18 +9,39 @@ Copyright (c) 2014 Xenophy.CO.,LTD All rights Reserved.
 http://www.xenophy.com
 */
 
-(function() {
+// {{{ require
 
-    "use strict";
+require('cli-framework');
 
-    var CLI = require('cli-Framework');
+// }}}
+// {{{ CLI.application
 
-    CLI.application({
+/*
+ * define your application
+ */
+CLI.application({
 
+    // {{{ name
 
-    });
+    name: 'MicroField',
 
-})();
+    // }}}
+    // {{{ appFolder
+
+    appFolder: __dirname + '/../app',
+
+    // }}}
+    // {{{ launch
+
+    launch: function() {
+
+    }
+
+    // }}
+
+});
+
+// }}}
 
 /*
  * Local variables:

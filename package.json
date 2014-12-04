@@ -2,7 +2,7 @@
   "name": "microfield",
   "version": "0.0.1",
   "description": "CLI for MicroField SDK.",
-  "main": "index.js",
+  "main": "bin/application.js",
   "scripts": {
     "test": "MicroField CLI test"
   },

@@ -13,8 +13,7 @@ CLI.define('MicroField.controller.Main', {
 
     run: function() {
 
-        this.getTitle();
-        console.log("main");
+        CLI.create('MicroField.controller.Help').run();
 
     }
 

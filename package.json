@@ -1,6 +1,6 @@
 {
   "name": "microfield",
-  "version": "1.0.0.16",
+  "version": "1.0.17",
   "description": "CLI for MicroField SDK.",
   "main": "bin/index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   "author": "Xenophy",
   "license": "GPL3",
   "bin": {
-    "microfield": "./bin/application.js"
+    "microfield": "./bin/index.js"
   },
   "config": {
       "blanket": {

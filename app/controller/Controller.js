@@ -23,11 +23,7 @@ CLI.define('MicroField.controller.Controller', {
             f('{0}MicroField CLI v{2}{1}', ansies.bold, ansies.reset, ver)
         ].join("\n");
 
-
-
-
-
-
+        return text;
 
     }
 

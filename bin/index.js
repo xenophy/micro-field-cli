@@ -35,6 +35,16 @@ CLI.application({
 
     launch: function() {
 
+        // {{{ package.jsonからバージョン設定
+
+        var name = this.getName(),
+            manifest = global[name].manifest = JSON.parse(
+                require('fs').readFileSync(__dirname + '/../package.json').toString('utf8')
+            );
+        CLI.setVersion(name, manifest.version);
+
+        // }}}
+
     }
 
     // }}

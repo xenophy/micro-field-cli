@@ -1,8 +1,8 @@
 {
   "name": "microfield",
-  "version": "0.0.1",
+  "version": "1.0.0.14",
   "description": "CLI for MicroField SDK.",
-  "main": "bin/application.js",
+  "main": "bin/index.js",
   "scripts": {
     "test": "MicroField CLI test"
   },

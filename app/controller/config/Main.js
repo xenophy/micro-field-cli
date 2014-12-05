@@ -27,6 +27,7 @@ CLI.define('MicroField.controller.config.Main', {
             output      = '',
             ansies      = me.ansies,
             green       = ansies.green,
+            red         = ansies.red,
             bold        = ansies.bold,
             reset       = ansies.reset;
 
@@ -35,7 +36,7 @@ CLI.define('MicroField.controller.config.Main', {
 
         if (CLI.Object.getKeys(me.getOptions()).length < 1) {
 
-            output += "current settings\n";
+            output += "Current settings\n";
             output += "\n";
 
             CLI.iterate(config.getValues(), function(key, value) {
@@ -44,14 +45,37 @@ CLI.define('MicroField.controller.config.Main', {
 
         } else {
 
-            CLI.iterate(config.getParams(), function(param) {
+            var invalidOpts  = [],
+                configParams = config.getParams();
 
-                if (args[param]) {
-                    config['set' + CLI.String.capitalize(param)](args[param]);
-                    output += f('  set {0}{2}{1} in {4}{3}{1}', green, reset, param, args[param], bold) + "\n";
+            CLI.iterate(me.getOptions(), function(key) {
+
+                if (CLI.Array.indexOf(configParams, key) === -1) {
+                    invalidOpts.push(key);
                 }
 
             });
+
+            if (invalidOpts.length === 0) {
+
+                CLI.iterate(config.getParams(), function(param) {
+
+                    if (args[param]) {
+                        config['set' + CLI.String.capitalize(param)](args[param]);
+                        output += f('  set {0}{2}{1} in {4}{3}{1}', green, reset, param, args[param], bold) + "\n";
+                    }
+
+                });
+
+            } else {
+
+                output += f('{0}Could not set invalid keys.{1}', red, reset) + "\n";
+
+                CLI.iterate(invalidOpts, function(option) {
+                    output += f('  --{0}', option) + "\n";
+                });
+
+            }
 
         }
 

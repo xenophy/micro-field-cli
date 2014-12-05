@@ -80,10 +80,22 @@ CLI.define('MicroField.config.Config', {
         // ファイル初期化
         this.update({});
 
+    },
+
+    // }}}
+    // {{{ getValues
+
+    getValues: function() {
+
+        var me      = this,
+            fs      = require('fs'),
+            t       = this.filepath;
+
+        return CLI.applyIf({}, CLI.decode(fs.readFileSync(t).toString()));
+
     }
 
     // }}}
-
 
 }, function(cls) {
 

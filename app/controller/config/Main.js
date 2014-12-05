@@ -20,13 +20,27 @@ CLI.define('MicroField.controller.config.Main', {
 
     run: function() {
 
-        var me      = this,
-            args    = me.argv,
-            config  = MicroField.config.Config;
+        var me          = this,
+            args        = me.argv,
+            config      = MicroField.config.Config,
+            f           = CLI.String.format,
+            output      = '',
+            ansies      = me.ansies,
+            green       = ansies.green,
+            bold        = ansies.bold,
+            reset       = ansies.reset;
+
+        output += me.getTitle() + "\n";
+        output += "\n";
 
         if (CLI.Object.getKeys(me.getOptions()).length < 1) {
 
-            CLI.create('MicroField.controller.config.Help').run();
+            output += "current settings\n";
+            output += "\n";
+
+            CLI.iterate(config.getValues(), function(key, value) {
+                output += f('  {0}{2}{1}\t: {4}{3}{1}', green, reset, key, value, bold) + "\n";
+            });
 
         } else {
 
@@ -34,11 +48,14 @@ CLI.define('MicroField.controller.config.Main', {
 
                 if (args[param]) {
                     config['set' + CLI.String.capitalize(param)](args[param]);
+                    output += f('  set {0}{2}{1} in {4}{3}{1}', green, reset, param, args[param], bold) + "\n";
                 }
 
             });
 
         }
+
+        CLI.log(output);
 
     }
 

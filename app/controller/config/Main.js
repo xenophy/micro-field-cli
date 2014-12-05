@@ -24,15 +24,21 @@ CLI.define('MicroField.controller.config.Main', {
             args    = me.argv,
             config  = MicroField.config.Config;
 
-            console.log(args);
+        if (CLI.Object.getKeys(me.getOptions()).length < 1) {
 
-        CLI.iterate(config.getParams(), function(param) {
+            CLI.create('MicroField.controller.config.Help').run();
 
-            if (args[param]) {
-                config['set' + CLI.String.capitalize(param)](args[param]);
-            }
+        } else {
 
-        });
+            CLI.iterate(config.getParams(), function(param) {
+
+                if (args[param]) {
+                    config['set' + CLI.String.capitalize(param)](args[param]);
+                }
+
+            });
+
+        }
 
     }
 

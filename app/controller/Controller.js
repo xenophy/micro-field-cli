@@ -24,9 +24,7 @@ CLI.define('MicroField.controller.Controller', {
         ].join("\n");
 
 
-        console.log(text);
 
-//        console.log();
 
 
 

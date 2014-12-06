@@ -7,7 +7,9 @@ CLI.define('MicroField.setup.Setup', {
     // {{{ requires
 
     requires: [
-        'MicroField.config.Config'
+        'MicroField.config.Config',
+        'MicroField.setup.Main',
+        'MicroField.setup.Login'
     ],
 
     // }}}
@@ -28,11 +30,14 @@ CLI.define('MicroField.setup.Setup', {
     execute: function() {
 
         var me      = this,
+            async   = require('async'),
             fs      = require('fs'),
             path    = require('path'),
             log     = MicroField.app.log,
             bold    = me.ansi.bold,
             cfg     = MicroField.config.Config,
+            login   = MicroField.setup.Login,
+            main    = MicroField.setup.Main,
             text    = '';
 
         // タイトル出力
@@ -71,7 +76,34 @@ CLI.define('MicroField.setup.Setup', {
 
         }
 
-        console.log("Go!");
+        // 非同期処理実行開始
+        async.series([
+
+            // ログイン:クリーンアップ
+            function(next) {
+                login.cleanup.call(login, next);
+            },
+
+            // メイン:クリーンアップ
+            function(next) {
+                main.cleanup.call(main, next);
+            },
+
+            // ログイン:セットアップ実行
+            function(next) {
+                login.execute.call(login, next);
+            },
+
+            // メイン:セットアップ実行
+            function(next) {
+                main.execute.call(main, next);
+            }
+
+        ], function (err, result) {
+
+            console.log("done!");
+
+        });
 
     }
 

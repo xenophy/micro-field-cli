@@ -31,6 +31,22 @@ CLI.define('MicroField.app.Util', {
             },
 
             // }}}
+            // {{{ info
+
+            info: function(text) {
+
+                var me = MicroField.getApplication();
+
+                MicroField.app.log.write(
+                    me.ansi.bold(
+                        me.colors.green('[INF]')
+                    ),
+                    text
+                );
+
+            },
+
+            // }}}
             // {{{ error
 
             error: function(text) {
@@ -47,6 +63,7 @@ CLI.define('MicroField.app.Util', {
             }
 
             // }}}
+
 
         },
 

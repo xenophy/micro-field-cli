@@ -30,7 +30,6 @@ CLI.define('MicroField.config.Config', {
 
     // }}}
 
-
 });
 
 // }}}

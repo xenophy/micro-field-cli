@@ -9,25 +9,6 @@ CLI.define('MicroField.controller.Controller', {
     extend: 'CLI.app.Controller',
 
     // }}}
-    // {{{ getTitle
-
-    getTitle: function() {
-
-        var me      = this,
-            ansies  = me.ansies,
-            ver     = CLI.getVersion('MicroField').version,
-            f       = CLI.String.format,
-            text;
-
-        text = [
-            f('{0}MicroField CLI v{2}{1}', ansies.bold, ansies.reset, ver)
-        ].join("\n");
-
-        return text;
-
-    }
-
-    // }}}
 
 });
 

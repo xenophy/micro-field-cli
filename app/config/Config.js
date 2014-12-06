@@ -14,26 +14,18 @@ CLI.define('MicroField.config.Config', {
     extend: 'CLI.util.Config',
 
     // }}}
-    // {{{ config
+    // {{{ params
 
-    config: {
+    params: [
+        'accessToken',
+        'releasesUrl',
+        'archiveUrl'
+    ],
 
-        // {{{ params
+    // }}}
+    // {{{ filename
 
-        params: [
-            'accessToken',
-            'releasesUrl',
-            'archiveUrl'
-        ],
-
-        // }}}
-        // {{{ filename
-
-        filename: '.microfieldclicfg.json'
-
-        // }}}
-
-    }
+    filename: '.microfieldclicfg.json'
 
     // }}}
 

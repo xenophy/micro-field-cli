@@ -22,25 +22,25 @@ CLI.define('MicroField.controller.config.Main', {
 
         var me          = this,
             args        = me.argv,
+            app         = MicroField.getApplication(),
             config      = MicroField.config.Config,
             f           = CLI.String.format,
-            output      = '',
-            ansies      = me.ansies,
-            green       = ansies.green,
-            red         = ansies.red,
-            bold        = ansies.bold,
-            reset       = ansies.reset;
+            text        = '',
+            bold        = me.ansi.bold,
+            red         = me.colors.red,
+            green       = me.colors.green;
 
-        output += me.getTitle() + "\n";
-        output += "\n";
+        text += app.getTitle();
 
         if (CLI.Object.getKeys(me.getOptions()).length < 1) {
 
-            output += "Current settings\n";
-            output += "\n";
+            text += "Current settings\n";
+            text += "\n";
 
             CLI.iterate(config.getValues(), function(key, value) {
-                output += f('  {0}{2}{1}\t: {4}{3}{1}', green, reset, key, value, bold) + "\n";
+
+                text += f('  {0}\t: {1}', green(key), bold(value)) + "\n";
+
             });
 
         } else {
@@ -62,24 +62,24 @@ CLI.define('MicroField.controller.config.Main', {
 
                     if (args[param]) {
                         config['set' + CLI.String.capitalize(param)](args[param]);
-                        output += f('  set {0}{2}{1} in {4}{3}{1}', green, reset, param, args[param], bold) + "\n";
+                        text += f('  {0}\t: {1}', green(param), bold(args[param])) + "\n";
                     }
 
                 });
 
             } else {
 
-                output += f('{0}Could not set invalid keys.{1}', red, reset) + "\n";
+                text += red('Could not set invalid keys.') + "\n";
 
                 CLI.iterate(invalidOpts, function(option) {
-                    output += f('  --{0}', option) + "\n";
+                    text += f('  --{0}', option) + "\n";
                 });
 
             }
 
         }
 
-        CLI.log(output);
+        CLI.log(text);
 
     }
 

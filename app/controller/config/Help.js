@@ -14,22 +14,19 @@ CLI.define('MicroField.controller.config.Help', {
     run: function() {
 
         var me          = this,
+            app         = MicroField.getApplication(),
             f           = CLI.String.format,
-            ansies      = me.ansies,
-            bold        = ansies.bold,
-            underline   = ansies.underline,
-            reset       = ansies.reset;
+            bold        = me.ansi.bold,
+            underline   = me.ansi.underline,
+            text        = '';
 
-        CLI.log([
-            me.getTitle(),
-            '',
-            f('{0}Options{1}', underline, reset),
-            f('  * --{0}accessToken{1} - *****', bold, reset),
-            f('  * --{0}releasesUrl{1} - *****', bold, reset),
-            f('  * --{0}archiveUrl{1} - *****', bold, reset),
-            ''
-        ].join("\n"));
+        text += app.getTitle();
+        text += underline('Options') + "\n";
+        text += f('  * --{0} - *****', bold('accessToken')) + "\n";
+        text += f('  * --{0} - *****', bold('releasesUrl')) + "\n";
+        text += f('  * --{0} - *****', bold('archiveUrl')) + "\n";
 
+        CLI.log(text);
     }
 
     // }}}

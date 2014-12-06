@@ -11,45 +11,7 @@ http://www.xenophy.com
 
 // {{{ require
 
-require('cli-framework');
-
-// }}}
-// {{{ CLI.application
-
-/*
- * define your application
- */
-CLI.application({
-
-    // {{{ name
-
-    name: 'MicroField',
-
-    // }}}
-    // {{{ appFolder
-
-    appFolder: __dirname + '/../app',
-
-    // }}}
-    // {{{ launch
-
-    launch: function() {
-
-        // {{{ package.jsonからバージョン設定
-
-        var name = this.getName(),
-            manifest = global[name].manifest = JSON.parse(
-                require('fs').readFileSync(__dirname + '/../package.json').toString('utf8')
-            );
-        CLI.setVersion(name, manifest.version);
-
-        // }}}
-
-    }
-
-    // }}
-
-});
+require('../app/application.js');
 
 // }}}
 

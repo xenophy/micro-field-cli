@@ -49,6 +49,42 @@ CLI.define('MicroField.setup.Abstract', {
     },
 
     // }}}
+    // {{{ copyFiles
+
+    copyFiles: function(list, callback, progress) {
+
+        var me      = this,
+            async   = require('async'),
+            path    = require('path'),
+            count   = 0,
+            series  = [];
+
+        CLI.iterate(list, function(item) {
+
+            var src = item[0],
+                dest = item[1];
+
+            src = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), src));
+            dest = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), dest));
+
+            series.push(function(callback) {
+
+                CLI.Fs.copy(src, dest, callback, function(item) {
+                    count++;
+                    progress(item);
+                });
+
+            });
+
+        });
+
+        async.series(series, function (err, result) {
+            callback(count);
+        });
+
+    },
+
+    // }}}
     // {{{ removeFiles
 
     removeFiles: function(list, callback, progress) {
@@ -150,8 +186,8 @@ CLI.define('MicroField.setup.Abstract', {
                 return;
             }
 
-            // [INF] Generated Application
-            MicroField.app.log.info('Generated Application');
+            // [INF] Generated Login Application
+            MicroField.app.log.info('Generated Login Application');
             CLI.log('');
 
             // 不要なファイルを削除
@@ -165,18 +201,28 @@ CLI.define('MicroField.setup.Abstract', {
                     CLI.log('');
                 }
 
-            /*
-            // コピー
-            me.copyFiles([
-                {src: 'login/app.json_override', dest: 'login/app.json'}
-            ]);
-           */
+                // コピー
+                me.copyFiles([
+                    ['login/app.json_override', 'login/app.json']
+                ], function(count) {
 
-                // コールバック
-                callback();
+                    if (count > 0) {
+                        CLI.log('');
+                    }
+
+                    // コールバック
+                    callback();
+
+                }, function(item) {
+
+                    // [INF] copied: ***************
+                    MicroField.app.log.info('copied: ' + item);
+
+                });
 
             }, function(item) {
 
+                // [INF] removed: ***************
                 MicroField.app.log.info('removed: ' + item);
 
             });

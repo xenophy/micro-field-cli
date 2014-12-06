@@ -61,8 +61,11 @@ CLI.define('MicroField.controller.config.Main', {
                 CLI.iterate(config.getParams(), function(param) {
 
                     if (args[param]) {
+
                         config['set' + CLI.String.capitalize(param)](args[param]);
+
                         text += f('  {0}\t: {1}', green(param), bold(args[param])) + "\n";
+
                     }
 
                 });

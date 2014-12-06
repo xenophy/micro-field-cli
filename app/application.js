@@ -52,7 +52,13 @@ CLI.application({
 
         var me = this;
 
-        me.log.error('Unknown command: "' + cmd.join(" ") + '"');
+        if (cmd.join(" ").length === 0) {
+
+            CLI.create('MicroField.controller.Help').run();
+
+        } else {
+            me.log.error('Unknown command: "' + cmd.join(" ") + '"');
+        }
 
     },
 

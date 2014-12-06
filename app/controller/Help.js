@@ -14,23 +14,18 @@ CLI.define('MicroField.controller.Help', {
     run: function() {
 
         var me          = this,
+            app         = MicroField.getApplication(),
             f           = CLI.String.format,
-            ansies      = me.ansies,
-            bold        = ansies.bold,
-            underline   = ansies.underline,
-            reset       = ansies.reset;
+            bold        = me.ansi.bold,
+            underline   = me.ansi.underline,
+            text        = '';
 
+        text += app.getTitle();
+        text += underline('Commands') + "\n";
+        text += f('  * {0} - Load a properties file or sets a configuration property', bold('config')) + "\n";
+        text += f('  * {0} - Displays help for commands', bold('help')) + "\n";
 
-        CLI.log([
-            me.getTitle(),
-            '',
-//            f('{0}Categories{1}', underline, reset),
-//            '',
-            f('{0}Commands{1}', underline, reset),
-            f('  * {0}config{1} - Load a properties file or sets a configuration property', bold, reset),
-            f('  * {0}help{1} - Displays help for commands', bold, reset),
-            ''
-        ].join("\n"));
+        CLI.log(text);
 
     }
 

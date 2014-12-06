@@ -42,13 +42,14 @@ CLI.define('MicroField.setup.Login', {
             series  = [];
 
         // アプリケーション生成
-        series.push(function() {
+        series.push(function(callback) {
             me.generateApplication(callback);
         });
 
-
-
-
+        // アプリケーションビルド
+        series.push(function(callback) {
+            me.buildApplication(callback);
+        });
 
         // 非同期実行
         async.series(series, function (err, result) {

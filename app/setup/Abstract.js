@@ -147,7 +147,7 @@ CLI.define('MicroField.setup.Abstract', {
             f       = CLI.String.format,
             cmd     = '',
             timer   = null,
-            bar     = me.progress('  ' + me.colors.green('Generating Application') + ' [:bar]', {
+            bar     = me.progress('  ' + me.colors.green('Generating Login Application') + ' [:bar]', {
                 complete: '=',
                 incomplete: ' ',
                 width: 20,
@@ -226,6 +226,65 @@ CLI.define('MicroField.setup.Abstract', {
                 MicroField.app.log.info('removed: ' + item);
 
             });
+
+        });
+
+    },
+
+    // }}}
+    // {{{ buildApplication
+
+    buildApplication: function(callback) {
+
+        var me      = this,
+            exec    = require('child_process').exec,
+            f       = CLI.String.format,
+            cmd     = '',
+            timer   = null,
+            bar     = me.progress('  ' + me.colors.green('Building Login Application') + ' [:bar]', {
+                complete: '=',
+                incomplete: ' ',
+                width: 20,
+                total: 101
+            });
+
+        // プログレスバー動作開始
+        timer = setInterval(function () {
+            bar.tick();
+            if (bar.curr === 100) {
+                bar.curr = 0;
+            }
+        }, 100);
+
+        // コマンド実行
+        cmd = f([
+            'cd {0}',
+            'sencha app refresh',
+            'sencha app build --clean'
+        ].join(MicroField.app.getCmdSeparator()),
+            CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), me.getTargetDir()))
+        );
+        exec(cmd, function(error, stdout, stderr) {
+
+            // プログレスバー動作停止
+            clearInterval(timer);
+            bar.stream.clearLine();
+            bar.stream.cursorTo(0);
+
+            if (error !== null) {
+
+                // クリーンアップ
+                me.cleenup(callback);
+
+                return;
+            }
+
+            // [INF] Generated Login Application
+            MicroField.app.log.info('Generated Login Application');
+            CLI.log('');
+
+            // コールバック
+            callback();
 
         });
 

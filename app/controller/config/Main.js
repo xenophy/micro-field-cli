@@ -25,10 +25,10 @@ CLI.define('MicroField.controller.config.Main', {
             app         = MicroField.getApplication(),
             config      = MicroField.config.Config,
             f           = CLI.String.format,
-            text        = '',
             bold        = me.ansi.bold,
             red         = me.colors.red,
-            green       = me.colors.green;
+            green       = me.colors.green,
+            text        = '';
 
         text += app.getTitle();
 

@@ -9,11 +9,9 @@ CLI.define('MicroField.config.Config', {
     singleton: true,
 
     // }}}
-    // {{{ filepath
+    // {{{ extend
 
-    filepath: require('path').resolve(
-        require('path').join(process.env[CLI.isWindows ? 'USERPROFILE' : 'HOME'], '.microfieldclicfg.json')
-    ),
+    extend: 'CLI.util.Config',
 
     // }}}
     // {{{ config
@@ -26,96 +24,18 @@ CLI.define('MicroField.config.Config', {
             'accessToken',
             'releasesUrl',
             'archiveUrl'
-        ]
+        ],
 
         // }}}
+        // {{{ filename
 
-    },
-
-    // }}}
-    // {{{ privates
-
-    privates: {
-
-        // {{{ udpate
-
-        update: function(config) {
-
-            config = config || {};
-
-            var me  = this,
-                fs  = require('fs'),
-                t   = this.filepath;
-
-            if (!fs.existsSync(t)) {
-
-                fs.writeFileSync(t, CLI.encode({}, null, '  '));
-                fs.chmodSync(t, 0600);
-
-            }
-
-            CLI.applyIf(config, CLI.decode(fs.readFileSync(t).toString()));
-            fs.writeFileSync(t, CLI.encode(config, null, '  '));
-
-        }
+        filename: '.microfieldclicfg.json'
 
         // }}}
-
-    },
-
-    // }}}
-    // {{{ constructor
-
-    constructor: function(config) {
-
-        this.initConfig(config);
-
-    },
-
-    // }}}
-    // {{{ init
-
-    init: function() {
-
-        // ファイル初期化
-        this.update({});
-
-    },
-
-    // }}}
-    // {{{ getValues
-
-    getValues: function() {
-
-        var me      = this,
-            fs      = require('fs'),
-            t       = this.filepath;
-
-        return CLI.applyIf({}, CLI.decode(fs.readFileSync(t).toString()));
 
     }
 
     // }}}
-
-}, function(cls) {
-
-    var setter = {};
-
-    CLI.iterate(cls.getParams(), function(param) {
-
-        setter['set' + CLI.String.capitalize(param)] = CLI.Function.createSequence(cls.init, function(token) {
-
-            var o = {};
-
-            o[param] = token;
-
-            this.update(o);
-
-        })
-
-    });
-
-    CLI.apply(cls, setter);
 
 });
 

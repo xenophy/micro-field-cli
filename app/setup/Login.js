@@ -46,6 +46,10 @@ CLI.define('MicroField.setup.Login', {
             me.generateApplication(callback);
         });
 
+
+
+
+
         // 非同期実行
         async.series(series, function (err, result) {
 

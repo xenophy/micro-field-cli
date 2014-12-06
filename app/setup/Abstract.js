@@ -59,7 +59,7 @@ CLI.define('MicroField.setup.Abstract', {
             count   = 0,
             series  = [];
 
-        CLI.iterate(me.getCleanupList(), function(item) {
+        CLI.iterate(list, function(item) {
 
             var t = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), item));
 
@@ -83,11 +83,7 @@ CLI.define('MicroField.setup.Abstract', {
 
     cleanup: function(callback) {
 
-        var me      = this,
-            async   = require('async'),
-            path    = require('path'),
-            count   = 0,
-            series  = [];
+        var me = this;
 
         me.removeFiles(me.getCleanupList(), function(count) {
 
@@ -154,10 +150,36 @@ CLI.define('MicroField.setup.Abstract', {
                 return;
             }
 
+            // [INF] Generated Application
             MicroField.app.log.info('Generated Application');
+            CLI.log('');
 
-            // コールバック
-            callback();
+            // 不要なファイルを削除
+            me.removeFiles([
+                'login/app',
+                'login/app.json',
+                'login/index.html'
+            ], function(count) {
+
+                if (count > 0) {
+                    CLI.log('');
+                }
+
+            /*
+            // コピー
+            me.copyFiles([
+                {src: 'login/app.json_override', dest: 'login/app.json'}
+            ]);
+           */
+
+                // コールバック
+                callback();
+
+            }, function(item) {
+
+                MicroField.app.log.info('removed: ' + item);
+
+            });
 
         });
 

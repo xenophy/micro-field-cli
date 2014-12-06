@@ -28,6 +28,11 @@ CLI.define('MicroField.setup.Main', {
     ],
 
     // }}}
+    // {{{ targetDir
+
+    targetDir: '',
+
+    // }}}
     // {{{ execute
 
     execute: function(callback) {

@@ -18,6 +18,7 @@ CLI.define('MicroField.config.Config', {
 
     params: [
         'accessToken',
+        'extPath',
         'releasesUrl',
         'archiveUrl'
     ],
@@ -28,6 +29,7 @@ CLI.define('MicroField.config.Config', {
     filename: '.microfieldclicfg.json'
 
     // }}}
+
 
 });
 

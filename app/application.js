@@ -19,6 +19,18 @@ require('cli-framework');
  */
 CLI.application({
 
+    // {{{ requires
+
+    requires: [
+        'MicroField.app.Util'
+    ],
+
+    // }}}
+    // {{{ appProperty
+
+    appProperty: 'microfieldProp',
+
+    // }}}
     // {{{ name
 
     name: 'MicroField',
@@ -60,59 +72,11 @@ CLI.application({
             me.log.error('Unknown command: "' + cmd.join(" ") + '"');
         }
 
-    },
-
-    // }}}
-    // {{{ log
-
-    log: {
-
-        // {{{ write
-
-        write: function(tag, text) {
-
-            CLI.log(tag + ' ' + text);
-
-        },
-
-        // }}}
-        // {{{ error
-
-        error: function(text) {
-
-            var me = MicroField.getApplication();
-
-            me.log.write(
-                me.ansi.bold(
-                    me.colors.red('[ERR]')
-                ),
-                text
-            );
-
-        }
-
-        // }}}
-
-    },
-
-    // }}}
-    // {{{ getTitle
-
-    getTitle: function() {
-
-        var me      = MicroField.getApplication(),
-            version = CLI.getVersion('MicroField').version,
-            f       = CLI.String.format,
-            text    = '';
-
-        text += me.ansi.bold(f('MicroField CLI v{0}', version)) + "\n";
-        text += "\n";
-
-        return text;
-
     }
 
     // }}}
+
+
 });
 
 // }}}

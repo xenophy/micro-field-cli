@@ -22,7 +22,6 @@ CLI.define('MicroField.controller.config.Main', {
 
         var me          = this,
             args        = me.argv,
-            app         = MicroField.getApplication(),
             config      = MicroField.config.Config,
             f           = CLI.String.format,
             bold        = me.ansi.bold,
@@ -30,7 +29,8 @@ CLI.define('MicroField.controller.config.Main', {
             green       = me.colors.green,
             text        = '';
 
-        text += app.getTitle();
+        text += MicroField.app.getTitle();
+        text += "\n";
 
         if (CLI.Object.getKeys(me.getOptions()).length < 1) {
 

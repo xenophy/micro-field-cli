@@ -9,6 +9,13 @@ CLI.define('MicroField.app.Util', {
 
     CLI.apply(MicroField.app, {
 
+        // {{{ getCmdSeparator
+
+        getCmdSeparator: function() {
+            return CLI.isWindows ? ' & ' : ';';
+        },
+
+        // }}}
         // {{{ getSampleFilename
 
         getSampleFilename: function() {

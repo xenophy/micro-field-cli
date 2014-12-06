@@ -43,6 +43,9 @@ CLI.define('MicroField.setup.Setup', {
         // タイトル出力
         CLI.log(MicroField.app.getTitle());
 
+        // TODO: senchaコマンド存在確認
+
+
         // アプリケーションディレクトリでの実行であるかを判定
         if (!MicroField.app.isApplicationDir()) {
 

@@ -28,11 +28,31 @@ CLI.define('MicroField.setup.Login', {
     ],
 
     // }}}
+    // {{{ targetDir
+
+    targetDir: 'login',
+
+    // }}}
     // {{{ execute
 
     execute: function(callback) {
 
-        callback();
+        var me      = this,
+            async   = require('async'),
+            series  = [];
+
+        // アプリケーション生成
+        series.push(function() {
+            me.generateApplication(callback);
+        });
+
+        // 非同期実行
+        async.series(series, function (err, result) {
+
+            // コールバック
+            callback();
+
+        });
 
     }
 

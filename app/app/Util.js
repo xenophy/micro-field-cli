@@ -117,6 +117,131 @@ CLI.define('MicroField.app.Util', {
 
             return true;
 
+        },
+
+        // }}}
+        // {{{ copyFiles
+
+        copyFiles: function(list, progress, callback) {
+
+            var me      = this,
+                async   = require('async'),
+                path    = require('path'),
+                count   = 0,
+                series  = [];
+
+            if (arguments.length === 2) {
+                callback = progress;
+            }
+
+            CLI.iterate(list, function(item) {
+
+                var src = item[0],
+                dest = item[1];
+
+                src = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), src));
+                dest = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), dest));
+
+                series.push(function(callback) {
+
+                    CLI.Fs.copy(src, dest, callback, function(item) {
+                        count++;
+                        progress(src, dest);
+                    });
+
+                });
+
+            });
+
+            async.series(series, function (err, result) {
+                callback(count);
+            });
+
+        },
+
+        // }}}
+        // {{{ removeFiles
+
+        removeFiles: function(list, progress, callback) {
+
+            var me      = this,
+                async   = require('async'),
+                path    = require('path'),
+                count   = 0,
+                series  = [];
+
+            if (arguments.length === 2) {
+                callback = progress;
+            }
+
+            CLI.iterate(list, function(item) {
+
+                var t = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), item));
+
+                series.push(function(callback) {
+                    CLI.Fs.remove(t, callback, function(item) {
+                        count++;
+                        progress(item);
+                    });
+                });
+
+            });
+
+            async.series(series, function (err, result) {
+                callback(count);
+            });
+
+        },
+
+        // }}}
+        // {{{ changeToWritable
+
+        changeToWritable: function(list, progress, callback) {
+
+            var me      = this,
+                fs      = require('fs'),
+                path    = require('path'),
+                async   = require('async'),
+                count   = 0,
+                series  = [];
+
+            if (arguments.length === 2) {
+                callback = progress;
+            }
+
+            CLI.iterate(list, function(item) {
+
+                var t = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), item));
+
+                series.push((function(t) {
+
+                    return function(next) {
+
+                        fs.stat(t, function(err, stat) {
+
+                            if (err) {
+                                next();
+                                return;
+                            }
+
+                            if (stat.isDirectory()) {
+                                fs.chmod(t, 0777, next);
+                            } else {
+                                fs.chmod(t, 0666, next);
+                            }
+
+                        });
+
+                    };
+
+                })(t));
+
+            });
+
+            async.series(series, function (err, result) {
+                callback(count);
+            });
+
         }
 
         // }}}

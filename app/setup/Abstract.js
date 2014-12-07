@@ -49,89 +49,23 @@ CLI.define('MicroField.setup.Abstract', {
     },
 
     // }}}
-    // {{{ copyFiles
-
-    copyFiles: function(list, callback, progress) {
-
-        var me      = this,
-            async   = require('async'),
-            path    = require('path'),
-            count   = 0,
-            series  = [];
-
-        CLI.iterate(list, function(item) {
-
-            var src = item[0],
-                dest = item[1];
-
-            src = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), src));
-            dest = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), dest));
-
-            series.push(function(callback) {
-
-                CLI.Fs.copy(src, dest, callback, function(item) {
-                    count++;
-                    progress(item);
-                });
-
-            });
-
-        });
-
-        async.series(series, function (err, result) {
-            callback(count);
-        });
-
-    },
-
-    // }}}
-    // {{{ removeFiles
-
-    removeFiles: function(list, callback, progress) {
-
-        var me      = this,
-            async   = require('async'),
-            path    = require('path'),
-            count   = 0,
-            series  = [];
-
-        CLI.iterate(list, function(item) {
-
-            var t = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), item));
-
-            series.push(function(callback) {
-                CLI.Fs.remove(t, callback, function(item) {
-                    count++;
-                    progress(item);
-                });
-            });
-
-        });
-
-        async.series(series, function (err, result) {
-            callback(count);
-        });
-
-    },
-
-    // }}}
     // {{{ cleanup
 
     cleanup: function(callback) {
 
         var me = this;
 
-        me.removeFiles(me.getCleanupList(), function(count) {
+        MicroField.app.removeFiles(me.getCleanupList(), function(item) {
+
+            MicroField.app.log.info('removed: ' + item);
+
+        }, function(count) {
 
             if (count > 0) {
                 CLI.log('');
             }
 
             callback();
-
-        }, function(item) {
-
-            MicroField.app.log.info('removed: ' + item);
 
         });
 
@@ -191,20 +125,30 @@ CLI.define('MicroField.setup.Abstract', {
             CLI.log('');
 
             // 不要なファイルを削除
-            me.removeFiles([
+            MicroField.app.removeFiles([
                 'login/app',
                 'login/app.json',
                 'login/index.html'
-            ], function(count) {
+            ], function(item) {
+
+                // [INF] removed: ***************
+                MicroField.app.log.info('removed: ' + item);
+
+            }, function(count) {
 
                 if (count > 0) {
                     CLI.log('');
                 }
 
                 // コピー
-                me.copyFiles([
+                MicroField.app.copyFiles([
                     ['login/app.json_override', 'login/app.json']
-                ], function(count) {
+                ], function(item) {
+
+                    // [INF] copied: ***************
+                    MicroField.app.log.info('copied: ' + item);
+
+                }, function(count) {
 
                     if (count > 0) {
                         CLI.log('');
@@ -213,17 +157,7 @@ CLI.define('MicroField.setup.Abstract', {
                     // コールバック
                     callback();
 
-                }, function(item) {
-
-                    // [INF] copied: ***************
-                    MicroField.app.log.info('copied: ' + item);
-
                 });
-
-            }, function(item) {
-
-                // [INF] removed: ***************
-                MicroField.app.log.info('removed: ' + item);
 
             });
 

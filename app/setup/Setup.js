@@ -25,6 +25,35 @@ CLI.define('MicroField.setup.Setup', {
     singleton: true,
 
     // }}}
+    // {{{ existsSenchaCmd
+
+    existsSenchaCmd: function(callback) {
+
+        var me      = this,
+            exec    = require('child_process').exec,
+            log     = MicroField.app.log,
+            f       = CLI.String.format,
+            cmd     = '';
+
+        // コマンド実行
+        cmd = 'sencha';
+
+        exec(cmd, function(error, stdout, stderr) {
+
+            if (error) {
+
+                log.error('cannot find Sencha Cmd');
+                return;
+
+            }
+
+            callback();
+
+        });
+
+    },
+
+    // }}}
     // {{{ execute
 
     execute: function() {
@@ -33,6 +62,7 @@ CLI.define('MicroField.setup.Setup', {
             async   = require('async'),
             fs      = require('fs'),
             path    = require('path'),
+            f       = CLI.String.format,
             log     = MicroField.app.log,
             bold    = me.ansi.bold,
             cfg     = MicroField.config.Config,
@@ -43,149 +73,96 @@ CLI.define('MicroField.setup.Setup', {
         // タイトル出力
         CLI.log(MicroField.app.getTitle());
 
-        // TODO: senchaコマンド存在確認
-
-
-        // アプリケーションディレクトリでの実行であるかを判定
-        if (!MicroField.app.isApplicationDir()) {
-
-            log.error('cannot find ' + bold(MicroField.app.getSampleFilename()));
-            return;
-        }
-
-        // Ext JS 存在確認
-        var extPath = cfg.getValues()['extPath'];
-
-        if (!CLI.isDefined(extPath)) {
-
-            log.error('"' + bold('extPath') + '" config have not been set.');
-
-            text  = "\n";
-            text += 'Please set the ' + bold('extPath') + ' using folloing command.';
-            text += "\n";
-            text += "\n";
-            text += "  microfield config --extPath=\"[Ext JS Path]\"";
-            text += "\n";
-
-            CLI.log(text);
-
-            return;
-        }
-
-        // TODO: 非同期対応
-        if (!fs.existsSync(CLI.resolvePath(extPath)) || !fs.existsSync(path.resolve(path.join(CLI.resolvePath(extPath), 'src')))) {
-
-            log.error('cannot find Ext JS in "' + bold(extPath) + '"');
-            return;
-
-        }
-
-        // TODO: microfield-sample.jsonのコピー
-
-        // TODO: 書き込み権限変更
-
-        /*
-                // microfield-sample.jsonコピー
-                me.copyFiles([
-                    {src: 'mods/microfield\-sample.json', dest: 'mods/microfield.json'}
-                ]);
-
-                var mfdir = Cmd.mfdir;
-
-                if (!Cmd.isWindows) {
-
-                    // 変更ファイル一覧
-                    var targets = [
-                        '.htaccess',
-                        'app.json',
-                        'mods/MicroField/app/Application.js',
-                        'mods/MicroField/app/view/center/Center.js',
-                        'sass/src/view/main/Main.scss',
-                        'login/app.json',
-                        'login/sass/src/view/main/Main.scss',
-                        'login/mods/MicroField/app/view/main/Main.js',
-                        'login/mods/MicroField/app/Application.js',
-                        'resources/Readme.md',
-                        'resources/favicon.ico',
-                        'login/resources/Readme.md',
-                        'login/resources/favicon.ico'
-                    ];
-
-                    var dirTargets = [
-                        'resources',
-                        'resources/protected',
-                        'login/resources',
-                        'resources/images',
-                        'login/resources/images',
-                        'build/production/MicroField/resources',
-                        'build/production/MicroField/resources/protected'
-                    ];
-
-                    try {
-                        rmdir('resources/images');
-                    } catch(e) {
-                    }
-
-                    try {
-                        fs.mkdirSync('resources/images');
-                    } catch(e) {
-                    }
-
-                    try {
-                        rmdir('login/resources/images');
-                    } catch(e) {
-                    }
-
-                    try {
-                        fs.mkdirSync('login/resources/images');
-                    } catch(e) {
-                    }
-
-                    // ファイル書き込み権限変更
-                    Ext.iterate(targets, function(item) {
-
-                        var target = mfdir + '/' + item;
-
-                        Cmd.puts(format('{1}: {0} ...', target, ansi.blue('Changing Permissions')));
-                        Cmd.puts("\033[2A");
-
-                        // 権限変更処理
-                        try {
-                            fs.chmodSync(target, 0666);
-                        } catch(e) {
-                        }
-
-                        Cmd.puts(format('\033[0J{1}: {0}', target, ansi.green('Changed')));
-
-                    });
-
-                    // ディレクトリ書き込み権限変更
-                    Ext.iterate(dirTargets, function(item) {
-
-                        var target = mfdir + '/' + item;
-
-                        Cmd.puts(format('{1}: {0} ...', target, ansi.blue('Changing Directory Permissions')));
-                        Cmd.puts("\033[2A");
-
-                        // 権限変更処理
-                        try {
-                            fs.chmodSync(target, 0777);
-                        } catch(e) {
-                        }
-
-                        Cmd.puts(format('\033[0J{1}: {0}', target, ansi.green('Changed')));
-
-                    });
-
-                }
-
-               */
-
-
-
-
         // 非同期処理実行開始
         async.series([
+
+            // senchaコマンド存在確認
+            function(next) {
+                me.existsSenchaCmd(next);
+            },
+
+            // アプリケーションディレクトリでの実行であるかを判定
+            function(next) {
+
+                if (!MicroField.app.isApplicationDir()) {
+
+                    log.error('cannot find ' + bold(MicroField.app.getSampleFilename()));
+                    return;
+                }
+
+                next();
+
+            },
+
+            // Ext JS 存在確認
+            function(next) {
+
+                var extPath = cfg.getValues()['extPath'];
+
+                if (!CLI.isDefined(extPath)) {
+
+                    log.error('"' + bold('extPath') + '" config have not been set.');
+
+                    text  = "\n";
+                    text += 'Please set the ' + bold('extPath') + ' using folloing command.';
+                    text += "\n";
+                    text += "\n";
+                    text += "  microfield config --extPath=\"[Ext JS Path]\"";
+                    text += "\n";
+
+                    CLI.log(text);
+
+                    return;
+                }
+
+                fs.exists(CLI.resolvePath(extPath), function(exists) {
+
+                    if (!exists) {
+
+                        log.error('cannot find Ext JS in "' + bold(extPath) + '"');
+                        return;
+
+                    }
+
+                    fs.exists(path.resolve(path.join(CLI.resolvePath(extPath), 'src')), function(exists) {
+
+                        if (!exists) {
+
+                            log.error('cannot find Ext JS in "' + bold(extPath) + '"');
+                            return;
+
+                        }
+
+                        next();
+
+                    });
+
+                });
+
+            },
+
+            // microfield-sample.jsonのコピー
+            function(next) {
+
+                MicroField.app.copyFiles([
+                    ['mods/microfield\-sample.json', 'mods/microfield.json']
+                ], function(src, dest) {
+
+                    // [INF] copied: ***************
+                    MicroField.app.log.info(f('copied: {0} to {1}', src, dest));
+
+                }, function(count) {
+
+                    if (count > 0) {
+                        CLI.log('');
+                    }
+
+                    // コールバック
+                    next();
+
+                });
+
+            },
 
             // ログイン:クリーンアップ
             function(next) {
@@ -205,6 +182,118 @@ CLI.define('MicroField.setup.Setup', {
             // メイン:セットアップ実行
             function(next) {
                 main.execute.call(main, next);
+            },
+
+            // 必要ディレクトリ作成
+            function(next) {
+
+                // TODO
+
+
+                /*
+                    try {
+                        rmdir('resources/images');
+                    } catch(e) {
+                    }
+
+                    try {
+                        fs.mkdirSync('resources/images');
+                    } catch(e) {
+                    }
+
+                    try {
+                        rmdir('login/resources/images');
+                    } catch(e) {
+                    }
+
+                    try {
+                        fs.mkdirSync('login/resources/images');
+                    } catch(e) {
+                    }
+                */
+
+                next();
+            },
+
+            // 書き込み権限変更
+            function(next) {
+
+                if (!CLI.isWindows) {
+
+                    MicroField.app.changeToWritable([
+                        '.htaccess',
+                        'app.json',
+                        'mods/MicroField/app/Application.js',
+                        'mods/MicroField/app/view/center/Center.js',
+                        'sass/src/view/main/Main.scss',
+                        'login/app.json',
+                        'login/sass/src/view/main/Main.scss',
+                        'login/mods/MicroField/app/view/main/Main.js',
+                        'login/mods/MicroField/app/Application.js',
+                        'resources/Readme.md',
+                        'resources/favicon.ico',
+                        'login/resources/Readme.md',
+                        'login/resources/favicon.ico',
+                        'resources',
+                        'resources/protected',
+                        'login/resources',
+                        'resources/images',
+                        'login/resources/images',
+                        'build/production/MicroField/resources',
+                        'build/production/MicroField/resources/protected'
+                    ], function(item) {
+
+                        // [INF] copied: ***************
+                        MicroField.app.log.info(f('chmod: {0}', item));
+
+                    }, function(count) {
+
+                        if (count > 0) {
+                            CLI.log('');
+                        }
+
+                        // コールバック
+                        next();
+
+                    });
+
+                } else {
+
+                    // コールバック
+                    next();
+
+                }
+
+            },
+
+            // ログイン：アクセス初期化
+            function(next) {
+
+                // TODO
+                next();
+
+            },
+
+            // メイン：アクセス初期化
+            function(next) {
+
+                // TODO
+                next();
+
+            },
+
+            // ログイン:リビルド
+            function(next) {
+
+                // TODO: リビルドメソッド？
+                // login.buildApplication.call(login, next);
+                //
+            },
+
+            // メイン:リビルド
+            function(next) {
+                // TODO: リビルドメソッド？
+                // main.buildApplication.call(main, next);
             }
 
         ], function (err, result) {

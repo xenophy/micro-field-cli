@@ -54,6 +54,52 @@ CLI.define('MicroField.setup.Setup', {
     },
 
     // }}}
+    // {{{ makeDirectories
+
+    makeDirectories: function(callback) {
+
+
+        var me = this,
+            async = require('async'),
+            mkdirp = require('mkdirp'),
+            series = [];
+
+        CLI.iterate([
+            'resources/images',
+            'login/resources/images'
+        ], function(t) {
+
+            series.push((function(t) {
+
+                return function(next) {
+
+                    var target = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), t));
+
+                    mkdirp(target, function (err) {
+
+                        // [INF] made: ********
+                        MicroField.app.log.info('made: ' + target);
+
+                        next();
+                    });
+
+                }
+
+            })(t));
+
+        });
+
+        // 非同期実行
+        async.series(series, function (err, result) {
+
+            // コールバック
+            callback();
+
+        });
+
+    },
+
+    // }}}
     // {{{ execute
 
     execute: function() {
@@ -187,32 +233,8 @@ CLI.define('MicroField.setup.Setup', {
             // 必要ディレクトリ作成
             function(next) {
 
-                // TODO
+                me.makeDirectories(next);
 
-
-                /*
-                    try {
-                        rmdir('resources/images');
-                    } catch(e) {
-                    }
-
-                    try {
-                        fs.mkdirSync('resources/images');
-                    } catch(e) {
-                    }
-
-                    try {
-                        rmdir('login/resources/images');
-                    } catch(e) {
-                    }
-
-                    try {
-                        fs.mkdirSync('login/resources/images');
-                    } catch(e) {
-                    }
-                */
-
-                next();
             },
 
             // 書き込み権限変更

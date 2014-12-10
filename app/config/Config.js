@@ -18,6 +18,7 @@ CLI.define('MicroField.config.Config', {
 
     params: [
         'accessToken',
+        'domain',
         'extPath',
         'releasesUrl',
         'archiveUrl'

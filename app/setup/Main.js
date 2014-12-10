@@ -28,6 +28,30 @@ CLI.define('MicroField.setup.Main', {
     ],
 
     // }}}
+    // {{{ disusedList
+
+    disusedList: [
+        'app',
+        'app.js',
+        'app.json',
+        'index.html'
+    ],
+
+    // }}}
+    // {{{ overrideList
+
+    overrideList: [
+        ['app.js_override', 'app.js'],
+        ['app.json_override', 'app.json'],
+        ['mods/microfield\-sample.json', 'mods/microfield.json']
+    ],
+
+    // }}}
+    // {{{ type
+
+    type: 'Main',
+
+    // }}}
     // {{{ targetDir
 
     targetDir: '',
@@ -36,7 +60,29 @@ CLI.define('MicroField.setup.Main', {
     // {{{ execute
 
     execute: function(callback) {
-        callback();
+
+        var me      = this,
+            async   = require('async'),
+            series  = [];
+
+        // アプリケーション生成
+        series.push(function(callback) {
+            me.generateApplication(callback);
+        });
+
+        // アプリケーションビルド
+        series.push(function(callback) {
+            me.buildApplication(callback);
+        });
+
+        // 非同期実行
+        async.series(series, function (err, result) {
+
+            // コールバック
+            callback();
+
+        });
+
     }
 
     // }}}

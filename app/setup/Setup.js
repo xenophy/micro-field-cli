@@ -100,6 +100,35 @@ CLI.define('MicroField.setup.Setup', {
     },
 
     // }}}
+    // {{{ parseHtaccess
+
+    parseHtaccess: function(callback) {
+
+        var me      = this,
+            fs      = require('fs'),
+            f       = CLI.String.format,
+            cfg     = MicroField.config.Config,
+            domain  = cfg.getValues()['domain'] || 'localhost';
+            target  = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), '.htaccess'));
+
+        fs.readFile(target, function(err, data) {
+
+            var text        = data.toString(),
+                rewriteBase = text.match(/[\r\s]*RewriteBase (.*?)[\s]*\n/)[1],
+                url         = f('http://{0}{1}', domain, rewriteBase);
+
+            callback({
+                text        : text,
+                domain      : domain,
+                rewriteBase : rewriteBase,
+                url         : url
+            });
+
+        });
+
+    },
+
+    // }}}
     // {{{ execute
 
     execute: function() {
@@ -187,6 +216,22 @@ CLI.define('MicroField.setup.Setup', {
 
             },
 
+            // .htaccess 解析
+            function(next) {
+
+                me.parseHtaccess(function(data) {
+
+                    // メイン設定
+                    main.setUrl(data.url + '/');
+
+                    // ログイン設定
+                    login.setUrl(data.url + '/login/');
+
+                    next();
+                });
+
+            },
+
             // microfield-sample.jsonのコピー
             function(next) {
 
@@ -198,10 +243,6 @@ CLI.define('MicroField.setup.Setup', {
                     MicroField.app.log.info(f('copied: {0} to {1}', src, dest));
 
                 }, function(count) {
-
-                    if (count > 0) {
-                        CLI.log('');
-                    }
 
                     // コールバック
                     next();
@@ -232,9 +273,7 @@ CLI.define('MicroField.setup.Setup', {
 
             // 必要ディレクトリ作成
             function(next) {
-
                 me.makeDirectories(next);
-
             },
 
             // 書き込み権限変更
@@ -270,10 +309,6 @@ CLI.define('MicroField.setup.Setup', {
 
                     }, function(count) {
 
-                        if (count > 0) {
-                            CLI.log('');
-                        }
-
                         // コールバック
                         next();
 
@@ -290,37 +325,27 @@ CLI.define('MicroField.setup.Setup', {
 
             // ログイン：アクセス初期化
             function(next) {
-
-                // TODO
-                next();
-
+                login.access4Init.call(login, next);
             },
 
             // メイン：アクセス初期化
             function(next) {
-
-                // TODO
-                next();
-
+                main.access4Init.call(main, next);
             },
 
             // ログイン:リビルド
             function(next) {
-
-                // TODO: リビルドメソッド？
-                // login.buildApplication.call(login, next);
-                //
+                login.buildApplication.call(login, next);
             },
 
             // メイン:リビルド
             function(next) {
-                // TODO: リビルドメソッド？
-                // main.buildApplication.call(main, next);
+                main.buildApplication.call(main, next);
             }
 
         ], function (err, result) {
 
-            console.log("done!");
+            // console.log("done!");
 
         });
 

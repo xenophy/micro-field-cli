@@ -28,9 +28,29 @@ CLI.define('MicroField.setup.Abstract', {
         cleanupList: [],
 
         // }}}
+        // {{{ disusedList
+
+        disusedList: [],
+
+        // }}}
+        // {{{ overrideList
+
+        overrideList: [],
+
+        // }}}
+        // {{{ type
+
+        type: '',
+
+        // }}}
         // {{{ targetDir
 
-        targetDir: ''
+        targetDir: '',
+
+        // }}}
+        // {{{ url
+
+        url: null
 
         // }}}
 
@@ -61,10 +81,6 @@ CLI.define('MicroField.setup.Abstract', {
 
         }, function(count) {
 
-            if (count > 0) {
-                CLI.log('');
-            }
-
             callback();
 
         });
@@ -81,7 +97,7 @@ CLI.define('MicroField.setup.Abstract', {
             f       = CLI.String.format,
             cmd     = '',
             timer   = null,
-            bar     = me.progress('  ' + me.colors.green('Generating Login Application') + ' [:bar]', {
+            bar     = me.progress('  ' + me.colors.green('Generating ' + me.getType() + ' Application') + ' [:bar]', {
                 complete: '=',
                 incomplete: ' ',
                 width: 20,
@@ -120,39 +136,24 @@ CLI.define('MicroField.setup.Abstract', {
                 return;
             }
 
-            // [INF] Generated Login Application
-            MicroField.app.log.info('Generated Login Application');
-            CLI.log('');
+            // [INF] Generated [Type] Application
+            MicroField.app.log.info('Generated ' + me.getType() + ' Application');
 
             // 不要なファイルを削除
-            MicroField.app.removeFiles([
-                'login/app',
-                'login/app.json',
-                'login/index.html'
-            ], function(item) {
+            MicroField.app.removeFiles(me.getDisusedList(), function(item) {
 
                 // [INF] removed: ***************
                 MicroField.app.log.info('removed: ' + item);
 
             }, function(count) {
 
-                if (count > 0) {
-                    CLI.log('');
-                }
-
                 // コピー
-                MicroField.app.copyFiles([
-                    ['login/app.json_override', 'login/app.json']
-                ], function(item) {
+                MicroField.app.copyFiles(me.getOverrideList(), function(item) {
 
                     // [INF] copied: ***************
                     MicroField.app.log.info('copied: ' + item);
 
                 }, function(count) {
-
-                    if (count > 0) {
-                        CLI.log('');
-                    }
 
                     // コールバック
                     callback();
@@ -175,7 +176,7 @@ CLI.define('MicroField.setup.Abstract', {
             f       = CLI.String.format,
             cmd     = '',
             timer   = null,
-            bar     = me.progress('  ' + me.colors.green('Building Login Application') + ' [:bar]', {
+            bar     = me.progress('  ' + me.colors.green('Building ' + me.getType() + ' Application') + ' [:bar]', {
                 complete: '=',
                 incomplete: ' ',
                 width: 20,
@@ -208,14 +209,13 @@ CLI.define('MicroField.setup.Abstract', {
             if (error !== null) {
 
                 // クリーンアップ
-                me.cleenup(callback);
+                me.cleanup(callback);
 
                 return;
             }
 
-            // [INF] Generated Login Application
-            MicroField.app.log.info('Generated Login Application');
-            CLI.log('');
+            // [INF] Built [Type] Application
+            MicroField.app.log.info('Built ' + me.getType() + ' Application');
 
             // コールバック
             callback();
@@ -229,6 +229,30 @@ CLI.define('MicroField.setup.Abstract', {
 
     execute: function(callback) {
         callback();
+    },
+
+    // }}}
+    // {{{ access4Init
+
+    access4Init: function(callback) {
+
+        var me      = this,
+            f       = CLI.String.format,
+            request = require("request");
+
+        request({
+            url: me.getUrl(),
+            port: 80,
+            method: 'PUT'
+        }, function(err, res, body) {
+
+            // [INF] accessed: ***************
+            MicroField.app.log.info(f('accessed: {0}', me.getUrl()));
+
+            callback();
+
+        });
+
     }
 
     // }}}

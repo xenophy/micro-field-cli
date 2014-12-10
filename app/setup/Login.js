@@ -28,6 +28,27 @@ CLI.define('MicroField.setup.Login', {
     ],
 
     // }}}
+    // {{{ disusedList
+
+    disusedList: [
+        'login/app',
+        'login/app.json',
+        'login/index.html'
+    ],
+
+    // }}}
+    // {{{ overrideList
+
+    overrideList: [
+        ['login/app.json_override', 'login/app.json']
+    ],
+
+    // }}}
+    // {{{ type
+
+    type: 'Login',
+
+    // }}}
     // {{{ targetDir
 
     targetDir: 'login',

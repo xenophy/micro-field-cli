@@ -8,6 +8,7 @@ CLI.define('MicroField.setup.Setup', {
 
     requires: [
         'MicroField.config.Config',
+        'MicroField.database.Manager',
         'MicroField.setup.Main',
         'MicroField.setup.Login'
     ],
@@ -23,6 +24,32 @@ CLI.define('MicroField.setup.Setup', {
     // {{{ singleton
 
     singleton: true,
+
+    // }}}
+    // {{{ config
+
+    config: {
+
+        // {{{ appSettings
+
+        appSettings: {}
+
+        // }}}
+
+    },
+
+    // }}}
+    // {{{ constructor
+
+    constructor: function(config) {
+
+        var me  = this;
+
+        me.initConfig(config);
+        me.callParent(arguments);
+
+
+    },
 
     // }}}
     // {{{ existsSenchaCmd
@@ -106,6 +133,7 @@ CLI.define('MicroField.setup.Setup', {
 
         var me      = this,
             fs      = require('fs'),
+            path    = require('path'),
             f       = CLI.String.format,
             cfg     = MicroField.config.Config,
             domain  = cfg.getValues()['domain'] || 'localhost';
@@ -125,6 +153,61 @@ CLI.define('MicroField.setup.Setup', {
             });
 
         });
+
+    },
+
+    // }}}
+    // {{{ parseApplicationSettings
+
+    parseApplicationSettings: function(callback) {
+
+        var me      = this,
+            fs      = require('fs'),
+            path    = require('path'),
+            f       = CLI.String.format,
+            target  = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods/microfield\-sample.json'));
+
+        fs.readFile(target, function(err, data) {
+            me.setAppSettings(CLI.decode(MicroField.app.removeComment(data.toString()), true));
+            callback();
+        });
+
+    },
+
+    // }}}
+    // {{{ setupTables
+
+    setupTables: function(callback) {
+
+        var me      = this,
+            fs      = require('fs'),
+            path    = require('path'),
+            async   = require('async'),
+            f       = CLI.String.format,
+            series, conn;
+
+        // コネクションラッパー取得
+        conn = MicroField.database.Manager.getConnection(me.getAppSettings()['database']['default']);
+
+        series = [
+
+            // 接続
+            function(next) {
+                conn.connect(next);
+            },
+
+
+
+
+            // 切断
+            function(next) {
+                conn.disconnect(next);
+            }
+
+        ];
+
+        // 非同期処理実行開始
+        async.series(series);
 
     },
 
@@ -150,6 +233,8 @@ CLI.define('MicroField.setup.Setup', {
 
         // 非同期処理実行開始
         async.series([
+
+            /*
 
             // senchaコマンド存在確認
             function(next) {
@@ -231,7 +316,14 @@ CLI.define('MicroField.setup.Setup', {
                 });
 
             },
+           */
 
+            // microfield-sample.json 解析
+            function(next) {
+                me.parseApplicationSettings(next);
+            },
+
+            /*
             // microfield-sample.jsonのコピー
             function(next) {
 
@@ -261,6 +353,14 @@ CLI.define('MicroField.setup.Setup', {
                 main.cleanup.call(main, next);
             },
 
+           */
+
+            // データベーステーブルセットアップ
+            function(next) {
+                me.setupTables(next);
+            },
+
+          /*
             // ログイン:セットアップ実行
             function(next) {
                 login.execute.call(login, next);
@@ -342,6 +442,7 @@ CLI.define('MicroField.setup.Setup', {
             function(next) {
                 main.buildApplication.call(main, next);
             }
+           */
 
         ], function (err, result) {
 

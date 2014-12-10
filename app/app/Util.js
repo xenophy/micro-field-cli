@@ -242,9 +242,137 @@ CLI.define('MicroField.app.Util', {
                 callback(count);
             });
 
+        },
+
+        // }}}
+        // {{{ removeComment
+
+        removeComment: function (str) {
+
+            var buf=[],
+                pos=0,
+                s=str=String(str);
+                R:
+
+            while(s) {
+
+                var c,nc,n,
+                    q=false,
+                    sq=false,
+                    re=false,
+                    rec=false,
+                    esc=false;
+
+                for (var i=0,l=s.length;i<l;i++) {
+
+                    c=s[i];
+
+                    if(esc) {
+
+                        esc=false;
+
+                    } else if(q) {
+
+                        if (c=='"') {
+                            q=false;
+                        } else if (c=='\\') {
+                            esc=true;
+                        }
+
+                    } else if(sq) {
+
+                        if (c=="'") {
+                            sq=false;
+                        } else if (c=='\\') {
+                            esc=true;
+                        }
+
+                    } else if(re) {
+
+                        if (rec) {
+
+                            if (c==']') {
+                                rec=false;
+                            } else if (c=='\\') {
+                                esc=true;
+                            }
+
+                        } else {
+
+                            if (c=="/") {
+                                re=false;
+                            } else if(c=='\\') {
+                                esc=true;
+                            } else if(c=='[') {
+                                rec=true;
+                            }
+
+                        }
+
+                    } else {
+
+                        if (c=='"') {
+
+                            q=true;
+
+                        } else if(c=="'") {
+
+                            sq=true;
+
+                        } else if(c=='/') {
+
+                            nc=s[i+1];
+
+                            if (nc=='/') {
+
+                                var l = s.length;
+
+                                buf.push(s.slice(0,i));
+                                s=s.slice(i+2);
+                                s=s.replace(/[\s\S]*?(\r?\n)/, '$1');
+                                pos += (l - s.length);
+                                continue R;
+
+                            } else if(nc=='*') {
+
+                                var l = s.length;
+
+                                buf.push(s.slice(0,i));
+                                n=s.indexOf('*/',i+2);
+                                s=s.slice(n+2);
+                                pos += (l - s.length);
+                                continue R;
+
+                            } else {
+
+                                var cur = pos + i + 1,
+                                    regcheck = str.slice(0, cur) + '^' + str.slice(cur);
+
+                                try {
+
+                                    Function('('+regcheck+')'); re = true;
+
+                                } catch(e) {
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                buf.push(s);
+                break;
+            }
+
+            return buf.join('');
         }
 
         // }}}
+
 
     });
 

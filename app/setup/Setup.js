@@ -189,6 +189,7 @@ CLI.define('MicroField.setup.Setup', {
         // コネクションラッパー取得
         conn = MicroField.database.Manager.getConnection(me.getAppSettings()['database']['default']);
 
+        // TODO: waterfall化
         series = [
 
             // 接続
@@ -196,8 +197,11 @@ CLI.define('MicroField.setup.Setup', {
                 conn.connect(next);
             },
 
+            // テーブル存在確認
 
+            // テーブル生成
 
+            // 初期データ挿入
 
             // 切断
             function(next) {

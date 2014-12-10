@@ -128,6 +128,30 @@ CLI.define('MicroField.database.MySQL', {
             callback();
         });
 
+    },
+
+    // }}}
+    // {{{ query
+
+    query: function(callback) {
+
+
+    },
+
+    // }}}
+    // {{{ createTable
+
+    createTable: function(callback) {
+
+
+    },
+
+    // }}}
+    // {{{ existsTable
+
+    existsTable: function(callback) {
+
+
     }
 
     // }}}

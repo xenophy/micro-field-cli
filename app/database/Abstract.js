@@ -23,7 +23,22 @@ CLI.define('MicroField.database.Abstract', {
     // }}}
     // {{{ disconnect
 
-    disconnect: CLI.emptyFn
+    disconnect: CLI.emptyFn,
+
+    // }}}
+    // {{{ query
+
+    query: CLI.emptyFn,
+
+    // }}}
+    // {{{ createTable
+
+    createTable: CLI.emptyFn,
+
+    // }}}
+    // {{{ existsTable
+
+    existsTable: CLI.emptyFn
 
     // }}}
 

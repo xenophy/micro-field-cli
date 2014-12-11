@@ -32,7 +32,110 @@ CLI.define('MicroField.setup.Setup', {
 
         // {{{ appSettings
 
-        appSettings: {}
+        appSettings: {},
+
+        // }}}
+        // {{{ tableStructure
+
+        tableStructure: {
+
+            // {{{ name
+
+            name: 'users',
+
+            // }}}
+            // {{{ fields
+
+            fields: [{
+
+                // {{{ pk
+
+                name            : 'pk',
+                type            : 'bigint',
+                length          : 20,
+                notnull         : true,
+                auto_increment  : true
+
+                // }}}
+
+            }, {
+
+                // {{{ status
+
+                name            : 'status',
+                type            : 'tinyint',
+                length          : 4,
+                notnull         : true,
+                default         : 1
+
+                // }}}
+
+            }, {
+
+                // {{{ role
+
+                name            : 'role',
+                type            : 'varchar',
+                length          : 100,
+                notnull         : true
+
+                // }}}
+
+            }, {
+
+                // {{{ identity
+
+                name            : 'identity',
+                type            : 'varchar',
+                length          : 255,
+                notnull         : true
+
+                // }}}
+
+            }, {
+
+                // {{{ password
+
+                name            : 'password',
+                type            : 'char',
+                length          : 255,
+                notnull         : true
+
+                // }}}
+
+            }, {
+
+                // {{{ modified
+
+                name            : 'modified',
+                type            : 'datetime',
+                notnull         : true
+
+                // }}}
+
+            }, {
+
+                // {{{ created
+
+                name            : 'created',
+                type            : 'datetime',
+                notnull         : true
+
+                // }}}
+
+            }],
+
+            // }}}
+            // {{{ tablse settings
+
+            primary_key         : 'pk',
+            charset             : 'utf8',
+            engine              : 'InnoDB',
+            auto_increment      : 1
+
+            // }}}
+
+        }
 
         // }}}
 
@@ -84,7 +187,6 @@ CLI.define('MicroField.setup.Setup', {
     // {{{ makeDirectories
 
     makeDirectories: function(callback) {
-
 
         var me = this,
             async = require('async'),
@@ -175,6 +277,47 @@ CLI.define('MicroField.setup.Setup', {
     },
 
     // }}}
+    // {{{ getInitialDataQuery
+
+    getInitialDataQuery: function() {
+
+        var me          = this,
+            crypto      = require('crypto'),
+            shasum      = crypto.createHash('sha512'),
+            date        = CLI.Date.format(new Date(), 'Y-m-d H:m:s'),
+            f           = CLI.String.format,
+            identity    = me.getAppSettings()['database']['default']['user'],
+            sql;
+
+        return f([
+            'INSERT INTO {0} (',
+            '    status,',
+            '    role,',
+            '    identity,',
+            '    password,',
+            '    modified,',
+            '    created',
+            ') VALUES (',
+            '    \'{1}\',',
+            '    \'{2}\',',
+            '    \'{3}\',',
+            '    \'{4}\',',
+            '    \'{5}\',',
+            '    \'{6}\'',
+            ')'
+        ].join("\n"),
+            me.getTableStructure().name,
+            1,
+            'administrator',
+            identity,
+            shasum.update(identity).digest('hex'),
+            date,
+            date
+        );
+
+    },
+
+    // }}}
     // {{{ setupTables
 
     setupTables: function(callback) {
@@ -184,34 +327,111 @@ CLI.define('MicroField.setup.Setup', {
             path    = require('path'),
             async   = require('async'),
             f       = CLI.String.format,
-            series, conn;
+            skip    = false,
+            fns, conn;
 
         // コネクションラッパー取得
         conn = MicroField.database.Manager.getConnection(me.getAppSettings()['database']['default']);
 
-        // TODO: waterfall化
-        series = [
+        fns = [
 
             // 接続
             function(next) {
-                conn.connect(next);
+
+                if (!skip) {
+
+                    conn.connect(next);
+
+                } else {
+
+                    next();
+
+                }
+
             },
 
             // テーブル存在確認
+            function(next) {
+
+                if (!skip) {
+
+                    conn.existsTable(me.getTableStructure().name, function(err, exists) {
+
+                        if (err || exists) {
+                            skip = true;
+                        }
+
+                        next();
+
+                    });
+
+                } else {
+
+                    next();
+
+                }
+
+            },
 
             // テーブル生成
+            function(next) {
+
+                if (!skip) {
+
+                    conn.createTable(me.getTableStructure(), function(err) {
+
+                        if (err) {
+                            skip = true;
+                        }
+
+                        next();
+
+                    });
+
+                } else {
+
+                    next();
+
+                }
+
+            },
 
             // 初期データ挿入
+            function(next) {
+
+                if (!skip) {
+
+                    conn.query(me.getInitialDataQuery(), function(err) {
+
+                        if (err) {
+                            skip = true;
+                        }
+
+                        next();
+
+                    });
+
+                } else {
+
+                    next();
+
+                }
+
+            },
 
             // 切断
             function(next) {
+
                 conn.disconnect(next);
+
             }
 
         ];
 
         // 非同期処理実行開始
-        async.series(series);
+        async.waterfall(fns, function(err) {
+            callback();
+        });
 
     },
 
@@ -237,8 +457,6 @@ CLI.define('MicroField.setup.Setup', {
 
         // 非同期処理実行開始
         async.series([
-
-            /*
 
             // senchaコマンド存在確認
             function(next) {
@@ -320,14 +538,12 @@ CLI.define('MicroField.setup.Setup', {
                 });
 
             },
-           */
 
             // microfield-sample.json 解析
             function(next) {
                 me.parseApplicationSettings(next);
             },
 
-            /*
             // microfield-sample.jsonのコピー
             function(next) {
 
@@ -357,14 +573,11 @@ CLI.define('MicroField.setup.Setup', {
                 main.cleanup.call(main, next);
             },
 
-           */
-
             // データベーステーブルセットアップ
             function(next) {
                 me.setupTables(next);
             },
 
-          /*
             // ログイン:セットアップ実行
             function(next) {
                 login.execute.call(login, next);
@@ -446,7 +659,6 @@ CLI.define('MicroField.setup.Setup', {
             function(next) {
                 main.buildApplication.call(main, next);
             }
-           */
 
         ], function (err, result) {
 

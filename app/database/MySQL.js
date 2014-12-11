@@ -110,7 +110,7 @@ CLI.define('MicroField.database.MySQL', {
 
             }
 
-            callback();
+            callback(err);
 
         });
 
@@ -133,24 +133,116 @@ CLI.define('MicroField.database.MySQL', {
     // }}}
     // {{{ query
 
-    query: function(callback) {
+    query: function(sql, callback) {
 
+        var me      = this,
+            conn    = me.conn;
+
+        // クエリー実行
+        conn.query(sql, function (err, rows, fields) {
+
+            // コールバック関数実行
+            callback(err, rows, fields);
+
+        });
 
     },
 
     // }}}
     // {{{ createTable
 
-    createTable: function(callback) {
+    createTable: function(defs, callback) {
 
+        var me = this,
+            f = CLI.String.format,
+            data    = {},
+            fields  = [],
+            sql;
+
+        sql = [
+            'CREATE TABLE {0} (',
+            '{1}',
+            ')'
+        ].join("\n");
+
+        CLI.iterate(defs.fields, function(item) {
+
+            var field = '    ';
+
+            field += item.name + ' ';
+            field += item.type;
+
+            if (CLI.isNumber(item.length)) {
+                field += '(' + item.length + ')';
+            }
+
+            if (item.notnull === true) {
+                field += ' NOT NULL';
+            }
+
+            if (item.default !== undefined) {
+                field += ' DEFAULT \'' + item.default + '\'';
+            }
+
+            if (item.auto_increment === true) {
+                field += ' AUTO_INCREMENT';
+            }
+
+            fields.push(field);
+
+        });
+
+        fields.push('    PRIMARY KEY (`' + defs.primary_key + '`)'),
+
+        sql = f(sql, defs.name, fields.join(",\n"));
+
+        if (defs.engine) {
+            sql += ' ENGINE=' + defs.engine;
+        }
+
+        if (defs.auto_increment) {
+            sql += ' AUTO_INCREMENT=' + defs.auto_increment;
+        }
+
+        if (defs.charset) {
+            sql += ' DEFAULT CHARSET=' + defs.charset;
+        }
+
+        sql += ';';
+
+        // クエリー実行
+        me.query(sql, callback);
 
     },
 
     // }}}
     // {{{ existsTable
 
-    existsTable: function(callback) {
+    existsTable: function(table, callback) {
 
+        var me  = this,
+            f   = CLI.String.format,
+            sql;
+
+        // クエリー作成
+        sql = [
+            f("SHOW TABLES FROM `{0}` LIKE '{1}'", me.getDatabase(), table)
+        ].join("\n");
+
+        // クエリー実行
+        me.query(sql, function(err, rows, fields) {
+
+            if (rows && rows.length === 1) {
+
+                callback(err, true);
+
+            } else {
+
+                callback(err, false);
+
+            }
+
+        });
 
     }
 

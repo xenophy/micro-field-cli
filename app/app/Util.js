@@ -144,9 +144,10 @@ CLI.define('MicroField.app.Util', {
 
                 series.push(function(callback) {
 
-                    CLI.Fs.copy(src, dest, callback, function(item) {
+                    CLI.Fs.copy(src, dest, function(err) {
                         count++;
                         progress(src, dest);
+                        callback();
                     });
 
                 });
@@ -179,9 +180,10 @@ CLI.define('MicroField.app.Util', {
                 var t = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), item));
 
                 series.push(function(callback) {
-                    CLI.Fs.remove(t, callback, function(item) {
+                    CLI.Fs.remove(t, function(err) {
                         count++;
                         progress(item);
+                        callback();
                     });
                 });
 

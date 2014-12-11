@@ -69,13 +69,14 @@ CLI.application({
             CLI.create('MicroField.controller.Help').run();
 
         } else {
-            me.log.error('Unknown command: "' + cmd.join(" ") + '"');
+
+            MicroField.app.log.error('Unknown command: "' + cmd.join(" ") + '"');
+
         }
 
     }
 
     // }}}
-
 
 });
 

@@ -9,6 +9,18 @@ CLI.define('MicroField.controller.Controller', {
     extend: 'CLI.app.Controller',
 
     // }}}
+    // {{{ constructor
+
+    constructor: function(config) {
+
+        var me  = this;
+
+        me.initConfig(config);
+        me.callParent(arguments);
+
+    }
+
+    // }}}
 
 });
 

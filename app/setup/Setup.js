@@ -135,7 +135,12 @@ CLI.define('MicroField.setup.Setup', {
 
             // }}}
 
-        }
+        },
+
+        // }}}
+        // {{{ userSetups
+
+        userSetups: []
 
         // }}}
 
@@ -151,6 +156,20 @@ CLI.define('MicroField.setup.Setup', {
         me.initConfig(config);
         me.callParent(arguments);
 
+        // ユーザーセットアップ関数登録メソッド追加
+        CLI.apply(global, {
+
+            ModuleSetup: function() {
+                me.registUserSetup.apply(me, arguments);
+            }
+
+        });
+
+        // MicroField Cmd 互換性対応
+        CLI.ns('Cmd');
+        CLI.apply(Cmd, {
+            setup: global.ModuleSetup
+        });
 
     },
 
@@ -436,6 +455,114 @@ CLI.define('MicroField.setup.Setup', {
     },
 
     // }}}
+    // {{{ setupModules
+
+    setupModules: function(callback) {
+
+        var me      = this,
+            async   = require('async'),
+            fs      = require('fs'),
+            path    = require('path'),
+            f       = CLI.String.format,
+            series  = [];
+
+        CLI.iterate(me.getAppSettings()['mods'], function(modNs) {
+
+            var target = CLI.resolvePath(
+                path.join(
+                    MicroField.app.getApplicationDir(),
+                    'mods',
+                    modNs,
+                    'setup',
+                    'index.js'
+                )
+            );
+
+            series.push((function(target) {
+
+                return function(next) {
+
+                    fs.exists(target, function(exists) {
+
+                        if (exists) {
+                            require(target);
+                        }
+
+                        next();
+
+                    });
+
+                };
+
+            })(target));
+
+        });
+
+        series.push(function(next) {
+
+            var fns = [];
+
+            CLI.iterate(me.getUserSetups(), function(fn, i) {
+
+                fns.push(function(callback) {
+
+                    if (fn.length === 0) {
+                        fn();
+
+                        // [INF] Execute (Module) module setup.
+                        MicroField.app.log.info(f('Executed {0} module setup.', me.getAppSettings()['mods'][i]));
+
+                        callback();
+                    } else {
+                        fn(function() {
+
+                            // [INF] Execute (Module) module setup.
+                            MicroField.app.log.info(f('Executed {0} module setup.', me.getAppSettings()['mods'][i]));
+
+                            callback();
+                        });
+                    }
+
+                });
+
+            });
+
+            // 非同期実行
+            async.series(fns, function (err, result) {
+
+                // コールバック
+                next();
+
+            });
+
+        });
+
+        // 非同期実行
+        async.series(series, function (err, result) {
+
+            // コールバック
+            callback();
+
+        });
+
+    },
+
+    // }}}
+    // {{{ registUserSetup
+
+    registUserSetup: function(fn) {
+
+        var me = this,
+            tmp;
+
+        tmp = me.getUserSetups();
+        tmp.push(fn);
+
+        me.setUserSetups(tmp);
+
+    },
+
+    // }}}
     // {{{ execute
 
     execute: function() {
@@ -638,6 +765,11 @@ CLI.define('MicroField.setup.Setup', {
 
                 }
 
+            },
+
+            // モジュールセットアップ実行
+            function(next) {
+                me.setupModules(next);
             },
 
             // ログイン：アクセス初期化

@@ -35,29 +35,66 @@ CLI.define('MicroField.controller.get.siesta-extjs.Main', {
     run: function() {
 
         var me      = this,
-            request = require('request'),
+            fs      = require('fs'),
+            amdzip  = require('adm-zip'),
+            path    = require('path'),
+            http    = require('http'),
+            buf     = '',
             bar;
 
-        request.get(
+        // タイトル出力
+        CLI.log(MicroField.app.getTitle());
 
-            me.getUrl(),
+        http.get(me.getUrl(), function (res) {
 
-            function (error, response, body) {
+            res.setEncoding('binary');
 
-                // TODO: bodyを保存
+            var buf = '';
 
-                // TODO: zip展開
+            res.on('data', function (chunk) {
 
+                buf += chunk;
+                bar.tick(chunk.length);
 
+            });
 
+            res.on('end', function () {
 
-            }
+                var pkgroot = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'packages'));
+                var tmp     = CLI.resolvePath(path.join(pkgroot, 'siesta-extjs.zip'));
 
-        ).on('data', function(chunk) {
+                fs.writeFile(tmp, buf, 'binary', function() {
 
-            bar.tick(chunk.length);
+                    // [INF] Unzipping Ext JS...
+                    MicroField.app.log.info('Unzipping Ext JS...');
 
-        }).on('response', function(res) {
+                    // zipファイル読み込み
+                    var zip = new amdzip(tmp);
+
+                    // 解凍先のフォルダ名取得
+                    var folderName = zip.getEntries()[0].entryName;
+
+                    // 解凍
+                    zip.extractAllTo(pkgroot, true);
+
+                    // ディレクトリ名変更
+                    fs.rename(CLI.resolvePath(path.join(pkgroot, folderName)), CLI.resolvePath(path.join(pkgroot, 'siesta-extjs')), function() {
+
+                        // zipファイル削除
+                        fs.unlink(tmp, function() {
+
+                            // [INF] Got Ext JS from CDN
+                            MicroField.app.log.info('Got Ext JS from CDN');
+
+                        });
+
+                    });
+
+                });
+
+            });
+
+        }).on('response', function (res) {
 
             bar = me.progress('  ' + me.colors.green('Downloading Ext JS from CDN') + ' [:bar] :percent :etas', {
                 complete: '=',
@@ -65,6 +102,8 @@ CLI.define('MicroField.controller.get.siesta-extjs.Main', {
                 width: 20,
                 total: parseInt(res.headers['content-length'], 10)
             });
+
+        }).on('error', function (err) {
 
         });
 

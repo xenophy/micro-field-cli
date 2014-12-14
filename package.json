@@ -1,39 +1,40 @@
 {
-  "name": "microfield",
-  "version": "0.1.1",
-  "description": "CLI for MicroField SDK.",
-  "main": "bin/index.js",
-  "scripts": {
-    "test": "MicroField CLI test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/xenophy/micro-field-cli.git"
-  },
-  "keywords": [
-    "microfield"
-  ],
-  "author": "Xenophy",
-  "license": "GPL3",
-  "bin": {
-    "microfield": "./bin/index.js"
-  },
-  "config": {
-      "blanket": {
-          "pattern": "lib",
-          "data-cover-never": "node_modules"
-      }
-  },
-  "dependencies": {
-      "async": ">=0.9.0",
-      "blanket": ">=1.1.6",
-      "cli-framework": ">=0.0.1",
-      "mkdirp": ">=0.5.0",
-      "mysql": ">=2.5.3",
-      "node-class": ">=0.3.12",
-      "pg": ">=4.1.0",
-      "power-assert": ">=0.10.0",
-      "sqlite3": ">=3.0.4",
-      "request": ">=2.50.0"
-  }
+    "name": "microfield",
+    "version": "0.1.1",
+    "description": "CLI for MicroField SDK.",
+    "main": "bin/index.js",
+    "scripts": {
+        "test": "MicroField CLI test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/xenophy/micro-field-cli.git"
+    },
+    "keywords": [
+        "microfield"
+    ],
+    "author": "Xenophy",
+    "license": "GPL3",
+    "bin": {
+        "microfield": "./bin/index.js"
+    },
+    "config": {
+        "blanket": {
+            "pattern": "lib",
+            "data-cover-never": "node_modules"
+        }
+    },
+    "dependencies": {
+        "async"         : ">=0.9.0",
+        "blanket"       : ">=1.1.6",
+        "cli-framework" : ">=0.0.18",
+        "mkdirp"        : ">=0.5.0",
+        "mysql"         : ">=2.5.3",
+        "node-class"    : ">=0.3.12",
+        "pg"            : ">=4.1.0",
+        "power-assert"  : ">=0.10.0",
+        "sqlite3"       : ">=3.0.4",
+        "request"       : ">=2.50.0",
+        "adm-zip"       : ">-0.4.4"
+    }
 }

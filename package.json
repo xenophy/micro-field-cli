@@ -1,6 +1,6 @@
 {
     "name": "microfield",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "CLI for MicroField SDK.",
     "main": "bin/index.js",
     "scripts": {
@@ -35,6 +35,6 @@
         "power-assert"  : ">=0.10.0",
         "sqlite3"       : ">=3.0.4",
         "request"       : ">=2.50.0",
-        "adm-zip"       : ">-0.4.4"
+        "adm-zip"       : ">=0.4.4"
     }
 }

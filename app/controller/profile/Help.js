@@ -1,8 +1,8 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-// {{{ MicroField.controler.Help
+// {{{ MicroField.controler.profile.Help
 
-CLI.define('MicroField.controller.Help', {
+CLI.define('MicroField.controller.profile.Help', {
 
     // {{{ extend
 
@@ -21,17 +21,20 @@ CLI.define('MicroField.controller.Help', {
 
         text += MicroField.app.getTitle();
         text += "\n";
-        text += underline('Categories') + "\n";
-        text += f('  * {0}\t: Load a properties file or sets a configuration property', bold('config')) + "\n";
-        text += f('  * {0}\t\t: Get packages from internet', bold('get')) + "\n";
-        text += f('  * {0}\t: Displays help for commands', bold('help')) + "\n";
+        text += underline('microfield profile') + "\n";
+        text += "\n";
+        text += f('This command displays about already exists module status.') + "\n";
         text += "\n";
         text += underline('Commands') + "\n";
-        text += f('  * {0}\t: Executes the setup process for an application', bold('setup')) + "\n";
-        text += f('  * {0}\t: Displays about already exists module status', bold('profile')) + "\n";
+        text += f('  * {0} - Displays module list', bold('list')) + "\n";
+        text += "\n";
+        text += underline('Options') + "\n";
+        text += f('  * {0} - Output json format', bold('--json')) + "\n";
+        text += "\n";
+        text += underline('Syntax') + "\n";
+        text += f('  microfield profile [ModuleName]') + "\n";
 
         CLI.log(text);
-
     }
 
     // }}}

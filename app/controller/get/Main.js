@@ -11,7 +11,7 @@ CLI.define('MicroField.controller.get.Main', {
     // }}}
     // {{{ run
 
-    run: function(callback) {
+    run: function() {
 
         var me = this;
 

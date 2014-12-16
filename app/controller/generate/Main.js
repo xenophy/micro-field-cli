@@ -40,13 +40,14 @@ CLI.define('MicroField.controller.generate.Main', {
 
     run: function(command, modPath) {
 
-        var me      = this,
-            modNs   = modPath.split('/')[0],
-            modName = modPath.split('/')[1],
-            modDir  = modPath.split('/')[1];
+        var me          = this,
+            modNs       = modPath.split('/')[0],
+            modName     = modPath.split('/')[1],
+            modScreen   = modPath.split('/')[1],
+            modDir      = modPath.split('/')[1];
 
         if (me.argv.name) {
-            modName = me.argv.name;
+            modScreen = me.argv.name;
         }
 
         if (!CLI.Array.contains(me.getCommands(), command)) {
@@ -69,6 +70,7 @@ CLI.define('MicroField.controller.generate.Main', {
         CLI.create('MicroField.module.generate.' + command).execute({
             ns      : modNs,
             name    : modName,
+            sname   : modScreen,
             path    : modPath,
             dir     : modDir
         }, function() {

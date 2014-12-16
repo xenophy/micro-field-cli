@@ -13,19 +13,33 @@ CLI.define('MicroField.module.generate.Base', {
 
     execute: function(o, callback) {
 
-        var me      = this,
-            async   = require('async'),
-            path    = require('path'),
-            f       = CLI.String.format,
-            tpldir  = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), '.microfield', 'tpl', 'Base')),
-            destdir = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods', o.ns, o.dir)),
-            skip    = false,
-            series  = [],
-            text    = '';
+        var me          = this,
+            ECT         = require('ect'),
+            async       = require('async'),
+            fs          = require('fs'),
+            path        = require('path'),
+            recursive   = require('recursive-readdir');
+            f           = CLI.String.format,
+            tpldir      = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), '.microfield', 'tpl', 'Base')),
+            destdir     = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods', o.ns, o.dir)),
+            skip        = false,
+            series      = [],
+            data        = {},
+            text        = '';
 
+        // テンプレート適用データ作成
+        data = CLI.apply(o, {
+            lns         : o.ns.toLowerCase(),
+            lname       : o.name.toLowerCase(),
+            generator   : MicroField.app.getSign()
+        });
+
+        // タイトル出力
         CLI.log(MicroField.app.getTitle());
 
         series = [
+
+            // {{{ 出力ディレクトリ存在確認
 
             function(next) {
 
@@ -41,63 +55,90 @@ CLI.define('MicroField.module.generate.Base', {
 
             },
 
+            // }}}
+            // {{{ テンプレートディレクトリのファイルスキャン
+
             function(next) {
+
+                if (!skip) {
+
+                    recursive(tpldir, function (err, files) {
+
+                        var items = [];
+
+                        CLI.iterate(files, function(src) {
+                            src = path.relative(MicroField.app.getApplicationDir(), src);
+                            items.push([src, path.relative(MicroField.app.getApplicationDir(), path.join(destdir, path.relative(tpldir, src)))]);
+                        });
+
+                        // ファイルコピー
+                        MicroField.app.copyFiles(items, function(src, dest) {
+
+                            // [INF] copied: ***************
+                            MicroField.app.log.info('copied: ' + src);
+
+                        }, function(count) {
+
+                            next();
+
+                        });
+
+                    });
+
+                }
+
+            },
+
+            // }}}
+            // {{{ 置換処理
+
+            function(next) {
+
+                if (!skip) {
+
+                    recursive(destdir, function (err, files) {
+
+                        var renderer = ECT({ root : '/' }),
+                            writers = [];
+
+                        CLI.iterate(files, function(filename) {
+
+                            writers.push((function(text) {
+
+                                return function(cb) {
+
+                                    fs.writeFile(filename, text, function() {
+
+                                        cb();
+
+                                    });
+
+                                };
+
+                            })(renderer.render(filename, data || {})));
+
+
+                        });
+
+                        // 非同期実行開始
+                        async.series(writers, function() {
+                            next();
+                        });
+
+                    });
+
+                }
 
             }
 
-        ];
+            // }}}
 
+        ];
 
         // 非同期実行開始
         async.series(series, function() {
             callback();
         });
-
-
-
-
-
-        /*
-            var me          = this,
-                format      = String.format,
-                args        = Cmd.opts.args(),
-                ansi        = Cmd.ansi,
-                bold        = ansi.bold,
-                command     = args[2],
-                ns          = args[3],
-                modName     = me.modName,
-                sname       = ns.split('/')[1],
-                argv        = process.argv,
-                optName     = argv[5],
-                tpldir, destdir, binddata;
-
-               // タイトル表示
-            me.showTitle(false);
-
-            // ファイルディレクトリスキャン＆生成
-            tpldir  = format('{0}/tpl/{1}', Cmd.scriptdir, modName);
-            destdir = format('{0}/mods/{1}', Cmd.mfdir, ns);
-
-            me.walk(
-                tpldir,
-                destdir,
-                {
-                    ns          : ns.split('/')[0],
-                    name        : ns.split('/')[1],
-                    lns         : ns.split('/')[0].toLowerCase(),
-                    lname       : sname.toLowerCase(),
-                    prefix      : ns.split('/')[0].toLowerCase(),
-                    generator   : Cmd.sign,
-                    controllers : 'Main',
-                    views       : 'Main',
-                    stores      : '',
-                    screen      : ns.split('/')[1],
-                    sname       : sname.toLowerCase()
-                }
-            );
-         */
-
-
 
     }
 

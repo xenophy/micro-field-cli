@@ -14,18 +14,10 @@ CLI.define('MicroField.module.generate.Base', {
     execute: function(o, callback) {
 
         var me          = this,
-            ECT         = require('ect'),
             async       = require('async'),
-            fs          = require('fs'),
-            path        = require('path'),
-            recursive   = require('recursive-readdir');
-            f           = CLI.String.format,
-            tpldir      = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), '.microfield', 'tpl', 'Base')),
-            destdir     = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods', o.ns, o.dir)),
             skip        = false,
             series      = [],
-            data        = {},
-            text        = '';
+            data        = {};
 
         // テンプレート適用データ作成
         data = CLI.apply(o, {
@@ -63,27 +55,8 @@ CLI.define('MicroField.module.generate.Base', {
 
                 if (!skip) {
 
-                    recursive(tpldir, function (err, files) {
-
-                        var items = [];
-
-                        CLI.iterate(files, function(src) {
-                            src = path.relative(MicroField.app.getApplicationDir(), src);
-                            items.push([src, path.relative(MicroField.app.getApplicationDir(), path.join(destdir, path.relative(tpldir, src)))]);
-                        });
-
-                        // ファイルコピー
-                        MicroField.app.copyFiles(items, function(src, dest) {
-
-                            // [INF] copied: ***************
-                            MicroField.app.log.info('copied: ' + src);
-
-                        }, function(count) {
-
-                            next();
-
-                        });
-
+                    me.copyTemplates(me.getTplDirectory(), me.getDestDirectory(o), function() {
+                        next();
                     });
 
                 }
@@ -97,38 +70,8 @@ CLI.define('MicroField.module.generate.Base', {
 
                 if (!skip) {
 
-                    recursive(destdir, function (err, files) {
-
-                        var renderer = ECT({ root : '/' }),
-                            writers = [];
-
-                        CLI.iterate(files, function(filename) {
-
-                            writers.push((function(filename, text) {
-
-                                return function(cb) {
-
-                                    fs.writeFile(filename, text, function() {
-
-                                        // [INF] replaced: ***************
-                                        MicroField.app.log.info('replaced: ' + filename);
-
-                                        cb();
-
-                                    });
-
-                                };
-
-                            })(filename, renderer.render(filename, data || {})));
-
-
-                        });
-
-                        // 非同期実行開始
-                        async.series(writers, function() {
-                            next();
-                        });
-
+                    me.replaceTemplates(me.getDestDirectory(o), data, function() {
+                        next();
                     });
 
                 }

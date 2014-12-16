@@ -22,16 +22,46 @@ CLI.define('MicroField.controller.generate.Main', {
 
         // {{{ commands
 
-        commands: [
-            'header',
-            'footer',
-            'navigation',
-            'base',
-            'edit',
-            'editlist'
-        ]
+        commands: [{
+            name    : 'header',
+            cls     : 'Header'
+        }, {
+            name    : 'footer',
+            cls     : 'Footer'
+        }, {
+            name    : 'navigation',
+            cls     : 'Navigation'
+        }, {
+            name    : 'base',
+            cls     : 'Base'
+        }, {
+            name    : 'edit',
+            cls     : 'Edit'
+        }, {
+            name    : 'editlist',
+            cls     : 'EditList'
+        }]
 
         // }}}
+
+    },
+
+    // }}}
+    // {{{ findCommand
+
+    findCommand: function(command) {
+
+        var me = this;
+
+        return CLI.Array.findBy(me.getCommands(), function(item) {
+
+            if (item.name === command) {
+                return true;
+            }
+
+            return false;
+
+        });
 
     },
 
@@ -50,7 +80,7 @@ CLI.define('MicroField.controller.generate.Main', {
             modScreen = me.argv.name;
         }
 
-        if (!CLI.Array.contains(me.getCommands(), command)) {
+        if (!me.findCommand(command)) {
             CLI.create('MicroField.controller.generate.Help').run();
             return;
         }
@@ -65,9 +95,7 @@ CLI.define('MicroField.controller.generate.Main', {
             return;
         }
 
-        command = CLI.String.capitalize(command);
-
-        CLI.create('MicroField.module.generate.' + command).execute({
+        CLI.create('MicroField.module.generate.' + me.findCommand(command).cls).execute({
             ns      : modNs,
             name    : modName,
             sname   : modScreen,

@@ -16,16 +16,7 @@ CLI.define('MicroField.module.generate.Header', {
         var me          = this,
             async       = require('async'),
             skip        = false,
-            series      = [],
-            data        = {};
-
-        // テンプレート適用データ作成
-        data = CLI.apply(o, {
-            lns         : o.ns.toLowerCase(),
-            lname       : o.name.toLowerCase(),
-            sname       : o.sname.toLowerCase(),
-            generator   : MicroField.app.getSign()
-        });
+            series      = [];
 
         // タイトル出力
         CLI.log(MicroField.app.getTitle());
@@ -70,7 +61,7 @@ CLI.define('MicroField.module.generate.Header', {
 
                 if (!skip) {
 
-                    me.replaceTemplates(me.getDestDirectory(o), data, function() {
+                    me.replaceTemplates(me.getDestDirectory(o), me.getData(o), function() {
                         next();
                     });
 

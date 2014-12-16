@@ -1,8 +1,8 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-// {{{ MicroField.module.generate.Base
+// {{{ MicroField.module.generate.Edit
 
-CLI.define('MicroField.module.generate.Base', {
+CLI.define('MicroField.module.generate.Edit', {
 
     // {{{ extend
 

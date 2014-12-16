@@ -38,6 +38,20 @@ CLI.define('MicroField.module.generate.Abstract', {
     },
 
     // }}}
+    // {{{ getData
+
+    getData: function(o) {
+
+        return CLI.apply(o, {
+            lns         : o.ns.toLowerCase(),
+            lname       : o.name.toLowerCase(),
+            sname       : o.sname.toLowerCase(),
+            generator   : MicroField.app.getSign()
+        });
+
+    },
+
+    // }}}
     // {{{ existsModuleDirectory
 
     existsModuleDirectory: function(modPath, callback) {

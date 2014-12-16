@@ -31,6 +31,7 @@ CLI.define('MicroField.module.generate.Base', {
         data = CLI.apply(o, {
             lns         : o.ns.toLowerCase(),
             lname       : o.name.toLowerCase(),
+            sname       : o.sname.toLowerCase(),
             generator   : MicroField.app.getSign()
         });
 
@@ -103,11 +104,14 @@ CLI.define('MicroField.module.generate.Base', {
 
                         CLI.iterate(files, function(filename) {
 
-                            writers.push((function(text) {
+                            writers.push((function(filename, text) {
 
                                 return function(cb) {
 
                                     fs.writeFile(filename, text, function() {
+
+                                        // [INF] replaced: ***************
+                                        MicroField.app.log.info('replaced: ' + filename);
 
                                         cb();
 
@@ -115,7 +119,7 @@ CLI.define('MicroField.module.generate.Base', {
 
                                 };
 
-                            })(renderer.render(filename, data || {})));
+                            })(filename, renderer.render(filename, data || {})));
 
 
                         });

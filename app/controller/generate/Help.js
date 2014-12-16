@@ -33,6 +33,9 @@ CLI.define('MicroField.controller.generate.Help', {
         text += f('  * {0}\t: Generates a edit pattern module. This pattern is edit and save, depends on user\'s id', bold('edit')) + "\n";
         text += f('  * {0}\t: Generates a editlist pattern module. This pattern have "list screen" and "edit screen', bold('editlist')) + "\n";
         text += "\n";
+        text += underline('Options') + "\n";
+        text += f('  * --{0} - Do not create database table when generate', bold('nodb')) + "\n";
+        text += "\n";
         text += underline('Syntax') + "\n";
         text += "  microfield generate [command] [Module Path]\n";
         text += "\n";

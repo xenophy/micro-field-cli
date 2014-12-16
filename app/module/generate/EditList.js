@@ -172,8 +172,7 @@ CLI.define('MicroField.module.generate.EditList', {
 
             function(next) {
 
-                // TODO: --nodb でスキップ
-                if (!skip) {
+                if (!skip && !o.nodb) {
 
                     me.setupTables(function() {
                         next();
@@ -192,36 +191,9 @@ CLI.define('MicroField.module.generate.EditList', {
             callback();
         });
 
-    },
-
-    // }}}
-    // {{{ getInitialDataQuery
-
-    getInitialDataQuery: function() {
-
-        /*
-        var me          = this,
-            fs          = Cmd.fs,
-         scriptdir   = Cmd.scriptdir,
-        format      = String.format,
-        modName     = me.modName,
-        tpldir      = format('{0}/tpl/{1}', scriptdir, modName),
-        date        = Ext.util.Format.date(new Date(), 'yyyy-mm-dd HH:mm:ss'),
-        sql         = [];
-
-        // SQL生成
-        Ext.iterate(fs.readFileSync(format('{0}/tests/data.txt', tpldir)).toString().split("\n"), function(item, i) {
-            if (item) {
-                sql.push(format('({0}, \'{1}\', \'{2}\', \'{3}\')', 1, Ext.util.Format.trim(item), date, date));
-            }
-        });
-
-        return format('INSERT INTO {0} (status, textdata, modified, created) VALUES ', tableName) + sql.join(",\n") + ';';
-       */
     }
 
     // }}}
-
 
 });
 

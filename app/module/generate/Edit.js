@@ -172,8 +172,7 @@ CLI.define('MicroField.module.generate.Edit', {
 
             function(next) {
 
-                // TODO: --nodb でスキップ
-                if (!skip) {
+                if (!skip && !o.nodb) {
 
                     me.setupTables(function() {
                         next();

@@ -4,6 +4,13 @@
 
 CLI.define('MicroField.module.generate.Abstract', {
 
+    // {{{ requires
+
+    requires: [
+        'MicroField.database.Manager'
+    ],
+
+    // }}}
     // {{{ mixins
 
     mixins: [
@@ -11,11 +18,39 @@ CLI.define('MicroField.module.generate.Abstract', {
     ],
 
     // }}}
+    // {{{ constructor
+
+    constructor: function(config) {
+
+        var me  = this;
+
+        me.initConfig(config);
+        me.callParent(arguments);
+    },
+
+    // }}}
     // {{{ execute
 
     execute: CLI.emptyFn,
 
     // }}}
+    // {{{ config
+
+    config: {
+
+        // {{{ appSettings
+
+        appSettings: {},
+
+        // }}}
+        // {{{ tableStructure
+
+        tableStructure: {}
+
+        // }}}
+
+    },
+
     // {{{ getTplDirectory
 
     getTplDirectory: function() {
@@ -42,12 +77,18 @@ CLI.define('MicroField.module.generate.Abstract', {
 
     getData: function(o) {
 
-        return CLI.apply(o, {
+        var tmp = CLI.apply(o, {
             lns         : o.ns.toLowerCase(),
             lname       : o.name.toLowerCase(),
             sname       : o.sname.toLowerCase(),
             generator   : MicroField.app.getSign()
         });
+
+        if (this.getTableStructure().name) {
+            tmp['tableName'] = this.getTableStructure().name;
+        }
+
+        return tmp;
 
     },
 
@@ -143,6 +184,131 @@ CLI.define('MicroField.module.generate.Abstract', {
                 callback();
             });
 
+        });
+
+    },
+
+    // }}}
+    // {{{ getInitialDataQuery
+
+    getInitialDataQuery: function() {
+        return false;
+    },
+
+    // }}}
+    // {{{ setupTables
+
+    setupTables: function(callback) {
+
+        var me      = this,
+            fs      = require('fs'),
+            path    = require('path'),
+            async   = require('async'),
+            f       = CLI.String.format,
+            skip    = false,
+            fns, conn;
+
+        // コネクションラッパー取得
+        conn = MicroField.database.Manager.getConnection(me.getAppSettings()['database']['default']);
+
+        fns = [
+
+            // 接続
+            function(next) {
+
+                if (!skip) {
+
+                    conn.connect(next);
+
+                } else {
+
+                    next();
+
+                }
+
+            },
+
+            // テーブル存在確認
+            function(next) {
+
+                if (!skip) {
+
+                    conn.existsTable(me.getTableStructure().name, function(err, exists) {
+
+                        if (err || exists) {
+                            skip = true;
+                        }
+
+                        next();
+
+                    });
+
+                } else {
+
+                    next();
+
+                }
+
+            },
+
+            // テーブル生成
+            function(next) {
+
+                if (!skip) {
+
+                    conn.createTable(me.getTableStructure(), function(err) {
+
+                        if (err) {
+                            skip = true;
+                        }
+
+                        next();
+
+                    });
+
+                } else {
+
+                    next();
+
+                }
+
+            },
+
+            // 初期データ挿入
+            function(next) {
+
+                if (!skip && me.getInitialDataQuery() !== false) {
+
+                    conn.query(me.getInitialDataQuery(), function(err) {
+
+                        if (err) {
+                            skip = true;
+                        }
+
+                        next();
+
+                    });
+
+                } else {
+
+                    next();
+
+                }
+
+            },
+
+            // 切断
+            function(next) {
+
+                conn.disconnect(next);
+
+            }
+
+        ];
+
+        // 非同期処理実行開始
+        async.waterfall(fns, function(err) {
+            callback();
         });
 
     },

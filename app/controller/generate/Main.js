@@ -32,6 +32,9 @@ CLI.define('MicroField.controller.generate.Main', {
             name    : 'navigation',
             cls     : 'Navigation'
         }, {
+            name    : 'tabletnavigation',
+            cls     : 'TabletNavigation'
+        }, {
             name    : 'base',
             cls     : 'Base'
         }, {

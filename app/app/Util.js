@@ -48,6 +48,23 @@ CLI.define('MicroField.app.Util', {
         },
 
         // }}}
+        // {{{ getSettings
+
+        getSettings: function(callback) {
+
+            var me      = this,
+                fs      = require('fs'),
+                path    = require('path'),
+                f       = CLI.String.format,
+                target  = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods/microfield.json'));
+
+            fs.readFile(target, function(err, data) {
+                callback(CLI.decode(MicroField.app.removeComment(data.toString()), true));
+            });
+
+        },
+
+        // }}}
         // {{{ log
 
         log: {

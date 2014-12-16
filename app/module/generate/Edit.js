@@ -9,6 +9,92 @@ CLI.define('MicroField.module.generate.Edit', {
     extend: 'MicroField.module.generate.Abstract',
 
     // }}}
+    // {{{ config
+
+    config: {
+
+        // {{{ tableStructure
+
+        tableStructure: {
+
+            // {{{ name
+
+            name: 'edit',
+
+            // }}}
+            // {{{ fields
+
+            fields: [{
+
+                // {{{ pk
+
+                name            : 'pk',
+                type            : 'bigint',
+                length          : 20,
+                notnull         : true,
+                auto_increment  : true
+
+                // }}}
+
+            }, {
+
+                // {{{ status
+
+                name            : 'status',
+                type            : 'tinyint',
+                length          : 4,
+                notnull         : true,
+                'default'       : 1
+
+                // }}}
+
+            }, {
+
+                // {{{ textdata
+
+                name            : 'textdata',
+                type            : 'varchar',
+                length          : 255,
+                notnull         : true
+
+                // }}}
+
+            }, {
+
+                // {{{ modified
+
+                name            : 'modified',
+                type            : 'datetime',
+                notnull         : true
+
+                // }}}
+
+            }, {
+
+                // {{{ created
+
+                name            : 'created',
+                type            : 'datetime',
+                notnull         : true
+
+                // }}}
+
+            }],
+
+            // }}}
+
+            primary_key         : 'pk',
+            charset             : 'utf8',
+            engine              : 'InnoDB',
+            auto_increment      : 1
+
+        }
+
+        // }}}
+
+    },
+
+    // }}}
     // {{{ execute
 
     execute: function(o, callback) {
@@ -23,6 +109,18 @@ CLI.define('MicroField.module.generate.Edit', {
 
         series = [
 
+            // {{{ アプリケーション設定取得
+
+            function(next) {
+
+                MicroField.app.getSettings(function(settings) {
+                    me.setAppSettings(settings);
+                    next();
+                });
+
+            },
+
+            // }}}
             // {{{ 出力ディレクトリ存在確認
 
             function(next) {
@@ -62,6 +160,22 @@ CLI.define('MicroField.module.generate.Edit', {
                 if (!skip) {
 
                     me.replaceTemplates(me.getDestDirectory(o), me.getData(o), function() {
+                        next();
+                    });
+
+                }
+
+            },
+
+            // }}}
+            // {{{ テーブルセットアップ
+
+            function(next) {
+
+                // TODO: --nodb でスキップ
+                if (!skip) {
+
+                    me.setupTables(function() {
                         next();
                     });
 

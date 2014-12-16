@@ -28,6 +28,7 @@ CLI.define('MicroField.controller.generate.Help', {
         text += f('  * {0}\t: Generates a simple header module', bold('header')) + "\n";
         text += f('  * {0}\t: Generates a simple footer module', bold('footer')) + "\n";
         text += f('  * {0}\t: Generates a tree panel based navigation module', bold('navigation')) + "\n";
+        text += f('  * {0}\t: Generates a tree panel based navigation module for tablet', bold('tabletnavigation')) + "\n";
         text += f('  * {0}\t: Generates a plain module', bold('base')) + "\n";
         text += f('  * {0}\t: Generates a edit pattern module. This pattern is edit and save, depends on user\'s id', bold('edit')) + "\n";
         text += f('  * {0}\t: Generates a editlist pattern module. This pattern have "list screen" and "edit screen', bold('editlist')) + "\n";

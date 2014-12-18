@@ -102,12 +102,12 @@ CLI.define('MicroField.module.generate.Edit', {
         var me      = this,
             async   = require('async'),
             skip    = false,
-            series  = [];
+            fns;
 
         // タイトル出力
         CLI.log(MicroField.app.getTitle());
 
-        series = [
+        fns = [
 
             // {{{ アプリケーション設定取得
 
@@ -187,7 +187,7 @@ CLI.define('MicroField.module.generate.Edit', {
         ];
 
         // 非同期実行開始
-        async.series(series, function() {
+        async.series(fns, function() {
             callback();
         });
 

@@ -133,12 +133,110 @@ CLI.define('MicroField.module.Manager', {
 
         ];
 
+        // 非同期処理実行
         async.series(series, function() {
 
             // コールバック実行
             callback(obj);
 
         });
+
+    },
+
+    // }}}
+    // {{{ append
+
+    append: function(o, callback) {
+
+        var me          = this,
+            async       = require('async'),
+            fs          = require('fs'),
+            path        = require('path'),
+            parser      = MicroField.module.Parser,
+            modPath     = o.modPath,
+            fieldType   = o.fieldType,
+            itemId      = o.itemId,
+            modNs       = modPath.split('/')[0],
+            modName     = modPath.split('/')[1],
+            classes     = {},
+            skip        = false,
+            series      = [],
+            mainControllerPath;
+
+        // 追加操作クラス定義
+        classes = {
+            edit        : 'Edit',
+            editlist    : 'EditList'
+        };
+
+        // メインコントローラークラスファイルパス取得
+        target = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods', modPath, '/app/view/main/MainController.js'));
+
+        series = [
+
+            // {{{ ファイル存在確認
+
+            function(next) {
+
+                fs.exists(target, function(exists) {
+
+                    if (!exists) {
+
+                        skip = true;
+
+                        // TODO: エラー表示
+
+                    }
+
+                    next();
+
+                });
+
+            },
+
+            // }}}
+            // {{{ メインコントローラークラス解析/クラス生成/実行
+
+            function(next) {
+
+                if (!skip) {
+
+                    fs.readFile(target, function(err, data) {
+
+                        obj = parser.getClassConfig(parser.removeComment(data.toString()));
+
+                        CLI.create('MicroField.module.append.' + classes[obj.extend.split('.')[2]], {
+                            ns          : modNs,
+                            name        : modName,
+                            fieldType   : fieldType,
+                            itemId      : itemId
+                        }).execute(next);
+
+                    });
+
+                }
+
+            }
+
+            // }}}
+
+        ];
+
+        /// 非同期処理実行
+        async.series(series, function() {
+
+            // コールバック実行
+            callback();
+
+        });
+
+    },
+
+    // }}}
+    // {{{ remove
+
+    remove: function() {
+
 
     }
 

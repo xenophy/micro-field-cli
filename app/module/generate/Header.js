@@ -13,15 +13,15 @@ CLI.define('MicroField.module.generate.Header', {
 
     execute: function(o, callback) {
 
-        var me          = this,
-            async       = require('async'),
-            skip        = false,
-            series      = [];
+        var me      = this,
+            async   = require('async'),
+            skip    = false,
+            fns;
 
         // タイトル出力
         CLI.log(MicroField.app.getTitle());
 
-        series = [
+        fns = [
 
             // {{{ 出力ディレクトリ存在確認
 
@@ -74,7 +74,7 @@ CLI.define('MicroField.module.generate.Header', {
         ];
 
         // 非同期実行開始
-        async.series(series, function() {
+        async.series(fns, function() {
             callback();
         });
 

@@ -16,12 +16,12 @@ CLI.define('MicroField.module.generate.TabletNavigation', {
         var me      = this,
             async   = require('async'),
             skip    = false,
-            series  = [];
+            fns;
 
         // タイトル出力
         CLI.log(MicroField.app.getTitle());
 
-        series = [
+        fns = [
 
             // {{{ 出力ディレクトリ存在確認
 
@@ -74,7 +74,7 @@ CLI.define('MicroField.module.generate.TabletNavigation', {
         ];
 
         // 非同期実行開始
-        async.series(series, function() {
+        async.series(fns, function() {
             callback();
         });
 

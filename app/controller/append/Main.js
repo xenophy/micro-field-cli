@@ -7,6 +7,7 @@ CLI.define('MicroField.controller.append.Main', {
     // {{{ requires
 
     requires: [
+        'MicroField.module.Manager'
     ],
 
     // }}}
@@ -19,14 +20,11 @@ CLI.define('MicroField.controller.append.Main', {
 
     config: {
 
-        // {{{ commands
+        // {{{ fields
 
-        commands: [{
-            name    : 'edit',
-            cls     : 'Edit'
-        }, {
-            name    : 'editlist',
-            cls     : 'EditList'
+        fields: [{
+            name    : 'textfield',
+            cls     : 'TextField'
         }]
 
         // }}}
@@ -34,15 +32,15 @@ CLI.define('MicroField.controller.append.Main', {
     },
 
     // }}}
-    // {{{ findCommand
+    // {{{ findField
 
-    findCommand: function(command) {
+    findField: function(type) {
 
         var me = this;
 
-        return CLI.Array.findBy(me.getCommands(), function(item) {
+        return CLI.Array.findBy(me.getFields(), function(item) {
 
-            if (item.name === command) {
+            if (item.name === type) {
                 return true;
             }
 
@@ -55,44 +53,34 @@ CLI.define('MicroField.controller.append.Main', {
     // }}}
     // {{{ run
 
-    run: function(field, modPath) {
+    run: function(fieldType, itemId, modPath) {
 
-        var me          = this,
-            modNs       = modPath.split('/')[0],
-            modName     = modPath.split('/')[1],
-            modScreen   = modPath.split('/')[1],
-            modDir      = modPath.split('/')[1];
+        var me = this;
 
-            console.log(arguments);
-
+        if (!me.findField(fieldType)) {
+            CLI.create('MicroField.controller.append.Help').run();
             return;
-
-        if (me.argv.name) {
-            modScreen = me.argv.name;
         }
 
-        if (!me.findCommand(command)) {
-            CLI.create('MicroField.controller.generate.Help').run();
+        if (!itemId) {
+            CLI.create('MicroField.controller.append.Help').run();
             return;
         }
 
         if (!modPath) {
-            CLI.create('MicroField.controller.generate.Help').run();
+            CLI.create('MicroField.controller.append.Help').run();
             return;
         }
 
         if (modPath.split('/').length !== 2) {
-            CLI.create('MicroField.controller.generate.Help').run();
+            CLI.create('MicroField.controller.append.Help').run();
             return;
         }
 
-        CLI.create('MicroField.module.generate.' + me.findCommand(command).cls).execute({
-            ns      : modNs,
-            name    : modName,
-            sname   : modScreen,
-            path    : modPath,
-            dir     : modDir,
-            nodb    : me.argv.nodb
+        MicroField.module.Manager.append({
+            fieldType   : fieldType,
+            itemId      : itemId,
+            modPath     : modPath
         }, function() {
 
         });

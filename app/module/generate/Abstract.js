@@ -51,6 +51,7 @@ CLI.define('MicroField.module.generate.Abstract', {
 
     },
 
+    // }}}
     // {{{ getTplDirectory
 
     getTplDirectory: function() {

@@ -13,11 +13,11 @@ CLI.define('MicroField.module.generate.Footer', {
 
     execute: function(o, callback) {
 
-        var me          = this,
-            async       = require('async'),
-            skip        = false,
-            series      = [],
-            data        = {};
+        var me      = this,
+            async   = require('async'),
+            skip    = false,
+            data    = {},
+            fns;
 
         // テンプレート適用データ作成
         data = CLI.apply(o, {
@@ -30,7 +30,7 @@ CLI.define('MicroField.module.generate.Footer', {
         // タイトル出力
         CLI.log(MicroField.app.getTitle());
 
-        series = [
+        fns = [
 
             // {{{ 出力ディレクトリ存在確認
 
@@ -83,7 +83,7 @@ CLI.define('MicroField.module.generate.Footer', {
         ];
 
         // 非同期実行開始
-        async.series(series, function() {
+        async.series(fns, function() {
             callback();
         });
 

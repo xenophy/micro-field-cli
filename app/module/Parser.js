@@ -19,8 +19,13 @@ CLI.define('MicroField.module.Parser', {
         CLI.iterate(src, function(line, i) {
             src[i] = line.replace(/^[\s　]+|[\s　]+$/g, '');
         });
-        src = src.join('');
-        src = src.replace(/\/\*.+?\*\//g, '');
+        src = src.join("\n");
+
+        // 複数行のコメント削除
+        src = src.replace(/\/\*?([^\/]|[^\*]\/)*\*\//g, '');
+
+        // 単行コメント削除
+        src = src.replace(/\s*\/\/.*$/g, '');
 
         return src;
 

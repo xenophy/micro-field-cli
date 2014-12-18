@@ -47,6 +47,11 @@ CLI.define('MicroField.module.append.Abstract', {
         tableName: null,
 
         // }}}
+        // {{{ serverFields
+
+        serverFields: null,
+
+        // }}}
         // {{{ ns
 
         ns: null,
@@ -128,9 +133,30 @@ CLI.define('MicroField.module.append.Abstract', {
                 // ファイル読み込み
                 fs.readFile(target, function(err, data) {
 
-                    var m = data.toString().match(/public(.*)\$table(.?)=(.?)['"]+(.*)+['"];/);
+                    var m = parser.removeComment(data.toString()).match(/public(.*)\$table(.?)=(.?)['"]+(.*)+['"];/);
 
                     me.setTableName(m[4]);
+
+                    next();
+
+                });
+
+            },
+
+            // }}}
+            // {{{ サーバーサイドフィールド定義解析
+
+            function(next) {
+
+                target = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods', me.getNs(), me.getName(), filenames.serverscript));
+
+                // ファイル読み込み
+                fs.readFile(target, function(err, data) {
+
+                    var m = parser.removeComment(data.toString()).match(/public(.*)\$fields(.?)=(.?)array(.?)\([\n|\r]+(.*)[\n|\r]+\)(.?);/);
+
+                    // JSON解析/設定
+                    me.setServerFields(CLI.decode('[' + m[5].split("'").join('"') + ']', true));
 
                     next();
 
@@ -139,7 +165,6 @@ CLI.define('MicroField.module.append.Abstract', {
             }
 
             // }}}
-
 
         ];
 
@@ -180,9 +205,16 @@ CLI.define('MicroField.module.append.Abstract', {
 
         // テーブル変更クラス生成/実行
         CLI.create('MicroField.module.alter.Table', {
+
+            // テーブル名
             tableName   : me.getTableName(),
+
+            // アイテムID
             itemId      : me.getItemId(),
+
+            // フィールド型
             fieldType   : me['get' + CLI.String.capitalize(me.getFieldType())]().fieldtype
+
         }).append(callback);
 
     },
@@ -192,8 +224,12 @@ CLI.define('MicroField.module.append.Abstract', {
 
     alterServerScript: function(callback) {
 
+        var me = this;
 
-        callback();
+        // サーバーサイドスクリプト変更クラス生成/実行
+        CLI.create('MicroField.module.alter.ServerScript', {
+
+        }).append(callback);
 
     },
 
@@ -202,8 +238,12 @@ CLI.define('MicroField.module.append.Abstract', {
 
     alterClientScript: function(callback) {
 
+        var me = this;
 
-        callback();
+        // クライアントサイドスクリプト変更クラス生成/実行
+        CLI.create('MicroField.module.alter.ClientScript', {
+
+        }).append(callback);
 
     }
 

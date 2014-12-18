@@ -156,11 +156,11 @@ CLI.define('MicroField.module.generate.Abstract', {
         recursive(target, function (err, files) {
 
             var renderer = ECT({ root : '/' }),
-                writers = [];
+                fns = [];
 
             CLI.iterate(files, function(filename) {
 
-                writers.push((function(filename, text) {
+                fns.push((function(filename, text) {
 
                     return function(cb) {
 
@@ -181,7 +181,7 @@ CLI.define('MicroField.module.generate.Abstract', {
             });
 
             // 非同期実行開始
-            async.series(writers, function() {
+            async.series(fns, function() {
                 callback();
             });
 

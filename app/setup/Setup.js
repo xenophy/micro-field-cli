@@ -210,14 +210,14 @@ CLI.define('MicroField.setup.Setup', {
         var me = this,
             async = require('async'),
             mkdirp = require('mkdirp'),
-            series = [];
+            fns = [];
 
         CLI.iterate([
             'resources/images',
             'login/resources/images'
         ], function(t) {
 
-            series.push((function(t) {
+            fns.push((function(t) {
 
                 return function(next) {
 
@@ -238,7 +238,7 @@ CLI.define('MicroField.setup.Setup', {
         });
 
         // 非同期実行
-        async.series(series, function (err, result) {
+        async.series(fns, function (err, result) {
 
             // コールバック
             callback();
@@ -464,7 +464,7 @@ CLI.define('MicroField.setup.Setup', {
             fs      = require('fs'),
             path    = require('path'),
             f       = CLI.String.format,
-            series  = [];
+            fns     = [];
 
         CLI.iterate(me.getAppSettings()['mods'], function(modNs) {
 
@@ -478,7 +478,7 @@ CLI.define('MicroField.setup.Setup', {
                 )
             );
 
-            series.push((function(target) {
+            fns.push((function(target) {
 
                 return function(next) {
 
@@ -498,7 +498,7 @@ CLI.define('MicroField.setup.Setup', {
 
         });
 
-        series.push(function(next) {
+        fns.push(function(next) {
 
             var fns = [];
 
@@ -538,7 +538,7 @@ CLI.define('MicroField.setup.Setup', {
         });
 
         // 非同期実行
-        async.series(series, function (err, result) {
+        async.series(fns, function (err, result) {
 
             // コールバック
             callback();

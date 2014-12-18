@@ -44,7 +44,7 @@ CLI.define('MicroField.profile.Profile', {
             async       = require('async'),
             manager     = MicroField.module.Manager,
             infos       = [],
-            series      = [],
+            fns         = [],
             bold        = me.ansi.bold,
             underline   = me.ansi.underline,
             green       = me.colors.green,
@@ -55,7 +55,7 @@ CLI.define('MicroField.profile.Profile', {
 
             CLI.iterate(list, function(modPath) {
 
-                series.push((function(modPath) {
+                fns.push((function(modPath) {
 
                     return function(next) {
                         manager.getInfo(modPath, function(info) {
@@ -73,7 +73,7 @@ CLI.define('MicroField.profile.Profile', {
             });
 
             // 非同期実行開始
-            async.series(series, function() {
+            async.series(fns, function() {
 
                 if (!json) {
 
@@ -154,7 +154,7 @@ CLI.define('MicroField.profile.Profile', {
             async       = require('async'),
             manager     = MicroField.module.Manager,
             infos       = [],
-            series      = [],
+            fns      = [],
             bold        = me.ansi.bold,
             underline   = me.ansi.underline,
             green       = me.colors.green,

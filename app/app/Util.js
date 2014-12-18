@@ -168,7 +168,7 @@ CLI.define('MicroField.app.Util', {
                 async   = require('async'),
                 path    = require('path'),
                 count   = 0,
-                series  = [];
+                fns  = [];
 
             if (arguments.length === 2) {
                 callback = progress;
@@ -182,7 +182,7 @@ CLI.define('MicroField.app.Util', {
                 src = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), src));
                 dest = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), dest));
 
-                series.push(function(callback) {
+                fns.push(function(callback) {
 
                     CLI.Fs.copy(src, dest, function(err) {
                         count++;
@@ -194,7 +194,7 @@ CLI.define('MicroField.app.Util', {
 
             });
 
-            async.series(series, function (err, result) {
+            async.series(fns, function (err, result) {
                 callback(count);
             });
 
@@ -209,7 +209,7 @@ CLI.define('MicroField.app.Util', {
                 async   = require('async'),
                 path    = require('path'),
                 count   = 0,
-                series  = [];
+                fns  = [];
 
             if (arguments.length === 2) {
                 callback = progress;
@@ -219,7 +219,7 @@ CLI.define('MicroField.app.Util', {
 
                 var t = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), item));
 
-                series.push(function(callback) {
+                fns.push(function(callback) {
                     CLI.Fs.remove(t, function(err) {
                         count++;
                         progress(item);
@@ -229,7 +229,7 @@ CLI.define('MicroField.app.Util', {
 
             });
 
-            async.series(series, function (err, result) {
+            async.series(fns, function (err, result) {
                 callback(count);
             });
 
@@ -245,7 +245,7 @@ CLI.define('MicroField.app.Util', {
                 path    = require('path'),
                 async   = require('async'),
                 count   = 0,
-                series  = [];
+                fns  = [];
 
             if (arguments.length === 2) {
                 callback = progress;
@@ -255,7 +255,7 @@ CLI.define('MicroField.app.Util', {
 
                 var t = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), item));
 
-                series.push((function(t) {
+                fns.push((function(t) {
 
                     return function(next) {
 
@@ -280,7 +280,7 @@ CLI.define('MicroField.app.Util', {
 
             });
 
-            async.series(series, function (err, result) {
+            async.series(fns, function (err, result) {
                 callback(count);
             });
 

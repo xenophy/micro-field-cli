@@ -27,13 +27,13 @@ CLI.define('MicroField.module.Manager', {
             recursive   = require('recursive-readdir'),
             modroot     = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods')),
             mods        = [],
-            series      = [];
+            fns         = [];
 
         recursive(modroot, function (err, files) {
 
             CLI.iterate(files, function(file) {
 
-                series.push((function(file) {
+                fns.push((function(file) {
 
                     return function(next) {
 
@@ -50,7 +50,7 @@ CLI.define('MicroField.module.Manager', {
 
             });
 
-            async.series(series, function() {
+            async.series(fns, function() {
 
                 // コールバック実行
                 callback(mods);
@@ -87,14 +87,13 @@ CLI.define('MicroField.module.Manager', {
             fs      = require('fs'),
             path    = require('path'),
             parser  = MicroField.module.Parser,
-            series  = [],
             skips   = {},
-            obj, target;
+            fns, obj, target;
 
         // Editビュー解析
         target = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods', modPath, '/app/view/edit/Edit.js'));
 
-        series = [
+        fns = [
 
             function(next) {
 
@@ -134,7 +133,7 @@ CLI.define('MicroField.module.Manager', {
         ];
 
         // 非同期処理実行
-        async.series(series, function() {
+        async.series(fns, function() {
 
             // コールバック実行
             callback(obj);
@@ -160,8 +159,7 @@ CLI.define('MicroField.module.Manager', {
             modName     = modPath.split('/')[1],
             classes     = {},
             skip        = false,
-            series      = [],
-            mainControllerPath;
+            fns, mainControllerPath;
 
         // 追加操作クラス定義
         classes = {
@@ -172,7 +170,7 @@ CLI.define('MicroField.module.Manager', {
         // メインコントローラークラスファイルパス取得
         target = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods', modPath, '/app/view/main/MainController.js'));
 
-        series = [
+        fns = [
 
             // {{{ ファイル存在確認
 
@@ -223,7 +221,7 @@ CLI.define('MicroField.module.Manager', {
         ];
 
         /// 非同期処理実行
-        async.series(series, function() {
+        async.series(fns, function() {
 
             // コールバック実行
             callback();

@@ -60,20 +60,20 @@ CLI.define('MicroField.setup.Login', {
 
         var me      = this,
             async   = require('async'),
-            series  = [];
+            fns     = [];
 
         // アプリケーション生成
-        series.push(function(callback) {
+        fns.push(function(callback) {
             me.generateApplication(callback);
         });
 
         // アプリケーションビルド
-        series.push(function(callback) {
+        fns.push(function(callback) {
             me.buildApplication(callback);
         });
 
         // 非同期実行
-        async.series(series, function (err, result) {
+        async.series(fns, function (err, result) {
 
             // コールバック
             callback();

@@ -35,6 +35,11 @@ CLI.define('MicroField.module.alter.Abstract', {
     },
 
     // }}}
+    // {{{ init
+
+    init: CLI.emptyFn,
+
+    // }}}
     // {{{ append
 
     append: CLI.emptyFn,

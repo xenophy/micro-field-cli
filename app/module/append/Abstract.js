@@ -30,7 +30,12 @@ CLI.define('MicroField.module.append.Abstract', {
 
             // {{{ items
 
-            items: null
+            items: null,
+
+            // }}}
+            // {{{ serverscript
+
+            serverscript: null
 
             // }}}
 
@@ -141,9 +146,10 @@ CLI.define('MicroField.module.append.Abstract', {
 
                 });
 
-            },
+            }
 
             // }}}
+            /*
             // {{{ サーバーサイドフィールド定義解析
 
             function(next) {
@@ -153,7 +159,7 @@ CLI.define('MicroField.module.append.Abstract', {
                 // ファイル読み込み
                 fs.readFile(target, function(err, data) {
 
-                    var m = parser.removeComment(data.toString()).match(/public(.*)\$fields(.?)=(.?)array(.?)\([\n|\r]+(.*)[\n|\r]+\)(.?);/);
+                    var m = parser.removeComment(data.toString()).match(/public(.*)\$fields(.?)=(.?)array(.?)\(([\s\S]*?)\)(.?);/);
 
                     // JSON解析/設定
                     me.setServerFields(CLI.decode('[' + m[5].split("'").join('"') + ']', true));
@@ -166,6 +172,7 @@ CLI.define('MicroField.module.append.Abstract', {
 
             // }}}
 
+           */
         ];
 
         // 非同期処理実行
@@ -228,6 +235,18 @@ CLI.define('MicroField.module.append.Abstract', {
 
         // サーバーサイドスクリプト変更クラス生成/実行
         CLI.create('MicroField.module.alter.ServerScript', {
+
+            // スクリプト名
+            scriptName: me.getFilenames().serverscript,
+
+            // アイテムID
+            itemId      : me.getItemId(),
+
+            // 名前空間
+            ns: me.getNs(),
+
+            // モジュール名
+            name: me.getName()
 
         }).append(callback);
 

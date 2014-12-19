@@ -13,6 +13,12 @@ CLI.define('MicroField.module.alter.ClientScript', {
 
     append: function(callback) {
 
+        // TODO: コンフィグオプションにクライアントサイドのフィールド一覧を設定して、取得できるようにする
+
+        // TODO: クライアントサイドファイル名をもらう
+
+        // TODO: 正規表現で、ソースコード置換/出力
+
         callback();
     }
 

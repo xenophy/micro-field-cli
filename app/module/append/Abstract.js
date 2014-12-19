@@ -52,11 +52,6 @@ CLI.define('MicroField.module.append.Abstract', {
         tableName: null,
 
         // }}}
-        // {{{ serverFields
-
-        serverFields: null,
-
-        // }}}
         // {{{ ns
 
         ns: null,
@@ -149,30 +144,7 @@ CLI.define('MicroField.module.append.Abstract', {
             }
 
             // }}}
-            /*
-            // {{{ サーバーサイドフィールド定義解析
 
-            function(next) {
-
-                target = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods', me.getNs(), me.getName(), filenames.serverscript));
-
-                // ファイル読み込み
-                fs.readFile(target, function(err, data) {
-
-                    var m = parser.removeComment(data.toString()).match(/public(.*)\$fields(.?)=(.?)array(.?)\(([\s\S]*?)\)(.?);/);
-
-                    // JSON解析/設定
-                    me.setServerFields(CLI.decode('[' + m[5].split("'").join('"') + ']', true));
-
-                    next();
-
-                });
-
-            }
-
-            // }}}
-
-           */
         ];
 
         // 非同期処理実行
@@ -237,16 +209,16 @@ CLI.define('MicroField.module.append.Abstract', {
         CLI.create('MicroField.module.alter.ServerScript', {
 
             // スクリプト名
-            scriptName: me.getFilenames().serverscript,
+            scriptName  : me.getFilenames().serverscript,
 
             // アイテムID
             itemId      : me.getItemId(),
 
             // 名前空間
-            ns: me.getNs(),
+            ns          : me.getNs(),
 
             // モジュール名
-            name: me.getName()
+            name        : me.getName()
 
         }).append(callback);
 
@@ -261,6 +233,21 @@ CLI.define('MicroField.module.append.Abstract', {
 
         // クライアントサイドスクリプト変更クラス生成/実行
         CLI.create('MicroField.module.alter.ClientScript', {
+
+            // スクリプト名
+            scriptName  : me.getFilenames().items,
+
+            // アイテムID
+            itemId      : me.getItemId(),
+
+            // xtype
+            xtype       : me['get' + CLI.String.capitalize(me.getFieldType())]().xtype,
+
+            // 名前空間
+            ns          : me.getNs(),
+
+            // モジュール名
+            name        : me.getName()
 
         }).append(callback);
 

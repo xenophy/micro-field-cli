@@ -17,7 +17,22 @@ CLI.define('MicroField.module.alter.Abstract', {
 
         // {{{ appSettings
 
-        appSettings: {}
+        appSettings: {},
+
+        // }}}
+        // {{{ classes
+
+        classes: {
+            'checkboxfield'     : 'Checkbox',
+            'combobox'          : 'Combobox',
+            'datefield'         : 'DateField',
+            'htmleditor'        : 'HtmlEditor',
+            'numberfield'       : 'NumberField',
+            'textarea'          : 'TextArea',
+            'textfield'         : 'TextField',
+            'timefield'         : 'TimeField',
+            'triggerfield'      : 'Trigger'
+        }
 
         // }}}
 

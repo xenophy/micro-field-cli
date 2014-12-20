@@ -33,6 +33,16 @@ CLI.define('MicroField.module.alter.ServerScript', {
         name: null,
 
         // }}}
+        // {{{ tplType
+
+        tplType: null,
+
+        // }}}
+        // {{{ fieldType
+
+        fieldType: null,
+
+        // }}}
         // {{{ fieldName
 
         fieldName: null

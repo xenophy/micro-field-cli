@@ -211,6 +211,12 @@ CLI.define('MicroField.module.append.Abstract', {
             // スクリプト名
             scriptName  : me.getFilenames().serverscript,
 
+            // テンプレートタイプ
+            tplType     : CLI.getClassName(me).split('.').pop(),
+
+            // フィールドタイプ
+            fieldType   : me.getFieldType(),
+
             // フィールド名
             fieldName   : me.getFieldName(),
 
@@ -236,6 +242,12 @@ CLI.define('MicroField.module.append.Abstract', {
 
             // スクリプト名
             scriptName  : me.getFilenames().items,
+
+            // テンプレートタイプ
+            tplType     : CLI.getClassName(me).split('.').pop(),
+
+            // フィールドタイプ
+            fieldType   : me.getFieldType(),
 
             // フィールド名
             fieldName   : me.getFieldName(),

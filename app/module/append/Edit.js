@@ -34,8 +34,88 @@ CLI.define('MicroField.module.append.Edit', {
         // {{{ fieldTypes
 
         fieldTypes: [
-            'textfield'
+            'checkboxfield',
+            'combobox',
+            'datefield',
+            'htmleditor',
+            'numberfield',
+            'textarea',
+            'textfield',
+            'timefield',
+            'triggerfield'
         ],
+
+        // }}}
+        // {{{ datefield
+
+        datefield: {
+
+            // {{{ xtype
+
+            xtype: 'datefield',
+
+            // }}}
+            // {{{ fieldtype
+
+            fieldtype: 'varchar(255)'
+
+            // }}}
+
+        },
+
+        // }}}
+        // {{{ htmleditor
+
+        htmleditor: {
+
+            // {{{ xtype
+
+            xtype: 'htmleditor',
+
+            // }}}
+            // {{{ fieldtype
+
+            fieldtype: 'varchar(255)'
+
+            // }}}
+
+        },
+
+        // }}}
+        // {{{ numberfield
+
+        numberfield: {
+
+            // {{{ xtype
+
+            xtype: 'numberfield',
+
+            // }}}
+            // {{{ fieldtype
+
+            fieldtype: 'bigint(20)'
+
+            // }}}
+
+        },
+
+        // }}}
+        // {{{ textarea
+
+        textarea: {
+
+            // {{{ xtype
+
+            xtype: 'textareafield',
+
+            // }}}
+            // {{{ fieldtype
+
+            fieldtype: 'varchar(255)'
+
+            // }}}
+
+        },
 
         // }}}
         // {{{ textfield
@@ -45,6 +125,42 @@ CLI.define('MicroField.module.append.Edit', {
             // {{{ xtype
 
             xtype: 'textfield',
+
+            // }}}
+            // {{{ fieldtype
+
+            fieldtype: 'varchar(255)'
+
+            // }}}
+
+        },
+
+        // }}}
+        // {{{ timefield
+
+        timefield: {
+
+            // {{{ xtype
+
+            xtype: 'timefield',
+
+            // }}}
+            // {{{ fieldtype
+
+            fieldtype: 'varchar(255)'
+
+            // }}}
+
+        },
+
+        // }}}
+        // {{{ triggerfield
+
+        triggerfield: {
+
+            // {{{ xtype
+
+            xtype: 'triggerfield',
 
             // }}}
             // {{{ fieldtype

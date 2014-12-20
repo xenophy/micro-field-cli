@@ -33,6 +33,16 @@ CLI.define('MicroField.module.alter.ClientScript', {
         name: null,
 
         // }}}
+        // {{{ tplType
+
+        tplType: null,
+
+        // }}}
+        // {{{ fieldType
+
+        fieldType: null,
+
+        // }}}
         // {{{ fieldName
 
         fieldName: null,
@@ -195,6 +205,12 @@ CLI.define('MicroField.module.alter.ClientScript', {
             indent  = o.forwardItemsIndent,
             code;
 
+            // TODO: タイプクラス生成、コード取得
+
+            //MicroField.module.append.Edit
+            //console.log(me.getTplType());
+//            console.log(me.getFieldType());
+
         code = f([
             '{',
             '{0}xtype       : \'{2}\',',
@@ -225,8 +241,6 @@ CLI.define('MicroField.module.alter.ClientScript', {
 
         items.push(code);
 
-//        console.log(items.join(', '));
-
         return o;
 
     },
@@ -242,6 +256,8 @@ CLI.define('MicroField.module.alter.ClientScript', {
             path    = require('path'),
             skip    = false,
             fns;
+
+            //console.log(me.getFieldType());
 
         fns = [
 

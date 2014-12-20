@@ -22,10 +22,7 @@ CLI.define('MicroField.controller.append.Main', {
 
         // {{{ fields
 
-        fields: [{
-            name    : 'textfield',
-            cls     : 'TextField'
-        }]
+        fields: null
 
         // }}}
 
@@ -40,7 +37,7 @@ CLI.define('MicroField.controller.append.Main', {
 
         return CLI.Array.findBy(me.getFields(), function(item) {
 
-            if (item.name === type) {
+            if (item === type) {
                 return true;
             }
 
@@ -53,35 +50,43 @@ CLI.define('MicroField.controller.append.Main', {
     // }}}
     // {{{ run
 
-    run: function(fieldType, itemId, modPath) {
+    run: function(fieldType, fieldName, modPath) {
 
         var me = this;
 
-        if (!me.findField(fieldType)) {
-            CLI.create('MicroField.controller.append.Help').run();
-            return;
-        }
+        // フィールドタイプ一覧取得
+        MicroField.module.Manager.getFieldTypes('append', modPath, function(fields) {
 
-        if (!itemId) {
-            CLI.create('MicroField.controller.append.Help').run();
-            return;
-        }
+            // フィールド定義設定
+            me.setFields(fields);
 
-        if (!modPath) {
-            CLI.create('MicroField.controller.append.Help').run();
-            return;
-        }
+            if (!me.findField(fieldType)) {
+                CLI.create('MicroField.controller.append.Help').run();
+                return;
+            }
 
-        if (modPath.split('/').length !== 2) {
-            CLI.create('MicroField.controller.append.Help').run();
-            return;
-        }
+            if (!fieldName) {
+                CLI.create('MicroField.controller.append.Help').run();
+                return;
+            }
 
-        MicroField.module.Manager.append({
-            fieldType   : fieldType,
-            itemId      : itemId,
-            modPath     : modPath
-        }, function() {
+            if (!modPath) {
+                CLI.create('MicroField.controller.append.Help').run();
+                return;
+            }
+
+            if (modPath.split('/').length !== 2) {
+                CLI.create('MicroField.controller.append.Help').run();
+                return;
+            }
+
+            MicroField.module.Manager.append({
+                fieldType   : fieldType,
+                fieldName   : fieldName,
+                modPath     : modPath
+            }, function() {
+
+            });
 
         });
 

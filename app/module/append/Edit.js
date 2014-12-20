@@ -31,6 +31,13 @@ CLI.define('MicroField.module.append.Edit', {
         },
 
         // }}}
+        // {{{ fieldTypes
+
+        fieldTypes: [
+            'textfield'
+        ],
+
+        // }}}
         // {{{ textfield
 
         textfield: {

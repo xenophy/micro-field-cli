@@ -33,9 +33,9 @@ CLI.define('MicroField.module.alter.ServerScript', {
         name: null,
 
         // }}}
-        // {{{ itemId
+        // {{{ fieldName
 
-        itemId: null
+        fieldName: null
 
         // }}}
 
@@ -166,7 +166,7 @@ CLI.define('MicroField.module.alter.ServerScript', {
 
                 var tmp = me.getFields();
 
-                tmp.push(me.getItemId());
+                tmp.push(me.getFieldName());
                 me.setFields(tmp, next);
 
             }

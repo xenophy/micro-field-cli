@@ -67,9 +67,9 @@ CLI.define('MicroField.module.append.Abstract', {
         fieldType: null,
 
         // }}}
-        // {{{ itemId
+        // {{{ fieldName
 
-        itemId: null
+        fieldName: null
 
         // }}}
 
@@ -188,8 +188,8 @@ CLI.define('MicroField.module.append.Abstract', {
             // テーブル名
             tableName   : me.getTableName(),
 
-            // アイテムID
-            itemId      : me.getItemId(),
+            // フィールド名
+            fieldName   : me.getFieldName(),
 
             // フィールド型
             fieldType   : me['get' + CLI.String.capitalize(me.getFieldType())]().fieldtype
@@ -211,8 +211,8 @@ CLI.define('MicroField.module.append.Abstract', {
             // スクリプト名
             scriptName  : me.getFilenames().serverscript,
 
-            // アイテムID
-            itemId      : me.getItemId(),
+            // フィールド名
+            fieldName   : me.getFieldName(),
 
             // 名前空間
             ns          : me.getNs(),
@@ -237,8 +237,8 @@ CLI.define('MicroField.module.append.Abstract', {
             // スクリプト名
             scriptName  : me.getFilenames().items,
 
-            // アイテムID
-            itemId      : me.getItemId(),
+            // フィールド名
+            fieldName   : me.getFieldName(),
 
             // xtype
             xtype       : me['get' + CLI.String.capitalize(me.getFieldType())]().xtype,

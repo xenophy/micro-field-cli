@@ -16,6 +16,34 @@ CLI.define('MicroField.module.Manager', {
     singleton: true,
 
     // }}}
+    // {{{ config
+
+    config: {
+
+        // {{{ classes
+
+        classes: {
+            edit        : 'Edit',
+            editlist    : 'EditList'
+        }
+
+        // }}}
+
+    },
+
+    // }}}
+    // {{{ constructor
+
+    constructor: function(config) {
+
+        var me  = this;
+
+        me.initConfig(config);
+        me.callParent(arguments);
+
+    },
+
+    // }}}
     // {{{ getList
 
     getList: function(callback) {
@@ -143,6 +171,94 @@ CLI.define('MicroField.module.Manager', {
     },
 
     // }}}
+    // {{{ getFieldTypes
+
+    getFieldTypes: function(type, modPath, callback) {
+
+        var me          = this,
+            async       = require('async'),
+            fs          = require('fs'),
+            parser      = MicroField.module.Parser,
+            classes     = me.getClasses(),
+            skip        = false,
+            fns, types;
+
+        // メインコントローラークラスファイルパス取得
+        target = me.getMainViewControllerPath(modPath);
+
+        fns = [
+
+            // {{{ ファイル存在確認
+
+            function(next) {
+
+                fs.exists(target, function(exists) {
+
+                    if (!exists) {
+
+                        skip = true;
+
+                        // TODO: エラー表示
+
+                    }
+
+                    next();
+
+                });
+
+            },
+
+            // }}}
+            // {{{ メインコントローラークラス解析/クラス生成/実行
+
+            function(next) {
+
+                if (!skip) {
+
+                    fs.readFile(target, function(err, data) {
+
+                        obj = parser.getClassConfig(parser.removeComment(data.toString()));
+
+                        var cls = CLI.create('MicroField.module.append.' + classes[obj.extend.split('.')[2]], {
+                        });
+
+                        types = cls.getFieldTypes();
+
+                        next();
+
+                    });
+
+                }
+
+            }
+
+            // }}}
+
+        ];
+
+        /// 非同期処理実行
+        async.series(fns, function() {
+
+            // コールバック実行
+            callback(types);
+
+        });
+
+    },
+
+    // }}}
+    // {{{ getMainViewControllerPath
+
+    getMainViewControllerPath: function(modPath) {
+
+        var me      = this,
+            path    = require('path');
+
+        return CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods', modPath, '/app/view/main/MainController.js'));
+
+    },
+
+    // }}}
     // {{{ append
 
     append: function(o, callback) {
@@ -150,25 +266,18 @@ CLI.define('MicroField.module.Manager', {
         var me          = this,
             async       = require('async'),
             fs          = require('fs'),
-            path        = require('path'),
             parser      = MicroField.module.Parser,
             modPath     = o.modPath,
             fieldType   = o.fieldType,
-            itemId      = o.itemId,
+            fieldName   = o.fieldName,
             modNs       = modPath.split('/')[0],
             modName     = modPath.split('/')[1],
-            classes     = {},
+            classes     = me.getClasses(),
             skip        = false,
-            fns, mainControllerPath;
-
-        // 追加操作クラス定義
-        classes = {
-            edit        : 'Edit',
-            editlist    : 'EditList'
-        };
+            fns;
 
         // メインコントローラークラスファイルパス取得
-        target = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods', modPath, '/app/view/main/MainController.js'));
+        target = me.getMainViewControllerPath(modPath);
 
         fns = [
 
@@ -207,7 +316,7 @@ CLI.define('MicroField.module.Manager', {
                             ns          : modNs,
                             name        : modName,
                             fieldType   : fieldType,
-                            itemId      : itemId
+                            fieldName   : fieldName
                         }).execute(next);
 
                     });

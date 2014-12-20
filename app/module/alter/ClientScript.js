@@ -33,9 +33,9 @@ CLI.define('MicroField.module.alter.ClientScript', {
         name: null,
 
         // }}}
-        // {{{ itemId
+        // {{{ fieldName
 
-        itemId: null,
+        fieldName: null,
 
         // }}}
         // {{{ xtype
@@ -209,8 +209,8 @@ CLI.define('MicroField.module.alter.ClientScript', {
             // インデント
             indent + indent,
 
-            // itemId
-            me.getItemId(),
+            // fieldName
+            me.getFieldName(),
 
             // xtype
             me.getXtype(),

@@ -18,9 +18,9 @@ CLI.define('MicroField.module.alter.Table', {
         tableName: {},
 
         // }}}
-        // {{{ itemId
+        // {{{ fieldName
 
-        itemId: {},
+        fieldName: {},
 
         // }}}
         // {{{ fieldType
@@ -105,7 +105,7 @@ CLI.define('MicroField.module.alter.Table', {
                     '    `{3}`'
                 ].join("\n");
 
-                sql = f(sql, me.getTableName(), me.getItemId(), me.getFieldType(), afterfield);
+                sql = f(sql, me.getTableName(), me.getFieldName(), me.getFieldType(), afterfield);
 
                 conn.query(sql, function(err) {
 

@@ -104,21 +104,21 @@ CLI.define('MicroField.module.append.Abstract', {
     // {{{ getAlterTableClass
 
     getAlterTableClass: function() {
-        return CLI.create('MicroField.module.alter.Table', this.getClassConfig());
+        return CLI.create('MicroField.module.alter.' + CLI.getClassName(this).split('.').pop().toLowerCase() + '.Table', this.getClassConfig());
     },
 
     // }}}
     // {{{ getAlterServerClass
 
     getAlterServerClass: function() {
-        return CLI.create('MicroField.module.alter.ServerScript', this.getClassConfig());
+        return CLI.create('MicroField.module.alter.' + CLI.getClassName(this).split('.').pop().toLowerCase() + '.ServerScript', this.getClassConfig());
     },
 
     // }}}
     // {{{ getAlterClientClass
 
     getAlterClientClass: function() {
-        return CLI.create('MicroField.module.alter.ClientScript', this.getClassConfig());
+        return CLI.create('MicroField.module.alter.' + CLI.getClassName(this).split('.').pop().toLowerCase() + '.ClientScript', this.getClassConfig());
     },
 
     // }}}

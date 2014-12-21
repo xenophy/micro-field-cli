@@ -1,12 +1,12 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-// {{{ MicroField.module.alter.ClientScript
+// {{{ MicroField.module.alter.editlist.ClientScript
 
-CLI.define('MicroField.module.alter.ClientScript', {
+CLI.define('MicroField.module.alter.editlist.ClientScript', {
 
     // {{{ extend
 
-    extend: 'MicroField.module.alter.Abstract',
+    extend: 'MicroField.module.alter.editlist.Abstract',
 
     // }}}
     // {{{ config

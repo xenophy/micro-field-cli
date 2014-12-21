@@ -196,18 +196,13 @@ CLI.define('MicroField.module.append.Edit', {
             },
 
             // }}}
-            // {{{ name重複チェック
+            // {{{ 重複チェック
 
             function(next) {
                 me.duplicatecheck(function(duplicate) {
 
                     if (duplicate) {
-
                         skip = true;
-
-                        // TODO: エラーメッセージ
-
-
                     }
 
                     next();

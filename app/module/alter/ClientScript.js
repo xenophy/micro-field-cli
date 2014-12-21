@@ -237,9 +237,79 @@ CLI.define('MicroField.module.alter.ClientScript', {
 
         });
 
+    },
+
+    // }}}
+    // {{{ duplicatecheck
+
+    duplicatecheck: function(callback) {
+
+        var me          = this,
+            async       = require('async'),
+            path        = require('path'),
+            f           = CLI.String.format,
+            appdir      = MicroField.app.getApplicationDir(),
+            ns          = me.getNs(),
+            name        = me.getName(),
+            script      = me.getFilenames().items,
+            exists      = false,
+            bold        = me.ansi.bold,
+            fns;
+
+        fns = [
+
+            // 初期化
+            function(next) {
+
+                // 初期化
+                me.init(next);
+
+            },
+
+            // フィールド重複チェック
+            function(next) {
+
+                var text = me.getItems().items.join(",").split("'").join('"');
+
+                text = text.replace(/(.*)fieldLabel(.*):(.*)(,*)/, '');
+
+                CLI.iterate(eval('[' + text + ']'), function(item) {
+
+                    if (exists) {
+                        return;
+                    }
+
+                    if (item.name === me.getFieldName()) {
+
+                        exists = true;
+
+                        MicroField.app.log.error(f(
+                            '"{0}" already exists in {1}.',
+                            bold(me.getFieldName()),
+                            path.join(appdir, 'mods', ns, name, script)
+                        ));
+                    }
+
+                });
+
+                next();
+
+            }
+
+        ];
+
+        // 非同期処理実行
+        async.series(fns, function() {
+
+            // コールバック実行
+            callback(exists);
+
+        });
+
     }
 
     // }}}
+
 
 });
 

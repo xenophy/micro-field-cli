@@ -16,6 +16,13 @@ CLI.define('MicroField.module.alter.Abstract', {
     ],
 
     // }}}
+    // {{{ mixins
+
+    mixins: [
+        'CLI.mixin.Ansi'
+    ],
+
+    // }}}
     // {{{ config
 
     config: {

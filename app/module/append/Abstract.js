@@ -9,22 +9,7 @@ CLI.define('MicroField.module.append.Abstract', {
     extend: 'MicroField.Base',
 
     // }}}
-    // {{{ requires
 
-    requires: [
-        'MicroField.database.Manager',
-        'MicroField.module.Parser',
-        'MicroField.module.alter.Table'
-    ],
-
-    // }}}
-    // {{{ mixins
-
-    mixins: [
-        'CLI.mixin.Ansi'
-    ],
-
-    // }}}
     // {{{ config
 
     config: {
@@ -35,56 +20,41 @@ CLI.define('MicroField.module.append.Abstract', {
 
             // {{{ items
 
-            items: null,
+            items           : '',
 
             // }}}
             // {{{ serverscript
 
-            serverscript: null
+            serverscript    : ''
 
             // }}}
 
         },
 
         // }}}
-        // {{{ items
-
-        items: null,
-
-        // }}}
-        // {{{ tableName
-
-        tableName: null,
-
-        // }}}
-
-
-
-
-
         // {{{ ns
 
-        ns: null,
+        ns                  : '',
 
         // }}}
         // {{{ name
 
-        name: null,
+        name                : '',
 
         // }}}
         // {{{ fieldType
 
-        fieldType: null,
+        fieldType           : '',
 
         // }}}
         // {{{ fieldName
 
-        fieldName: null,
+        fieldName           : '',
 
         // }}}
         // {{{ classConfig
 
-        classConfig: {}
+        classConfig         : {},
 
         // }}}
 
@@ -131,20 +101,103 @@ CLI.define('MicroField.module.append.Abstract', {
     },
 
     // }}}
+    // {{{ getAlterTableClass
+
+    getAlterTableClass: function() {
+        return CLI.create('MicroField.module.alter.Table', this.getClassConfig());
+    },
+
+    // }}}
+    // {{{ getAlterServerClass
+
+    getAlterServerClass: function() {
+        return CLI.create('MicroField.module.alter.ServerScript', this.getClassConfig());
+    },
+
+    // }}}
+    // {{{ getAlterClientClass
+
+    getAlterClientClass: function() {
+        return CLI.create('MicroField.module.alter.ClientScript', this.getClassConfig());
+    },
+
+    // }}}
     // {{{ duplicatecheck
 
     duplicatecheck: function(callback) {
 
         var me      = this,
-            exists  = false;
+            async   = require('async'),
+            skip    = false,
+            fns;
 
+        fns = [
+
+            // テーブル変更クラス重複チェック
+            function(next) {
+                me.getAlterTableClass().duplicatecheck(function(duplicate) {
+
+                    if (duplicate) {
+                        skip = true;
+                    }
+
+                    next();
+                });
+            },
+
+            // サーバースクリプト変更クラス重複チェック
+            function(next) {
+                if (!skip) {
+                    me.getAlterServerClass().duplicatecheck(function(duplicate) {
+
+                        if (duplicate) {
+                            skip = true;
+                        }
+
+                        next();
+                    });
+                }
+            },
+
+            // クライアントスクリプト変更クラス重複チェック
+            function(next) {
+                if (!skip) {
+                    me.getAlterClientClass().duplicatecheck(function(duplicate) {
+
+                        if (duplicate) {
+                            skip = true;
+                        }
+
+                        next();
+                    });
+                }
+            }
+
+        ];
+
+        // 非同期処理実行
+        async.series(fns, function() {
+
+            // コールバック実行
+            callback(skip);
+
+        });
+
+
+
+
+        // TODO: 各変更クラスの重複チェックメソッド呼び出し
+//        me.getAlterTableClass().duplicatecheck()
+        /*
         CLI.iterate(me.getItems(), function(item) {
             if (item.name === me.name) {
                 exists = true;
             }
         });
 
-        callback(exists);
+       */
+
+       // callback(exists);
 
     },
 
@@ -154,7 +207,7 @@ CLI.define('MicroField.module.append.Abstract', {
     alterTable: function(callback) {
 
         // テーブル変更クラス生成/実行
-        CLI.create('MicroField.module.alter.Table', this.getClassConfig()).append(callback);
+        this.getAlterTableClass().append(callback);
 
     },
 
@@ -164,7 +217,7 @@ CLI.define('MicroField.module.append.Abstract', {
     alterServerScript: function(callback) {
 
         // サーバーサイドスクリプト変更クラス生成/実行
-        CLI.create('MicroField.module.alter.ServerScript', this.getClassConfig()).append(callback);
+        this.getAlterServerClass().append(callback);
 
     },
 
@@ -174,7 +227,7 @@ CLI.define('MicroField.module.append.Abstract', {
     alterClientScript: function(callback) {
 
         // クライアントサイドスクリプト変更クラス生成/実行
-        CLI.create('MicroField.module.alter.ClientScript', this.getClassConfig()).append(callback);
+        this.getAlterClientClass().append(callback);
 
     }
 

@@ -19,12 +19,22 @@ CLI.define('MicroField.module.append.EditList', {
 
             // {{{ items
 
-            items: 'app/view/edit/Edit.js',
+            items           : 'app/view/edit/Edit.js',
+
+            // }}}
+            // {{{ modul
+
+            model           : 'app/model/List.js',
+
+            // }}}
+            // {{{ columns
+
+            columns         : 'app/view/list/List.js',
 
             // }}}
             // {{{ serverscript
 
-            serverscript: 'classes/Lists.php'
+            serverscript    : 'classes/Lists.php'
 
             // }}}
 

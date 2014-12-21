@@ -13,9 +13,19 @@ CLI.define('MicroField.module.alter.editlist.ClientScript', {
 
     config: {
 
-        // {{{ script
+        // {{{ itemsScript
 
-        script: null
+        itemsScript     : '',
+
+        // }}}
+        // {{{ modelScript
+
+        modelScript     : '',
+
+        // }}}
+        // {{{ columnsScript
+
+        columnsScript   : ''
 
         // }}}
 
@@ -26,25 +36,62 @@ CLI.define('MicroField.module.alter.editlist.ClientScript', {
 
     init: function(callback) {
 
-        var me          = this,
-            fs          = require('fs'),
-            path        = require('path'),
-            appdir      = MicroField.app.getApplicationDir(),
-            ns          = me.getNs(),
-            name        = me.getName(),
-            script      = me.getFilenames().items;
+        var me              = this,
+            async           = require('async'),
+            fs              = require('fs'),
+            path            = require('path'),
+            appdir          = MicroField.app.getApplicationDir(),
+            ns              = me.getNs(),
+            name            = me.getName(),
+            itemsScript     = me.getFilenames().items,
+            modelScript     = me.getFilenames().model,
+            columnsScript   = me.getFilenames().columns,
+            fns;
 
-        target = path.join(appdir, 'mods', ns, name, script);
+        fns = [
 
-        // ファイル読み込み
-        fs.readFile(target, function(err, data) {
+            // itemsスクリプト読み込み
+            function(next) {
 
-            // TODO: エラー処理
+                // ファイル読み込み
+                fs.readFile(path.join(appdir, 'mods', ns, name, itemsScript), function(err, data) {
 
-            // ファイル保存
-            me.setScript(data.toString());
+                    // TODO: エラー処理
 
-            // コールバック
+                    // ファイル保存
+                    me.setItemsScript(data.toString());
+
+                    // コールバック
+                    next();
+
+                });
+
+            },
+
+            // columnsScriptスクリプト読み込み
+            function(next) {
+
+                // ファイル読み込み
+                fs.readFile(path.join(appdir, 'mods', ns, name, columnsScript), function(err, data) {
+
+                    // TODO: エラー処理
+
+                    // ファイル保存
+                    me.setColumnsScript(data.toString());
+
+                    // コールバック
+                    next();
+
+                });
+
+            },
+
+        ];
+
+        // 非同期処理実行
+        async.series(fns, function() {
+
+            // コールバック実行
             callback();
 
         });
@@ -65,7 +112,7 @@ CLI.define('MicroField.module.alter.editlist.ClientScript', {
             m, code;
 
         // アイテム抽出正規表現によるマッチ実行
-        m = me.getScript().match(/(.*)items(.*):(.*)\[([\s\S]*?)\]/);
+        m = me.getItemsScript().match(/(.*)items(.*):(.*)\[([\s\S]*?)\]/);
 
         // エラー処理
 
@@ -138,7 +185,7 @@ CLI.define('MicroField.module.alter.editlist.ClientScript', {
             src, m, code, target;
 
         // ソースコード取得
-        src = me.getScript();
+        src = me.getItemsScript();
 
         var items = items.join(', ');
 
@@ -202,6 +249,48 @@ CLI.define('MicroField.module.alter.editlist.ClientScript', {
     },
 
     // }}}
+    // {{{ getModel
+
+    getModel: function() {
+
+    },
+
+    // }}}
+    // {{{ setModel
+
+    setModel: function() {
+
+    },
+
+    // }}}
+    // {{{ addModel
+
+    addModel: function() {
+
+    },
+
+    // }}}
+    // {{{ getColumns
+
+    getColumns: function() {
+
+    },
+
+    // }}}
+    // {{{ setColmns
+
+    setColmns: function() {
+
+    },
+
+    // }}}
+    // {{{ addColumns
+
+    addColumns: function() {
+
+    },
+
+    // }}}
     // {{{ append
 
     append: function(callback) {
@@ -224,6 +313,22 @@ CLI.define('MicroField.module.alter.editlist.ClientScript', {
             function(next) {
 
                 me.setItems(me.addItem(me.getItems()), next);
+
+            },
+
+            // モデル追加
+            function(next) {
+
+                // TODO: 実装
+//                me.setModel(me.addModel(me.getModel()), next);
+
+            },
+
+            // カラム追加
+            function(next) {
+
+                // TODO: 実装
+//                me.setColmns(me.addColumns(me.getColumns()), next);
 
             }
 

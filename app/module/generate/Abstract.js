@@ -4,6 +4,11 @@
 
 CLI.define('MicroField.module.generate.Abstract', {
 
+    // {{{ extend
+
+    extend: 'MicroField.Base',
+
+    // }}}
     // {{{ requires
 
     requires: [
@@ -16,17 +21,6 @@ CLI.define('MicroField.module.generate.Abstract', {
     mixins: [
         'CLI.mixin.Ansi'
     ],
-
-    // }}}
-    // {{{ constructor
-
-    constructor: function(config) {
-
-        var me  = this;
-
-        me.initConfig(config);
-        me.callParent(arguments);
-    },
 
     // }}}
     // {{{ execute

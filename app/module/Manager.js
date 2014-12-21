@@ -4,6 +4,11 @@
 
 CLI.define('MicroField.module.Manager', {
 
+    // {{{ extend
+
+    extend: 'MicroField.Base',
+
+    // }}}
     // {{{ requires
 
     requires: [
@@ -28,18 +33,6 @@ CLI.define('MicroField.module.Manager', {
         }
 
         // }}}
-
-    },
-
-    // }}}
-    // {{{ constructor
-
-    constructor: function(config) {
-
-        var me  = this;
-
-        me.initConfig(config);
-        me.callParent(arguments);
 
     },
 

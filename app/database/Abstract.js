@@ -4,16 +4,9 @@
 
 CLI.define('MicroField.database.Abstract', {
 
-    // {{{ constructor
+    // {{{ extend
 
-    constructor: function(config) {
-
-        var me  = this;
-
-        me.initConfig(config);
-        me.callParent(arguments);
-
-    },
+    extend: 'MicroField.Base',
 
     // }}}
     // {{{ connect

@@ -15,17 +15,7 @@ CLI.define('MicroField.module.alter.Table', {
 
         // {{{ tableName
 
-        tableName: {},
-
-        // }}}
-        // {{{ fieldName
-
-        fieldName: {},
-
-        // }}}
-        // {{{ fieldType
-
-        fieldType: {}
+        tableName: {}
 
         // }}}
 
@@ -39,23 +29,58 @@ CLI.define('MicroField.module.alter.Table', {
      */
     addField: function(callback) {
 
-        var me      = this,
-            async   = require('async'),
-            fs      = require('fs'),
-            path    = require('path'),
-            f       = CLI.String.format,
-            parser  = MicroField.module.Parser,
-            skip    = false,
-            afterfield, fns;
+        var me          = this,
+            async       = require('async'),
+            fs          = require('fs'),
+            path        = require('path'),
+            f           = CLI.String.format,
+            appdir      = MicroField.app.getApplicationDir(),
+            rmc         = MicroField.app.removeComment,
+            ns          = me.getNs(),
+            name        = me.getName(),
+            fieldName   = me.getFieldName(),
+            fieldType   = me.getFieldType(),
+            script      = me.getFilenames().serverscript,
+            classes     = me.getClasses(),
+            connInfo    = me.getAppSettings()['database']['default'],
+            skip        = false,
+            afterfield, tplCls, fns;
+
+        // テンプレート情報クラス生成
+        tplCls = CLI.create(f('MicroField.module.append.{0}.{1}', me.getTplType().toLowerCase(), classes[fieldType]), {});
 
         // コネクションラッパー取得
-        conn = MicroField.database.Manager.getConnection(me.getAppSettings()['database']['default']);
+        conn = MicroField.database.Manager.getConnection(connInfo);
 
         fns = [
 
+            // {{{ テーブル名解析
+
+            function(next) {
+
+                target = path.join(appdir, 'mods', ns, name, script);
+
+                // ファイル読み込み
+                fs.readFile(target, function(err, data) {
+
+                    var m = rmc(data.toString()).match(/public(.*)\$table(.?)=(.?)['"]+(.*)+['"];/);
+
+                    // TODO: エラー処理：見つからなかったとき
+
+                    me.setTableName(m[4]);
+
+                    next();
+
+                });
+
+            },
+
+            // }}}
             // {{{ 接続
 
             function(next) {
+
+                // TODO: エラー処理：接続できなかったとき
 
                 if (!skip) {
                     conn.connect(next);
@@ -74,7 +99,7 @@ CLI.define('MicroField.module.alter.Table', {
 
                 conn.query(sql, function(err, columns) {
 
-                    // TODO: エラー処理
+                    // TODO: エラー処理: クエリーエラー、テーブルが見つからなかった時
 
                     var pos = false;
 
@@ -105,11 +130,11 @@ CLI.define('MicroField.module.alter.Table', {
                     '    `{3}`'
                 ].join("\n");
 
-                sql = f(sql, me.getTableName(), me.getFieldName(), me.getFieldType(), afterfield);
+                sql = f(sql, me.getTableName(), fieldName, tplCls.getColumnType()[connInfo.driver.toString()], afterfield);
 
                 conn.query(sql, function(err) {
 
-                    // TODO: エラー処理
+                    // TODO: エラー処理：フィールドの追加に失敗したとき
 
                     next();
                 });
@@ -141,11 +166,7 @@ CLI.define('MicroField.module.alter.Table', {
 
         var me      = this,
             async   = require('async'),
-            fs      = require('fs'),
-            path    = require('path'),
-            parser  = MicroField.module.Parser,
-            skip    = false,
-            fieldname, fns;
+            fns;
 
         fns = [
 

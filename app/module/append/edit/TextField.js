@@ -6,7 +6,7 @@ CLI.define('MicroField.module.append.edit.TextField', {
 
     // {{{ extend
 
-    extend: 'MicroField.module.append.edit.Abstract'
+    extend: 'MicroField.module.append.edit.Abstract',
 
     // }}}
     // {{{ config
@@ -18,9 +18,13 @@ CLI.define('MicroField.module.append.edit.TextField', {
         xtype: 'textfield',
 
         // }}}
-        // {{{ fieldtype
+        // {{{ columnType
 
-        fieldtype: 'varchar(255)'
+        columnType: {
+
+            mysql: 'varchar(255)'
+
+        }
 
         // }}}
 

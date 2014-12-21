@@ -4,6 +4,11 @@
 
 CLI.define('MicroField.module.alter.Abstract', {
 
+    // {{{ extend
+
+    extend: 'MicroField.Base',
+
+    // }}}
     // {{{ requires
 
     requires: [
@@ -32,21 +37,40 @@ CLI.define('MicroField.module.alter.Abstract', {
             'textfield'         : 'TextField',
             'timefield'         : 'TimeField',
             'triggerfield'      : 'Trigger'
-        }
+        },
+
+        // }}}
+        // {{{ ns
+
+        ns: null,
+
+        // }}}
+        // {{{ name
+
+        name: null,
+
+        // }}}
+        // {{{ fieldType
+
+        fieldType: null,
+
+        // }}}
+        // {{{ fieldName
+
+        fieldName: null,
+
+        // }}}
+        // {{{ tplType
+
+        tplType: null,
+
+        // }}}
+        // {{{ filenames
+
+        filenames: {}
 
         // }}}
 
-    },
-
-    // }}}
-    // {{{ constructor
-
-    constructor: function(config) {
-
-        var me  = this;
-
-        me.initConfig(config);
-        me.callParent(arguments);
     },
 
     // }}}

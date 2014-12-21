@@ -4,6 +4,11 @@
 
 CLI.define('MicroField.profile.Profile', {
 
+    // {{{ extend
+
+    extend: 'MicroField.Base',
+
+    // }}}
     // {{{ requires
 
     requires: [
@@ -21,18 +26,6 @@ CLI.define('MicroField.profile.Profile', {
     // {{{ singleton
 
     singleton: true,
-
-    // }}}
-    // {{{ constructor
-
-    constructor: function(config) {
-
-        var me  = this;
-
-        me.initConfig(config);
-        me.callParent(arguments);
-
-    },
 
     // }}}
     // {{{ showModuleList

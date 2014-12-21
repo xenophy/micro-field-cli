@@ -4,6 +4,11 @@
 
 CLI.define('MicroField.module.append.Abstract', {
 
+    // {{{ extend
+
+    extend: 'MicroField.Base',
+
+    // }}}
     // {{{ requires
 
     requires: [
@@ -52,6 +57,11 @@ CLI.define('MicroField.module.append.Abstract', {
         tableName: null,
 
         // }}}
+
+
+
+
+
         // {{{ ns
 
         ns: null,
@@ -69,21 +79,15 @@ CLI.define('MicroField.module.append.Abstract', {
         // }}}
         // {{{ fieldName
 
-        fieldName: null
+        fieldName: null,
+
+        // }}}
+        // {{{ classConfig
+
+        classConfig: {}
 
         // }}}
 
-    },
-
-    // }}}
-    // {{{ constructor
-
-    constructor: function(config) {
-
-        var me  = this;
-
-        me.initConfig(config);
-        me.callParent(arguments);
     },
 
     // }}}
@@ -96,64 +100,33 @@ CLI.define('MicroField.module.append.Abstract', {
 
     init: function(callback) {
 
-        var me          = this,
-            filenames   = me.getFilenames(),
-            async       = require('async'),
-            fs          = require('fs'),
-            path        = require('path'),
-            parser      = MicroField.module.Parser,
-            fns, target;
+        var me = this;
 
-        fns = [
+        // 変更クラスコンフィグオプション設定
+        me.setClassConfig({
 
-            // {{{ items解析
+            // テンプレートタイプ
+            tplType     : CLI.getClassName(me).split('.').pop(),
 
-            function(next) {
+            // モジュール名前空間
+            ns          : me.getNs(),
 
-                target = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods', me.getNs(), me.getName(), filenames.items));
+            // モジュール名
+            name        : me.getName(),
 
-                // ファイル読み込み
-                fs.readFile(target, function(err, data) {
+            // フィールドタイプ
+            fieldType   : me.getFieldType(),
 
-                    obj = parser.getClassConfig(parser.removeComment(data.toString()))
-                    me.setItems(obj.config.items);
-                    next();
+            // フィールド名
+            fieldName   : me.getFieldName(),
 
-                });
-
-            },
-
-            // }}}
-            // {{{ テーブル名解析
-
-            function(next) {
-
-                target = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods', me.getNs(), me.getName(), filenames.serverscript));
-
-                // ファイル読み込み
-                fs.readFile(target, function(err, data) {
-
-                    var m = parser.removeComment(data.toString()).match(/public(.*)\$table(.?)=(.?)['"]+(.*)+['"];/);
-
-                    me.setTableName(m[4]);
-
-                    next();
-
-                });
-
-            }
-
-            // }}}
-
-        ];
-
-        // 非同期処理実行
-        async.series(fns, function() {
-
-            // コールバック実行
-            callback();
+            // ファイル名一覧
+            filenames   : me.getFilenames()
 
         });
+
+        // コールバック実行
+        callback();
 
     },
 
@@ -180,21 +153,8 @@ CLI.define('MicroField.module.append.Abstract', {
 
     alterTable: function(callback) {
 
-        var me = this;
-
         // テーブル変更クラス生成/実行
-        CLI.create('MicroField.module.alter.Table', {
-
-            // テーブル名
-            tableName   : me.getTableName(),
-
-            // フィールド名
-            fieldName   : me.getFieldName(),
-
-            // フィールド型
-            fieldType   : me['get' + CLI.String.capitalize(me.getFieldType())]().fieldtype
-
-        }).append(callback);
+        CLI.create('MicroField.module.alter.Table', this.getClassConfig()).append(callback);
 
     },
 
@@ -203,30 +163,8 @@ CLI.define('MicroField.module.append.Abstract', {
 
     alterServerScript: function(callback) {
 
-        var me = this;
-
         // サーバーサイドスクリプト変更クラス生成/実行
-        CLI.create('MicroField.module.alter.ServerScript', {
-
-            // スクリプト名
-            scriptName  : me.getFilenames().serverscript,
-
-            // テンプレートタイプ
-            tplType     : CLI.getClassName(me).split('.').pop(),
-
-            // フィールドタイプ
-            fieldType   : me.getFieldType(),
-
-            // フィールド名
-            fieldName   : me.getFieldName(),
-
-            // 名前空間
-            ns          : me.getNs(),
-
-            // モジュール名
-            name        : me.getName()
-
-        }).append(callback);
+        CLI.create('MicroField.module.alter.ServerScript', this.getClassConfig()).append(callback);
 
     },
 
@@ -235,33 +173,8 @@ CLI.define('MicroField.module.append.Abstract', {
 
     alterClientScript: function(callback) {
 
-        var me = this;
-
         // クライアントサイドスクリプト変更クラス生成/実行
-        CLI.create('MicroField.module.alter.ClientScript', {
-
-            // スクリプト名
-            scriptName  : me.getFilenames().items,
-
-            // テンプレートタイプ
-            tplType     : CLI.getClassName(me).split('.').pop(),
-
-            // フィールドタイプ
-            fieldType   : me.getFieldType(),
-
-            // フィールド名
-            fieldName   : me.getFieldName(),
-
-            // xtype
-            xtype       : me['get' + CLI.String.capitalize(me.getFieldType())]().xtype,
-
-            // 名前空間
-            ns          : me.getNs(),
-
-            // モジュール名
-            name        : me.getName()
-
-        }).append(callback);
+        CLI.create('MicroField.module.alter.ClientScript', this.getClassConfig()).append(callback);
 
     }
 

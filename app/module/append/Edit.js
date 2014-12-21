@@ -48,6 +48,7 @@ CLI.define('MicroField.module.append.Edit', {
         // }}}
         // {{{ datefield
 
+        /*
         datefield: {
 
             // {{{ xtype
@@ -173,6 +174,7 @@ CLI.define('MicroField.module.append.Edit', {
 
         // }}}
 
+       */
     },
 
     // }}}
@@ -182,9 +184,6 @@ CLI.define('MicroField.module.append.Edit', {
 
         var me      = this,
             async   = require('async'),
-            fs      = require('fs'),
-            path    = require('path'),
-            parser  = MicroField.module.Parser,
             skip    = false,
             fns;
 

@@ -4,6 +4,11 @@
 
 CLI.define('MicroField.setup.Abstract', {
 
+    // {{{ extend
+
+    extend: 'MicroField.Base',
+
+    // }}}
     // {{{ requires
 
     requires: [
@@ -53,18 +58,6 @@ CLI.define('MicroField.setup.Abstract', {
         url: null
 
         // }}}
-
-    },
-
-    // }}}
-    // {{{ constructor
-
-    constructor: function(config) {
-
-        var me  = this;
-
-        me.initConfig(config);
-        me.callParent(arguments);
 
     },
 

@@ -13,39 +13,9 @@ CLI.define('MicroField.module.alter.ServerScript', {
 
     config: {
 
-        // {{{ scriptName
-
-        scriptName: null,
-
-        // }}}
         // {{{ script
 
-        script: null,
-
-        // }}}
-        // {{{ ns
-
-        ns: null,
-
-        // }}}
-        // {{{ name
-
-        name: null,
-
-        // }}}
-        // {{{ tplType
-
-        tplType: null,
-
-        // }}}
-        // {{{ fieldType
-
-        fieldType: null,
-
-        // }}}
-        // {{{ fieldName
-
-        fieldName: null
+        script: null
 
         // }}}
 
@@ -56,11 +26,15 @@ CLI.define('MicroField.module.alter.ServerScript', {
 
     init: function(callback) {
 
-        var me      = this,
-            fs      = require('fs'),
-            path    = require('path');
+        var me          = this,
+            fs          = require('fs'),
+            path        = require('path'),
+            appdir      = MicroField.app.getApplicationDir(),
+            ns          = me.getNs(),
+            name        = me.getName(),
+            script      = me.getFilenames().serverscript;
 
-        target = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods', me.getNs(), me.getName(), me.getScriptName()));
+        target = path.join(appdir, 'mods', ns, name, script);
 
         // ファイル読み込み
         fs.readFile(target, function(err, data) {
@@ -80,12 +54,14 @@ CLI.define('MicroField.module.alter.ServerScript', {
 
     getFields: function() {
 
-        var me      = this,
-            parser  = MicroField.module.Parser,
+        var me  = this,
+            rmc = MicroField.app.removeComment,
             m;
 
         // フィールド抽出正規表現によるマッチ実行
-        m = parser.removeComment(me.getScript()).match(/public(.*)\$fields(.?)=(.?)array(.?)\(([\s\S]*?)\)(.?);/);
+        m = rmc(me.getScript()).match(/public(.*)\$fields(.?)=(.?)array(.?)\(([\s\S]*?)\)(.?);/);
+
+        // TODO: エラー処理
 
         // JSON解析/設定
         return CLI.decode('[' + m[5].split("'").join('"') + ']', true);
@@ -97,10 +73,14 @@ CLI.define('MicroField.module.alter.ServerScript', {
 
     setFields: function(fields, callback) {
 
-        var me      = this,
-            f       = CLI.String.format,
-            fs      = require('fs'),
-            path    = require('path'),
+        var me          = this,
+            fs          = require('fs'),
+            path        = require('path'),
+            f           = CLI.String.format,
+            appdir      = MicroField.app.getApplicationDir(),
+            ns          = me.getNs(),
+            name        = me.getName(),
+            script      = me.getFilenames().serverscript,
             src, m, code, target;
 
         // ソースコード取得
@@ -108,6 +88,8 @@ CLI.define('MicroField.module.alter.ServerScript', {
 
         // ソースコード内のフィールド周り文字列を解析
         m = src.match(/(.*)public(.*)\$fields(.?)=(.?)array(.?)\([\s\S]*?\);/);
+
+        // TODO: エラー処理
 
         // 埋め込みコード生成
         code = f(
@@ -136,7 +118,7 @@ CLI.define('MicroField.module.alter.ServerScript', {
         // コード埋め込み
         src = src.replace(/(.*)public(.*)\$fields(.?)=(.?)array(.?)\([\s\S]*?\);/, code);
 
-        target = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), 'mods', me.getNs(), me.getName(), me.getScriptName()));
+        target = path.join(appdir, 'mods', ns, name, script);
 
         // ファイル書き込み
         fs.writeFile(target, src, function(err) {

@@ -34,6 +34,43 @@ CLI.define('MicroField.module.append.editlist.Abstract', {
             o.width
         );
 
+    },
+
+    // }}}
+    // {{{ getClientModelCode
+
+    getClientModelCode: function(indent, o) {
+
+        var f = CLI.String.format;
+
+        return f([
+            '{1}'
+        ].join("\n"),
+            indent,
+            o.itemId
+        );
+
+    },
+
+    // }}}
+    // {{{ getClientColumnsCode
+
+    getClientColumnsCode: function(indent, o) {
+
+        var f = CLI.String.format;
+
+        return f([
+            '{',
+            '{0}text        : \'{1}\',',
+            '{0}dataIndex   : \'{1}\',',
+            '{0}flex        : {2}',
+            '}'
+        ].join("\n"),
+            indent,
+            o.itemId,
+            o.flex
+        );
+
     }
 
     // }}}

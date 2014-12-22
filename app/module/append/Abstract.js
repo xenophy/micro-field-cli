@@ -183,22 +183,6 @@ CLI.define('MicroField.module.append.Abstract', {
 
         });
 
-
-
-
-        // TODO: 各変更クラスの重複チェックメソッド呼び出し
-//        me.getAlterTableClass().duplicatecheck()
-        /*
-        CLI.iterate(me.getItems(), function(item) {
-            if (item.name === me.name) {
-                exists = true;
-            }
-        });
-
-       */
-
-       // callback(exists);
-
     },
 
     // }}}

@@ -65,7 +65,7 @@ CLI.define('MicroField.module.alter.edit.Table', {
 
                     var m = rmc(data.toString()).match(/public(.*)\$table(.?)=(.?)['"]+(.*)+['"];/);
 
-                    // TODO: エラー処理：見つからなかったとき
+                    // TODO: テーブル名解析エラー処理 append:edit:Table #14
 
                     me.setTableName(m[4]);
 
@@ -80,7 +80,7 @@ CLI.define('MicroField.module.alter.edit.Table', {
 
             function(next) {
 
-                // TODO: エラー処理：接続できなかったとき
+                // TODO: DB接続エラー append:edit:Table
 
                 if (!skip) {
                     conn.connect(next);
@@ -99,7 +99,7 @@ CLI.define('MicroField.module.alter.edit.Table', {
 
                 conn.query(sql, function(err, columns) {
 
-                    // TODO: エラー処理: クエリーエラー、テーブルが見つからなかった時
+                    // TODO: 挿入先フィールド名取得エラー処理 append:edit:Table
 
                     var pos = false;
 
@@ -134,7 +134,7 @@ CLI.define('MicroField.module.alter.edit.Table', {
 
                 conn.query(sql, function(err) {
 
-                    // TODO: エラー処理：フィールドの追加に失敗したとき
+                    // TODO: フィールド挿入エラー処理 append:edit:Table
 
                     next();
                 });
@@ -264,7 +264,7 @@ CLI.define('MicroField.module.alter.edit.Table', {
 
                     var m = rmc(data.toString()).match(/public(.*)\$table(.?)=(.?)['"]+(.*)+['"];/);
 
-                    // TODO: エラー処理：見つからなかったとき
+                    // TODO: テーブル名解析エラー処理 append:edit:Table #14
 
                     me.setTableName(m[4]);
 
@@ -279,7 +279,7 @@ CLI.define('MicroField.module.alter.edit.Table', {
 
             function(next) {
 
-                // TODO: エラー処理：接続できなかったとき
+                // TODO: DB接続エラー append:edit:Table
 
                 if (!skip) {
                     conn.connect(next);
@@ -298,8 +298,7 @@ CLI.define('MicroField.module.alter.edit.Table', {
 
                 conn.query(sql, function(err, columns) {
 
-                    // TODO: エラー処理: クエリーエラー、テーブルが見つからなかった時
-
+                    // TODO: 挿入先フィールド名取得エラー処理 append:edit:Table
 
                     // modifiedの前のカラム名を取得
                     CLI.iterate(columns, function(col, i) {

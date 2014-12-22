@@ -23,26 +23,12 @@ CLI.define('MicroField.controller.remove.Help', {
         text += MicroField.app.getTitle();
         text += "\n";
 
-        /*
-        text += "This category contains various commands for module template setup.\n";
-        text += "\n";
-        text += underline('Commands') + "\n";
-        text += f('  * {0}\t: Generates a simple header module', bold('header')) + "\n";
-        text += f('  * {0}\t: Generates a simple footer module', bold('footer')) + "\n";
-        text += f('  * {0}\t: Generates a tree panel based navigation module', bold('navigation')) + "\n";
-        text += f('  * {0}\t: Generates a tree panel based navigation module for tablet', bold('tabletnavigation')) + "\n";
-        text += f('  * {0}\t: Generates a plain module', bold('base')) + "\n";
-        text += f('  * {0}\t: Generates a edit pattern module. This pattern is edit and save, depends on user\'s id', bold('edit')) + "\n";
-        text += f('  * {0}\t: Generates a editlist pattern module. This pattern have "list screen" and "edit screen', bold('editlist')) + "\n";
-        text += "\n";
-        text += underline('Options') + "\n";
-        text += f('  * --{0} - Do not create database table when generate', bold('nodb')) + "\n";
+        text += "This command removes a exists component in already exists module.\n";
         text += "\n";
         text += underline('Syntax') + "\n";
-        text += "  microfield generate [command] [Module Path]\n";
+        text += " microfield remove [itemid] [target module]\n";
         text += "\n";
-        text += f("  {0} microfield generate base MyApp/Base\n", green('ex:'));
-       */
+        text += f("  {0} microfield remove text1 MyApp/Edit\n", green('ex:'));
 
         CLI.log(text);
     }

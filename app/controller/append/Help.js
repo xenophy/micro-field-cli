@@ -28,7 +28,7 @@ CLI.define('MicroField.controller.append.Help', {
         text += underline('Syntax') + "\n";
         text += " microfield append [fieldtype] [itemid] [target module]\n";
         text += "\n";
-        text += f("  {0} microfield append append textfield text1 MyApp/Edit\n", green('ex:'));
+        text += f("  {0} microfield append textfield text1 MyApp/Edit\n", green('ex:'));
 
         CLI.log(text);
     }

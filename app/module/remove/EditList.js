@@ -63,26 +63,6 @@ CLI.define('MicroField.module.remove.EditList', {
             },
 
             // }}}
-            // {{{ 存在チェック
-
-            function(next) {
-
-                // TODO: 実装
-
-                /*
-                me.duplicatecheck(function(duplicate) {
-
-                    if (duplicate) {
-                        skip = true;
-                    }
-
-                    next();
-
-                });
-               */
-            },
-
-            // }}}
             // {{{ テーブルからフィールド削除
 
             function(next) {
@@ -95,18 +75,22 @@ CLI.define('MicroField.module.remove.EditList', {
             // {{{ サーバーサイドスクリプトからフィールド削除
 
             function(next) {
+                /*
                 if (!skip) {
                     me.alterServerScript(next);
                 }
+               */
             },
 
             // }}}
             // {{{ クライアントサイドスクリプトからフィールド削除
 
             function(next) {
+                /*
                 if (!skip) {
                     me.alterClientScript(next);
                 }
+               */
             }
 
             // }}}

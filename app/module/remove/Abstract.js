@@ -9,7 +9,6 @@ CLI.define('MicroField.module.remove.Abstract', {
     extend: 'MicroField.Base',
 
     // }}}
-
     // {{{ config
 
     config: {
@@ -111,71 +110,6 @@ CLI.define('MicroField.module.remove.Abstract', {
 
     getAlterClientClass: function() {
         return CLI.create('MicroField.module.alter.' + CLI.getClassName(this).split('.').pop().toLowerCase() + '.ClientScript', this.getClassConfig());
-    },
-
-    // }}}
-    // {{{ duplicatecheck
-
-    // TODO: 存在チェックへ変更
-    duplicatecheck: function(callback) {
-
-        var me      = this,
-            async   = require('async'),
-            skip    = false,
-            fns;
-
-        fns = [
-
-            // テーブル変更クラス重複チェック
-            function(next) {
-                me.getAlterTableClass().duplicatecheck(function(duplicate) {
-
-                    if (duplicate) {
-                        skip = true;
-                    }
-
-                    next();
-                });
-            },
-
-            // サーバースクリプト変更クラス重複チェック
-            function(next) {
-                if (!skip) {
-                    me.getAlterServerClass().duplicatecheck(function(duplicate) {
-
-                        if (duplicate) {
-                            skip = true;
-                        }
-
-                        next();
-                    });
-                }
-            },
-
-            // クライアントスクリプト変更クラス重複チェック
-            function(next) {
-                if (!skip) {
-                    me.getAlterClientClass().duplicatecheck(function(duplicate) {
-
-                        if (duplicate) {
-                            skip = true;
-                        }
-
-                        next();
-                    });
-                }
-            }
-
-        ];
-
-        // 非同期処理実行
-        async.series(fns, function() {
-
-            // コールバック実行
-            callback(skip);
-
-        });
-
     },
 
     // }}}

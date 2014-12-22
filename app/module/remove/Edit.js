@@ -53,26 +53,6 @@ CLI.define('MicroField.module.remove.Edit', {
             },
 
             // }}}
-            // {{{ 存在チェック
-
-            function(next) {
-
-                // TODO: 実装
-
-                /*
-                me.duplicatecheck(function(duplicate) {
-
-                    if (duplicate) {
-                        skip = true;
-                    }
-
-                    next();
-
-                });
-               */
-            },
-
-            // }}}
             // {{{ テーブルからフィールド削除
 
             function(next) {

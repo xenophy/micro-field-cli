@@ -22,7 +22,7 @@ CLI.define('MicroField.module.append.EditList', {
             items           : 'app/view/edit/Edit.js',
 
             // }}}
-            // {{{ modul
+            // {{{ model
 
             model           : 'app/model/List.js',
 

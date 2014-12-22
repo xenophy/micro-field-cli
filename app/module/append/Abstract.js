@@ -23,6 +23,16 @@ CLI.define('MicroField.module.append.Abstract', {
             items           : '',
 
             // }}}
+            // {{{ model
+
+            model           : '',
+
+            // }}}
+            // {{{ columns
+
+            columns         : '',
+
+            // }}}
             // {{{ serverscript
 
             serverscript    : ''

@@ -7,6 +7,7 @@ CLI.define('MicroField.setup.Setup', {
     // {{{ requires
 
     requires: [
+        'MicroField.app.Environment',
         'MicroField.config.Config',
         'MicroField.database.Manager',
         'MicroField.setup.Main',
@@ -653,6 +654,7 @@ CLI.define('MicroField.setup.Setup', {
             // .htaccess 解析
             function(next) {
 
+                // TODO: MicroField.app.Environmentへ移行
                 me.parseHtaccess(function(data) {
 
                     // メイン設定

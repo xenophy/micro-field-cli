@@ -218,6 +218,40 @@ CLI.define('MicroField.module.alter.ClientScript', {
     },
 
     // }}}
+    // {{{ removeItem
+
+    removeItem: function(callback) {
+
+        var me = this,
+            items = me.getItems(),
+            tmp = me.getItems().items,
+            pos;
+
+        // 削除対象検索
+        CLI.iterate(tmp, function(field, num) {
+
+            var regex = new RegExp("itemId(.*):(.*)(['|\"]?)" + me.getFieldName() + "(['|\"]?)");
+            var m = field.match(regex);
+
+            if (m !== null) {
+                pos = num;
+            }
+
+        });
+
+        // 対象削除
+        if (CLI.isNumber(pos)) {
+            tmp.splice(pos, 1);
+        }
+        items.items = tmp;
+        items.remove = true;
+
+        // 反映
+        me.setItems(items, callback);
+
+    },
+
+    // }}}
     // {{{ append
 
     append: function(callback) {
@@ -268,39 +302,12 @@ CLI.define('MicroField.module.alter.ClientScript', {
 
             // 初期化
             function(next) {
-
-                // 初期化
                 me.init(next);
-
             },
 
             // アイテム削除
             function(next) {
-
-                var pos, items = me.getItems(), tmp = me.getItems().items;
-
-                // 削除対象検索
-                CLI.iterate(tmp, function(field, num) {
-
-                    var regex = new RegExp("itemId(.*):(.*)(['|\"]?)" + me.getFieldName() + "(['|\"]?)");
-                    var m = field.match(regex);
-
-                    if (m !== null) {
-                        pos = num;
-                    }
-
-                });
-
-                // 対象削除
-                if (CLI.isNumber(pos)) {
-                    tmp.splice(pos, 1);
-                }
-                items.items = tmp;
-                items.remove = true;
-
-                // 反映
-                me.setItems(items, next);
-
+                me.removeItem(next)
             }
 
         ];

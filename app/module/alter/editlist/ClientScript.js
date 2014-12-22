@@ -221,6 +221,45 @@ CLI.define('MicroField.module.alter.editlist.ClientScript', {
     },
 
     // }}}
+    // {{{ removeModel
+
+    removeModel: function(callback) {
+
+        var me      = this,
+            model   = me.getModel(),
+            fields  = me.getModel().fields,
+            pos;
+
+        CLI.iterate(fields, function(field, num) {
+
+            var name;
+
+            if (CLI.isObject(field)) {
+
+                name = field.name;
+
+            } else {
+
+                name = field;
+
+            }
+
+            if (me.getFieldName() === name) {
+                pos = num;
+            }
+
+        });
+
+        if (CLI.isNumber(pos)) {
+            fields.splice(pos, 1);
+            model.fields = fields;
+        }
+
+        me.setModel(model, callback);
+
+    },
+
+    // }}}
     // {{{ getColumns
 
     getColumns: function() {
@@ -290,9 +329,9 @@ CLI.define('MicroField.module.alter.editlist.ClientScript', {
     },
 
     // }}}
-    // {{{ setColmns
+    // {{{ setColumns
 
-    setColmns: function(info, callback) {
+    setColumns: function(info, callback) {
 
         var me          = this,
             fs          = require('fs'),
@@ -303,6 +342,7 @@ CLI.define('MicroField.module.alter.editlist.ClientScript', {
             name        = me.getName(),
             script      = me.getFilenames().columns,
             columns     = info.columns,
+            remove      = info.remove,
             src, m, code, target;
 
         // ソースコード取得
@@ -311,8 +351,13 @@ CLI.define('MicroField.module.alter.editlist.ClientScript', {
         var columns = columns.join(', ');
 
         columns  = columns.substring(0, columns.length-1);
-        columns += info.forwardIndent;
-        columns += '    }\n' + info.forwardIndent + ']';
+
+        if (remove) {
+            columns += '}\n' + info.forwardIndent + ']';
+        } else {
+            columns += info.forwardIndent;
+            columns += '    }\n' + info.forwardIndent + ']';
+        }
 
         // 埋め込みコード生成
         code = f(
@@ -366,6 +411,41 @@ CLI.define('MicroField.module.alter.editlist.ClientScript', {
     },
 
     // }}}
+    // {{{ removeColumn
+
+    removeColumn: function(callback) {
+
+        var me      = this,
+            columns = me.getColumns(),
+            tmp     = me.getColumns().columns,
+            pos;
+
+        // 削除対象検索
+        CLI.iterate(tmp, function(field, num) {
+
+            var regex = new RegExp("dataIndex(.*):(.*)(['|\"]?)" + me.getFieldName() + "(['|\"]?)");
+            var m = field.match(regex);
+
+            if (m !== null) {
+                pos = num;
+            }
+
+        });
+
+        // 対象削除
+        if (CLI.isNumber(pos)) {
+            tmp.splice(pos, 1);
+        }
+        columns.columns = tmp;
+        columns.remove = true;
+
+        // 反映
+        me.setColumns(columns, callback);
+
+
+    },
+
+    // }}}
     // {{{ append
 
     append: function(callback) {
@@ -378,31 +458,65 @@ CLI.define('MicroField.module.alter.editlist.ClientScript', {
 
             // 初期化
             function(next) {
-
-                // 初期化
                 me.init(next);
-
             },
 
             // アイテム追加
             function(next) {
-
                 me.setItems(me.addItem(me.getItems()), next);
-
             },
 
             // モデル追加
             function(next) {
-
                 me.setModel(me.addModel(me.getModel()), next);
-
             },
 
             // カラム追加
             function(next) {
+                me.setColumns(me.addColumns(me.getColumns()), next);
+            }
 
-                me.setColmns(me.addColumns(me.getColumns()), next);
+        ];
 
+        // 非同期処理実行
+        async.series(fns, function() {
+
+            // コールバック実行
+            callback();
+
+        });
+
+    },
+
+    // }}}
+    // {{{ remove
+
+    remove: function(callback) {
+
+        var me      = this,
+            async   = require('async'),
+            fns;
+
+        fns = [
+
+            // 初期化
+            function(next) {
+                me.init(next);
+            },
+
+            // アイテム削除
+            function(next) {
+                me.removeItem(next)
+            },
+
+            // モデル削除
+            function(next) {
+                me.removeModel(next)
+            },
+
+            // カラム削除
+            function(next) {
+                me.removeColumn(next)
             }
 
         ];

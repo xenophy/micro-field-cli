@@ -140,6 +140,65 @@ CLI.define('MicroField.module.remove.Abstract', {
         // クライアントサイドスクリプト変更クラス生成/実行
         this.getAlterClientClass().remove(callback);
 
+    },
+
+    // }}}
+    // {{{ execute
+
+    execute: function(callback) {
+
+        var me      = this,
+            async   = require('async'),
+            skip    = false,
+            fns;
+
+        fns = [
+
+            // {{{ 初期化
+
+            function(next) {
+                me.init(next);
+            },
+
+            // }}}
+            // {{{ テーブルからフィールド削除
+
+            function(next) {
+                if (!skip) {
+                    me.alterTable(next);
+                }
+            },
+
+            // }}}
+            // {{{ サーバーサイドスクリプトからフィールド削除
+
+            function(next) {
+                if (!skip) {
+                    me.alterServerScript(next);
+                }
+            },
+
+            // }}}
+            // {{{ クライアントサイドスクリプトからフィールド削除
+
+            function(next) {
+                if (!skip) {
+                    me.alterClientScript(next);
+                }
+            }
+
+            // }}}
+
+        ];
+
+        // 非同期処理実行
+        async.series(fns, function() {
+
+            // コールバック実行
+            callback();
+
+        });
+
     }
 
     // }}}

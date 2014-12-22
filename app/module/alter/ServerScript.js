@@ -176,6 +176,54 @@ CLI.define('MicroField.module.alter.ServerScript', {
     },
 
     // }}}
+    // {{{ remove
+
+    remove: function(callback) {
+
+        var me      = this,
+            async   = require('async'),
+            fs      = require('fs'),
+            path    = require('path'),
+            skip    = false,
+            fns;
+
+        fns = [
+
+            // 初期化
+            function(next) {
+
+                // 初期化
+                me.init(next);
+
+            },
+
+            // フィールド削除
+            function(next) {
+
+                var tmp = me.getFields();
+
+                if (CLI.Array.contains(tmp, me.getFieldName())) {
+
+                    delete tmp[CLI.Array.indexOf(tmp, me.getFieldName())];
+
+                }
+                me.setFields(tmp, next);
+
+            }
+
+        ];
+
+        // 非同期処理実行
+        async.series(fns, function() {
+
+            // コールバック実行
+            callback();
+
+        });
+
+    },
+
+    // }}}
     // {{{ duplicatecheck
 
     duplicatecheck: function(callback) {

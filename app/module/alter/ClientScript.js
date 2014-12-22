@@ -145,6 +145,7 @@ CLI.define('MicroField.module.alter.ClientScript', {
             name        = me.getName(),
             script      = me.getFilenames().items,
             items       = itemsInfo.items,
+            remove      = itemsInfo.remove,
             src, m, code, target;
 
         // ソースコード取得
@@ -153,8 +154,13 @@ CLI.define('MicroField.module.alter.ClientScript', {
         var items = items.join(', ');
 
         items  = items.substring(0, items.length-1);
-        items += itemsInfo.forwardItemsIndent;
-        items += '    }\n' + itemsInfo.forwardItemsIndent + ']';
+
+        if (remove) {
+            items += '}\n' + itemsInfo.forwardItemsIndent + ']';
+        } else {
+            items += itemsInfo.forwardItemsIndent;
+            items += '    }\n' + itemsInfo.forwardItemsIndent + ']';
+        }
 
         // 埋め込みコード生成
         code = f(
@@ -234,6 +240,66 @@ CLI.define('MicroField.module.alter.ClientScript', {
             function(next) {
 
                 me.setItems(me.addItem(me.getItems()), next);
+
+            }
+
+        ];
+
+        // 非同期処理実行
+        async.series(fns, function() {
+
+            // コールバック実行
+            callback();
+
+        });
+
+    },
+
+    // }}}
+    // {{{ remove
+
+    remove: function(callback) {
+
+        var me      = this,
+            async   = require('async'),
+            fns;
+
+        fns = [
+
+            // 初期化
+            function(next) {
+
+                // 初期化
+                me.init(next);
+
+            },
+
+            // アイテム削除
+            function(next) {
+
+                var pos, items = me.getItems(), tmp = me.getItems().items;
+
+                // 削除対象検索
+                CLI.iterate(tmp, function(field, num) {
+
+                    var regex = new RegExp("itemId(.*):(.*)(['|\"]?)" + me.getFieldName() + "(['|\"]?)");
+                    var m = field.match(regex);
+
+                    if (m !== null) {
+                        pos = num;
+                    }
+
+                });
+
+                // 対象削除
+                if (CLI.isNumber(pos)) {
+                    tmp.splice(pos, 1);
+                }
+                items.items = tmp;
+                items.remove = true;
+
+                // 反映
+                me.setItems(items, next);
 
             }
 

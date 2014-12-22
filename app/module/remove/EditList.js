@@ -1,12 +1,12 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-// {{{ MicroField.module.append.EditList
+// {{{ MicroField.module.remove.EditList
 
-CLI.define('MicroField.module.append.EditList', {
+CLI.define('MicroField.module.remove.EditList', {
 
     // {{{ extend
 
-    extend: 'MicroField.module.append.Abstract',
+    extend: 'MicroField.module.remove.Abstract',
 
     // }}}
     // {{{ config
@@ -38,22 +38,7 @@ CLI.define('MicroField.module.append.EditList', {
 
             // }}}
 
-        },
-
-        // }}}
-        // {{{ fieldTypes
-
-        fieldTypes: [
-            'checkboxfield',
-            'combobox',
-            'datefield',
-            'htmleditor',
-            'numberfield',
-            'textarea',
-            'textfield',
-            'timefield',
-            'triggerfield'
-        ]
+        }
 
         // }}}
 
@@ -78,9 +63,13 @@ CLI.define('MicroField.module.append.EditList', {
             },
 
             // }}}
-            // {{{ 重複チェック
+            // {{{ 存在チェック
 
             function(next) {
+
+                // TODO: 実装
+
+                /*
                 me.duplicatecheck(function(duplicate) {
 
                     if (duplicate) {
@@ -90,10 +79,11 @@ CLI.define('MicroField.module.append.EditList', {
                     next();
 
                 });
+               */
             },
 
             // }}}
-            // {{{ テーブルにフィールド追加
+            // {{{ テーブルからフィールド削除
 
             function(next) {
                 if (!skip) {
@@ -102,7 +92,7 @@ CLI.define('MicroField.module.append.EditList', {
             },
 
             // }}}
-            // {{{ サーバーサイドスクリプトにフィールド追加
+            // {{{ サーバーサイドスクリプトからフィールド削除
 
             function(next) {
                 if (!skip) {
@@ -111,7 +101,7 @@ CLI.define('MicroField.module.append.EditList', {
             },
 
             // }}}
-            // {{{ クライアントサイドスクリプトにフィールド追加
+            // {{{ クライアントサイドスクリプトからフィールド削除
 
             function(next) {
                 if (!skip) {

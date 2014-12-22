@@ -7,6 +7,7 @@ CLI.define('MicroField.controller.remove.Main', {
     // {{{ requires
 
     requires: [
+        'MicroField.module.Manager'
     ],
 
     // }}}
@@ -19,30 +20,24 @@ CLI.define('MicroField.controller.remove.Main', {
 
     config: {
 
-        // {{{ commands
+        // {{{ fields
 
-        commands: [{
-            name    : 'edit',
-            cls     : 'Edit'
-        }, {
-            name    : 'editlist',
-            cls     : 'EditList'
-        }]
+        fields: null
 
         // }}}
 
     },
 
     // }}}
-    // {{{ findCommand
+    // {{{ findField
 
-    findCommand: function(command) {
+    findField: function(type) {
 
         var me = this;
 
-        return CLI.Array.findBy(me.getCommands(), function(item) {
+        return CLI.Array.findBy(me.getFields(), function(item) {
 
-            if (item.name === command) {
+            if (item === type) {
                 return true;
             }
 
@@ -55,45 +50,37 @@ CLI.define('MicroField.controller.remove.Main', {
     // }}}
     // {{{ run
 
-    run: function(field, modPath) {
+    run: function(fieldName, modPath) {
 
-        var me          = this,
-            modNs       = modPath.split('/')[0],
-            modName     = modPath.split('/')[1],
-            modScreen   = modPath.split('/')[1],
-            modDir      = modPath.split('/')[1];
+        var me = this;
 
-            console.log(arguments);
+        // フィールドタイプ一覧取得
+        MicroField.module.Manager.getFieldTypes('remove', modPath, function(fields) {
 
-            return;
+            // フィールド定義設定
+            me.setFields(fields);
 
-        if (me.argv.name) {
-            modScreen = me.argv.name;
-        }
+            if (!fieldName) {
+                CLI.create('MicroField.controller.remove.Help').run();
+                return;
+            }
 
-        if (!me.findCommand(command)) {
-            CLI.create('MicroField.controller.generate.Help').run();
-            return;
-        }
+            if (!modPath) {
+                CLI.create('MicroField.controller.remove.Help').run();
+                return;
+            }
 
-        if (!modPath) {
-            CLI.create('MicroField.controller.generate.Help').run();
-            return;
-        }
+            if (modPath.split('/').length !== 2) {
+                CLI.create('MicroField.controller.remove.Help').run();
+                return;
+            }
 
-        if (modPath.split('/').length !== 2) {
-            CLI.create('MicroField.controller.generate.Help').run();
-            return;
-        }
+            MicroField.module.Manager.remove({
+                fieldName   : fieldName,
+                modPath     : modPath
+            }, function() {
 
-        CLI.create('MicroField.module.generate.' + me.findCommand(command).cls).execute({
-            ns      : modNs,
-            name    : modName,
-            sname   : modScreen,
-            path    : modPath,
-            dir     : modDir,
-            nodb    : me.argv.nodb
-        }, function() {
+            });
 
         });
 

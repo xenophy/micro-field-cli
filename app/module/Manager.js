@@ -335,8 +335,79 @@ CLI.define('MicroField.module.Manager', {
     // }}}
     // {{{ remove
 
-    remove: function() {
+    remove: function(o, callback) {
 
+        var me          = this,
+            async       = require('async'),
+            fs          = require('fs'),
+            parser      = MicroField.module.Parser,
+            modPath     = o.modPath,
+            fieldName   = o.fieldName,
+            modNs       = modPath.split('/')[0],
+            modName     = modPath.split('/')[1],
+            classes     = me.getClasses(),
+            skip        = false,
+            fns;
+
+        // メインコントローラークラスファイルパス取得
+        target = me.getMainViewControllerPath(modPath);
+
+        fns = [
+
+            // {{{ ファイル存在確認
+
+            function(next) {
+
+                fs.exists(target, function(exists) {
+
+                    if (!exists) {
+
+                        skip = true;
+
+                        // TODO: エラー表示
+
+                    }
+
+                    next();
+
+                });
+
+            },
+
+            // }}}
+            // {{{ メインコントローラークラス解析/クラス生成/実行
+
+            function(next) {
+
+                if (!skip) {
+
+                    fs.readFile(target, function(err, data) {
+
+                        obj = parser.getClassConfig(parser.removeComment(data.toString()));
+
+                        CLI.create('MicroField.module.remove.' + classes[obj.extend.split('.')[2]], {
+                            ns          : modNs,
+                            name        : modName,
+                            fieldName   : fieldName
+                        }).execute(next);
+
+                    });
+
+                }
+
+            }
+
+            // }}}
+
+        ];
+
+        /// 非同期処理実行
+        async.series(fns, function() {
+
+            // コールバック実行
+            callback();
+
+        });
 
     }
 

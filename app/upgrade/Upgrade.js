@@ -26,8 +26,6 @@ CLI.define('MicroField.upgrade.Upgrade', {
     // {{{ config
 
     config: {
-
-
     },
 
     // }}}
@@ -38,8 +36,7 @@ CLI.define('MicroField.upgrade.Upgrade', {
         var me      = this,
             async   = require('async'),
             env     = MicroField.app.Environment,
-            htaccess, sdk;
-
+            htaccess, sdk, latest, latestPath;
 
         // タイトル出力
         CLI.log(MicroField.app.getTitle());
@@ -58,16 +55,45 @@ CLI.define('MicroField.upgrade.Upgrade', {
             // SDKバージョン取得
             function(next) {
                 env.getSdkVersion(function(data) {
-                    sdk = data;
+                    sdk = data.version;
+                    next();
+                });
+            },
+
+            // 最新バージョン取得
+            function(next) {
+                env.getLatestVersion(function(data) {
+                    latest = data;
+                    next();
+                });
+            },
+
+            // バージョン比較
+            function(next) {
+
+                if (sdk.isLessThan(latest)) {
+                    next();
+                } else {
+
+                    // TODO: 処理ストップ
+                }
+
+            },
+
+            // アーカイブ取得
+            function(next) {
+                env.getArchive(latest, function(data) {
+                    latestPath = data;
                     next();
                 });
             }
 
-            // 最新リリースタグ取得
-
-            // アーカイブ取得
-
             // SUM情報取得解析
+            function(next) {
+                env.getVersionSum(data) {
+                    next();
+                }
+            }
 
             // microfield.json初期値取得
 
@@ -75,88 +101,6 @@ CLI.define('MicroField.upgrade.Upgrade', {
 
         ], function() {
         });
-
-        /*
-
-       */
-
-        /*
-
-            var me      = this,
-                async   = Cmd.async;
-            // MicroField Cmd 設定取得
-            me.CmdConfig = me.getConfig();
-
-            // .htaccess情報解析取得
-            me.htaccess = me.getHtaccessInfo();
-
-            // curlパス取得
-            me.curlPath = me.getCurlPath();
-
-            // コマンド生成
-            me.cmds = me.createCommands();
-
-            async.waterfall([
-
-                // {{{ SDKバージョン取得
-
-                function (callback) {
-                    me.getSdkVersion(callback);
-                },
-
-                // }}}
-                // {{{ 最新リリースタグ取得
-
-                function (callback) {
-                    me.getReleaseTags(callback);
-                },
-
-                // }}}
-                // {{{ アーカイブ取得
-
-                function (ret, callback) {
-
-                    if (!ret) {
-                        return;
-                    }
-
-                    me.getArchive(callback);
-
-                },
-
-                // }}}
-                // {{{ SUM情報取得解析
-
-                function (callback) {
-                    me.getVersionSum(callback);
-                },
-
-                // }}}
-                // {{{ microfield.json初期値取得
-
-                function (callback) {
-                    me.getInitialSdkConfig(callback);
-                },
-
-                // }}}
-                // {{{ アップグレード実行
-
-                function(callback) {
-                    me.doUpgrade(callback);
-                }
-
-                // }}}
-
-            ], function (err, results) {
-
-                if (err) {
-                    throw err;
-                }
-
-                // コールバック実行
-                cb();
-            });
-        */
 
     }
 

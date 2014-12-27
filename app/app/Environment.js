@@ -234,7 +234,319 @@ CLI.define('MicroField.app.Environment', {
 
     getVersionSum: function(sdk, latest, callback) {
 
+        var me      = this,
+            async   = require('async'),
+            crypto  = require('crypto'),
+            fs      = require('fs'),
+            path    = require('path'),
+            formatHashData, mfcdir, sdkHash, latestHash;
 
+        if (latest.isGreaterThanOrEqual('1.5.0')) {
+            mfcdir = '.microfield';
+        } else {
+            mfcdir = 'cmd';
+        }
+
+        // ハッシュファイルを解析関数
+        formatHashData = function(data) {
+
+            var tmp = {};
+
+            data = data.split("\n");
+
+            data.forEach(function(line) {
+
+                if (line.length <= 0) {
+                    return;
+                }
+
+                var filename = line.split(',')[0];
+                var sum = line.split(',')[1];
+
+                tmp[filename] = sum;
+
+            });
+
+            return tmp;
+
+        };
+
+        // 非同期処理実行
+        async.series([
+
+            // 現SDKバージョンハッシュ取得
+            function(next) {
+                fs.readFile(
+                    path.join(
+                        MicroField.app.getApplicationDir(),
+                        mfcdir,
+                        'vf',
+                        crypto
+                            .createHmac('sha256', 'MicroFieldSDK')
+                            .update('v' + sdk.version).digest('hex')
+                    )
+                , function(err, data) {
+                    sdkHash = formatHashData(data.toString());
+                    next();
+                });
+            },
+
+            // 最新版SDKバージョンハッシュ取得
+            function(next) {
+                fs.readFile(
+                    path.join(
+                        latest.tmpdir,
+                        mfcdir,
+                        'vf',
+                        crypto
+                            .createHmac('sha256', 'MicroFieldSDK')
+                            .update('v' + latest.version).digest('hex')
+                    )
+                , function(err, data) {
+                    latestHash = formatHashData(data.toString());
+                    next();
+                });
+            }
+
+        ], function() {
+            callback({
+                sdk     : sdkHash,
+                latest  : latestHash
+            });
+        });
+
+    },
+
+    // }}}
+    // {{{ getInitialSdkConfig
+
+    getInitialSdkConfig: function(callback) {
+
+        var me      = this,
+            fs      = require('fs'),
+            exec    = require('child_process').exec,
+            f       = CLI.String.format;
+
+
+        exec('php -r \'require_once "mods/MicroField/libs/includes.php";$cls = new config_MicroField_DefaultValues();echo $cls->getJson();\'', {timeout: 60000}, function (error, stdout, stderr) {
+
+            if (error !== null) {
+
+                // TODO: エラー処理
+
+                /*
+                // [Failed: could not get initial sdk config.]
+                Cmd.puts(ansi.red('Failed: could not get initial sdk config.'));
+                process.exit(1);
+               */
+
+            }
+
+            /*
+                //  [INFO: Got initial sdk config.]
+                Cmd.puts(format('{0}: Got initial sdk config.', ansi.green('INFO')));
+               */
+
+            callback(CLI.decode(stdout));
+
+        });
+
+    },
+
+    // }}}
+    // {{{ getConfigComments
+
+    getConfigComments: function(keys, callback) {
+
+        var me      = this,
+            async   = require('async'),
+            exec    = require('child_process').exec,
+            f       = CLI.String.format,
+            cmd     = 'php -r \'require_once "mods/MicroField/libs/includes.php";$cls = new config_MicroField_DefaultValues();echo $cls->getComment("{0}");\'',
+            series  = [],
+            ret     = {};
+
+        keys.forEach(function(key) {
+
+            series.push(function(next) {
+
+                exec(f(cmd, key), {timeout: 60000}, function (error, stdout, stderr) {
+                    ret[key] = stdout;
+                    next();
+                })
+
+            });
+
+        });
+
+        async.series(series, function (err, results) {
+
+            if (err) {
+
+                // TODO: エラー処理
+                throw err;
+            }
+
+            // コールバック実行
+            callback(ret);
+        });
+
+    },
+
+    // }}}
+    // {{{ makeConfigSection
+
+    makeConfigSection: function(target, comments, callback) {
+
+        var f = CLI.String.format;
+
+        var makeSection = function(obj, parent, level) {
+
+            var ret = '';
+            var objLength = Object.keys(obj).length;
+
+            for (var p in obj) {
+
+                objLength--;
+
+                var key = parent + '/' + p;
+
+                if (!parent) {
+                    parent = '';
+                    key = p;
+                }
+
+                // コメント取得
+                var comment = '';
+                var tmp = comments[key].split("\n");
+
+                if (comments[key].length > 0) {
+
+                    // コメント作成
+                    comment += "\n/**\n";
+                    tmp.forEach(function(line) {
+                        comment += " * " + line + "\n";
+                    });
+                    comment += " */\n";
+
+                }
+
+                if(comment) {
+                    ret += comment;
+                }
+
+                ret += '"' + p + '": ';
+
+                if (obj[p].constructor == Object) {
+
+                    ret += "{\n";
+
+                    var tmp = makeSection(obj[p], key, (level + 1));
+
+                    tmp = tmp.split("\n");
+
+                    tmp.forEach(function(line) {
+
+                        ret += '    ';
+                        ret += line;
+                        ret += "\n";
+
+                    });
+
+                    ret += "}";
+
+                    if (objLength !== 0) {
+                        ret += ",";
+                    }
+
+                    ret += "\n";
+
+                } else {
+
+                    var tmp = '{0}';
+
+                    if (typeof obj[p] === 'string') {
+                        tmp = '"{0}"';
+                    }
+
+                    if(obj[p] instanceof Array){
+
+                        ret += "[\n";
+
+                        var itemLength = Object.keys(obj[p]).length;
+
+                        obj[p].forEach(function(line) {
+
+                            itemLength--;
+
+                            ret += '    ';
+
+                            var tmp = '{0}';
+
+                            if (typeof line === 'string') {
+                                tmp = '"{0}"';
+                            }
+
+                            ret += f(tmp, line);
+
+                            if (itemLength > 0) {
+                                ret += ",\n";
+                            } else {
+                                ret += "\n";
+                            }
+
+                        });
+
+                        ret += "]";
+
+                    } else {
+
+                        ret += f(tmp, obj[p]);
+
+                    }
+
+                    if (objLength !== 0) {
+                        ret += ",";
+                        ret += "\n";
+                    } else {
+                    }
+
+
+                }
+
+
+            }
+
+            return ret;
+
+        };
+
+        var text = makeSection(target, null, 1);
+        var tmp = text.split("\n");
+        var ret = "{\n";
+
+        tmp.forEach(function(line) {
+
+            ret += CLI.String.repeat('    ', 1);
+            ret += line;
+            ret += "\n";
+
+        });
+
+        ret += "}";
+        text = ret;
+
+        // Trim処理
+        ret = '';
+
+        text.split("\n").forEach(function(line) {
+            ret += line.replace(/\s+$/, "");
+            ret += "\n";
+        });
+        text = ret;
+
+        // コールバック
+        callback(text);
 
     }
 

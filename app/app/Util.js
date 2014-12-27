@@ -9,6 +9,17 @@ CLI.define('MicroField.app.Util', {
 
     CLI.apply(MicroField.app, {
 
+        // {{{ getsumfiles~irectory
+
+        getSumfilesDirectory: function() {
+
+            var path = require('path');
+
+            return CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), '.microfield', 'vf'));
+
+        },
+
+        // }}}
         // {{{ getCmdSeparator
 
         getCmdSeparator: function() {

@@ -9,8 +9,9 @@ CLI.define('MicroField.app.Util', {
 
     CLI.apply(MicroField.app, {
 
-        // {{{ getsumfiles~irectory
+        // {{{ getSumfilesDirectory
 
+        // TODO 不要なら削除
         getSumfilesDirectory: function() {
 
             var path = require('path');

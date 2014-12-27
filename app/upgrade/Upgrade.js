@@ -164,8 +164,29 @@ CLI.define('MicroField.upgrade.Upgrade', {
 
                     });
 
+                    // 非同期処理実行
                     async.series(series, function() {
                         next();
+                    });
+
+                },
+
+                // .htaccess RewriteBase更新
+                function(next) {
+
+                    var target = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), '.htaccess'));
+
+                    fs.readFile(target, function(err, data) {
+                        fs.writeFile(
+                            target,
+                            data.toString().replace(/[\r\s]*RewriteBase (.*?)[\s]*\n/, '\n    RewriteBase ' + htaccess.RewriteBase + '\n\n'),
+                            'utf8',
+                            function(err) {
+
+                            // TODO: エラー処理
+
+                            next();
+                        });
                     });
 
                 }

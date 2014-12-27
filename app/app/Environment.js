@@ -239,12 +239,18 @@ CLI.define('MicroField.app.Environment', {
             crypto  = require('crypto'),
             fs      = require('fs'),
             path    = require('path'),
-            formatHashData, mfcdir, sdkHash, latestHash;
+            formatHashData, sdkMfcdir, latestMfcdir, sdkHash, latestHash;
+
+        if (sdk.isGreaterThanOrEqual('1.5.0')) {
+            sdkMfcdir = '.microfield';
+        } else {
+            sdkMfcdir = 'cmd';
+        }
 
         if (latest.isGreaterThanOrEqual('1.5.0')) {
-            mfcdir = '.microfield';
+            latestMfcdir = '.microfield';
         } else {
-            mfcdir = 'cmd';
+            latestMfcdir = 'cmd';
         }
 
         // ハッシュファイルを解析関数
@@ -279,7 +285,7 @@ CLI.define('MicroField.app.Environment', {
                 fs.readFile(
                     path.join(
                         MicroField.app.getApplicationDir(),
-                        mfcdir,
+                        sdkMfcdir,
                         'vf',
                         crypto
                             .createHmac('sha256', 'MicroFieldSDK')
@@ -296,7 +302,7 @@ CLI.define('MicroField.app.Environment', {
                 fs.readFile(
                     path.join(
                         latest.tmpdir,
-                        mfcdir,
+                        latestMfcdir,
                         'vf',
                         crypto
                             .createHmac('sha256', 'MicroFieldSDK')

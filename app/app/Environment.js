@@ -203,8 +203,13 @@ CLI.define('MicroField.app.Environment', {
 
                 }).on('data', function(chunk) {
 
-                    buf += chunk;
-                    bar.tick(chunk.length);
+                    if (chunk) {
+
+                        buf += chunk;
+                        bar.tick(chunk.length);
+
+                    }
+
 
                 }).on('response', function (res) {
 

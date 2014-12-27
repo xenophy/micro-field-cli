@@ -116,8 +116,6 @@ CLI.define('MicroField.upgrade.Upgrade', {
 
                             });
 
-                            subnext();
-
                         });
 
                     });
@@ -177,9 +175,12 @@ CLI.define('MicroField.upgrade.Upgrade', {
                     var target = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), '.htaccess'));
 
                     fs.readFile(target, function(err, data) {
+
+                        var text = data.toString();
+
                         fs.writeFile(
                             target,
-                            data.toString().replace(/[\r\s]*RewriteBase (.*?)[\s]*\n/, '\n    RewriteBase ' + htaccess.RewriteBase + '\n\n'),
+                            text.replace(/[\r\s]*RewriteBase (.*?)[\s]*\n/, '\n    RewriteBase ' + htaccess.rewriteBase + '\n\n'),
                             'utf8',
                             function(err) {
 
@@ -245,14 +246,12 @@ CLI.define('MicroField.upgrade.Upgrade', {
 
             // バージョン比較
             function(next) {
-
                 if (sdk.isLessThan(latest)) {
                     next();
                 } else {
 
                     // TODO: 処理ストップ
                 }
-
             },
 
             // アーカイブ取得

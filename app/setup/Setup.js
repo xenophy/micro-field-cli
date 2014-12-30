@@ -249,36 +249,6 @@ CLI.define('MicroField.setup.Setup', {
     },
 
     // }}}
-    // {{{ parseHtaccess
-
-    parseHtaccess: function(callback) {
-
-        var me      = this,
-            fs      = require('fs'),
-            path    = require('path'),
-            f       = CLI.String.format,
-            cfg     = MicroField.config.Config,
-            domain  = cfg.getValues()['domain'] || 'localhost';
-            target  = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), '.htaccess'));
-
-        fs.readFile(target, function(err, data) {
-
-            var text        = data.toString(),
-                rewriteBase = text.match(/[\r\s]*RewriteBase (.*?)[\s]*\n/)[1],
-                url         = f('http://{0}{1}', domain, rewriteBase);
-
-            callback({
-                text        : text,
-                domain      : domain,
-                rewriteBase : rewriteBase,
-                url         : url
-            });
-
-        });
-
-    },
-
-    // }}}
     // {{{ parseApplicationSettings
 
     parseApplicationSettings: function(callback) {
@@ -654,8 +624,7 @@ CLI.define('MicroField.setup.Setup', {
             // .htaccess 解析
             function(next) {
 
-                // TODO: MicroField.app.Environmentへ移行
-                me.parseHtaccess(function(data) {
+                MicroField.app.Environment.getHtaccess(function(data) {
 
                     // メイン設定
                     main.setUrl(data.url + '/');

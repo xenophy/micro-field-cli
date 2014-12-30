@@ -6,26 +6,25 @@ CLI.define('MicroField.controller.get.Help', {
 
     // {{{ extend
 
-    extend: 'MicroField.controller.Controller',
+    extend: 'MicroField.Help',
 
     // }}}
-    // {{{ run
+    // {{{ config
 
-    run: function() {
+    config: {
 
-        var me          = this,
-            f           = CLI.String.format,
-            bold        = me.ansi.bold,
-            underline   = me.ansi.underline,
-            text        = '';
+        // {{{ commands
 
-        text += MicroField.app.getTitle();
-        text += "\n";
-        text += underline('Commands') + "\n";
-        text += f('  * {0} - Get Siesta Lite from Bryntum', bold('siesta-lite')) + "\n";
-        text += f('  * {0} - Get Ext JS for Siesta Lite\'s Harness from CDN', bold('siesta-extjs')) + "\n";
+        commands: [{
+            tag     : 'siesta-lite',
+            text    : 'Get Siesta Lite from Bryntum Site'
+        }, {
+            tag     : 'siesta-extjs',
+            text    : 'Get Ext JS for Siesta Lite\'s Harness from CDN'
+        }]
 
-        CLI.log(text);
+        // }}}
+
     }
 
     // }}}

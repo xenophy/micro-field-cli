@@ -14,6 +14,7 @@ CLI.define('MicroField.mixin.Output', {
             underline   = me.ansi.underline,
             blue        = me.colors.blue,
             green       = me.colors.green,
+            yellow      = me.colors.yellow,
             text        = '',
             line, tagColor;
 
@@ -29,13 +30,27 @@ CLI.define('MicroField.mixin.Output', {
 
         // ライン出力関数
         line = function(tag, text) {
-            tag += CLI.String.repeat(' ', 16 - tag.length);
-            return f('  * {0}: {1}', bold(tagColor(tag)), text) + "\n";
+            if (tag) {
+                tag += CLI.String.repeat(' ', 16 - tag.length);
+                return f('  * {0}: {1}', bold(tagColor(tag)), text) + "\n";
+            } else {
+                return f('  {0}', text) + "\n";
+            }
         };
 
         // MicroField CLI タイトル
         text += MicroField.app.getTitle();
         text += "\n";
+
+        // タイトル出力
+        if (me.getTitle()) {
+            text += yellow(me.getTitle()) + "\n";
+        }
+
+        // 説明出力
+        if (me.getDesc()) {
+            text += me.getDesc() + "\n\n";
+        }
 
         // リスト内容作成
         var active = [];
@@ -60,6 +75,8 @@ CLI.define('MicroField.mixin.Output', {
                 text += "\n";
             }
         });
+
+        text = text.replace(/Example: /, blue("Example: "));
 
         // 出力
         MicroField.app.log.write(text);

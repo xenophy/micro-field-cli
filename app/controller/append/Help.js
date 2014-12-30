@@ -6,31 +6,35 @@ CLI.define('MicroField.controller.append.Help', {
 
     // {{{ extend
 
-    extend: 'MicroField.controller.Controller',
+    extend: 'MicroField.Help',
 
     // }}}
-    // {{{ run
+    // {{{ config
 
-    run: function() {
+    config: {
 
-        var me          = this,
-            f           = CLI.String.format,
-            bold        = me.ansi.bold,
-            underline   = me.ansi.underline,
-            green       = me.colors.green,
-            text        = '';
+        // {{{ title
 
-        text += MicroField.app.getTitle();
-        text += "\n";
+        title: 'microfield append',
 
-        text += "This command appends a new component to already exists module.\n";
-        text += "\n";
-        text += underline('Syntax') + "\n";
-        text += " microfield append [fieldtype] [itemid] [target module]\n";
-        text += "\n";
-        text += f("  {0} microfield append textfield text1 MyApp/Edit\n", green('ex:'));
+        // }}}
+        // {{{ desc
 
-        CLI.log(text);
+        desc: 'This command appends a new component to already exists module.',
+
+        // }}}
+        // {{{ syntax
+
+        syntax: [{
+            text: [
+                'microfield append [fieldtype] [itemid] [target module]',
+                '',
+                '  Example: microfield append textfield text1 MyApp/Edit'
+            ].join("\n")
+        }]
+
+        // }}}
+
     }
 
     // }}}

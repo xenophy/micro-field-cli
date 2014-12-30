@@ -20,6 +20,16 @@ CLI.define('MicroField.Help', {
 
     config: {
 
+        // {{{ title
+
+        title: '',
+
+        // }}}
+        // {{{ desc
+
+        desc: '',
+
+        // }}}
         // {{{ categories
 
         categories: [],
@@ -32,7 +42,12 @@ CLI.define('MicroField.Help', {
         // }}}
         // {{{ options
 
-        options: []
+        options: [],
+
+        // }}}
+        // {{{ syntax
+
+        syntax: []
 
         // }}}
 
@@ -58,7 +73,8 @@ CLI.define('MicroField.Help', {
         this.outputList([
             'Categories',
             'Commands',
-            'Options'
+            'Options',
+            'Syntax'
         ]);
 
     }

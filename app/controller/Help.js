@@ -16,6 +16,9 @@ CLI.define('MicroField.controller.Help', {
         // {{{ categories
 
         categories: [{
+            tag     : 'append',
+            text    : 'Append field to specified module'
+        }, {
             tag     : 'config',
             text    : 'Load a properties file or sets a configuration property'
         }, {
@@ -24,6 +27,12 @@ CLI.define('MicroField.controller.Help', {
         }, {
             tag     : 'help',
             text    : 'Displays help for commands'
+        }, {
+            tag     : 'profile',
+            text    : 'Displays about already exists module status'
+        }, {
+            tag     : 'remove',
+            text    : 'Remove field from specified module'
         }],
 
         // }}}
@@ -32,9 +41,6 @@ CLI.define('MicroField.controller.Help', {
         commands: [{
             tag     : 'setup',
             text    : 'Executes the setup process for an application'
-        }, {
-            tag     : 'profile',
-            text    : 'Displays about already exists module status'
         }]
 
         // }}}

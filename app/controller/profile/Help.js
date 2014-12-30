@@ -6,35 +6,47 @@ CLI.define('MicroField.controller.profile.Help', {
 
     // {{{ extend
 
-    extend: 'MicroField.controller.Controller',
+    extend: 'MicroField.Help',
 
     // }}}
-    // {{{ run
+    // {{{ config
 
-    run: function() {
+    config: {
 
-        var me          = this,
-            f           = CLI.String.format,
-            bold        = me.ansi.bold,
-            underline   = me.ansi.underline,
-            text        = '';
+        // {{{ title
 
-        text += MicroField.app.getTitle();
-        text += "\n";
-        text += underline('microfield profile') + "\n";
-        text += "\n";
-        text += f('This command displays about already exists module status.') + "\n";
-        text += "\n";
-        text += underline('Commands') + "\n";
-        text += f('  * {0} - Displays module list', bold('list')) + "\n";
-        text += "\n";
-        text += underline('Options') + "\n";
-        text += f('  * {0} - Output json format', bold('--json')) + "\n";
-        text += "\n";
-        text += underline('Syntax') + "\n";
-        text += f('  microfield profile [ModuleName]') + "\n";
+        title: 'microfield profile',
 
-        CLI.log(text);
+        // }}}
+        // {{{ desc
+
+        desc: 'This command displays about already exists module status.',
+
+        // }}}
+        // {{{ commands
+
+        commands: [{
+            tag     : 'list',
+            text    : 'Displays module list'
+        }],
+
+        // }}}
+        // {{{ options
+
+        options: [{
+            tag     : '--json',
+            text    : 'Output json format'
+        }],
+
+        // }}}
+        // {{{ syntax
+
+        syntax: [{
+            text    : 'microfield profile [ModuleName] or "list"'
+        }]
+
+        // }}}
+
     }
 
     // }}}

@@ -6,31 +6,35 @@ CLI.define('MicroField.controller.remove.Help', {
 
     // {{{ extend
 
-    extend: 'MicroField.controller.Controller',
+    extend: 'MicroField.Help',
 
     // }}}
-    // {{{ run
+    // {{{ config
 
-    run: function() {
+    config: {
 
-        var me          = this,
-            f           = CLI.String.format,
-            bold        = me.ansi.bold,
-            underline   = me.ansi.underline,
-            green       = me.colors.green,
-            text        = '';
+        // {{{ title
 
-        text += MicroField.app.getTitle();
-        text += "\n";
+        title: 'microfield remove',
 
-        text += "This command removes a exists component in already exists module.\n";
-        text += "\n";
-        text += underline('Syntax') + "\n";
-        text += " microfield remove [itemid] [target module]\n";
-        text += "\n";
-        text += f("  {0} microfield remove text1 MyApp/Edit\n", green('ex:'));
+        // }}}
+        // {{{ desc
 
-        CLI.log(text);
+        desc: 'This command removes a exists component in already exists module.',
+
+        // }}}
+        // {{{ syntax
+
+        syntax: [{
+            text: [
+                'microfield remove [itemid] [target module]',
+                '',
+                '  ex# microfield remove text1 MyApp/Edit'
+            ].join("\n")
+        }]
+
+        // }}}
+
     }
 
     // }}}

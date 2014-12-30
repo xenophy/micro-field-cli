@@ -36,112 +36,6 @@ CLI.define('MicroField.setup.Setup', {
         appSettings: {},
 
         // }}}
-        // {{{ tableStructure
-
-        /*
-        tableStructure: {
-
-            // {{{ name
-
-            name: 'users',
-
-            // }}}
-            // {{{ fields
-
-            fields: [{
-
-                // {{{ pk
-
-                name            : 'pk',
-                type            : 'bigint',
-                length          : 20,
-                notnull         : true,
-                auto_increment  : true
-
-                // }}}
-
-            }, {
-
-                // {{{ status
-
-                name            : 'status',
-                type            : 'tinyint',
-                length          : 4,
-                notnull         : true,
-                default         : 1
-
-                // }}}
-
-            }, {
-
-                // {{{ role
-
-                name            : 'role',
-                type            : 'varchar',
-                length          : 100,
-                notnull         : true
-
-                // }}}
-
-            }, {
-
-                // {{{ identity
-
-                name            : 'identity',
-                type            : 'varchar',
-                length          : 255,
-                notnull         : true
-
-                // }}}
-
-            }, {
-
-                // {{{ password
-
-                name            : 'password',
-                type            : 'char',
-                length          : 255,
-                notnull         : true
-
-                // }}}
-
-            }, {
-
-                // {{{ modified
-
-                name            : 'modified',
-                type            : 'datetime',
-                notnull         : true
-
-                // }}}
-
-            }, {
-
-                // {{{ created
-
-                name            : 'created',
-                type            : 'datetime',
-                notnull         : true
-
-                // }}}
-
-            }],
-
-            // }}}
-            // {{{ tablse settings
-
-            primary_key         : 'pk',
-            charset             : 'utf8',
-            engine              : 'InnoDB',
-            auto_increment      : 1
-
-            // }}}
-
-        },
-
-        */
-
-        // }}}
         // {{{ userSetups
 
         userSetups: []
@@ -268,49 +162,6 @@ CLI.define('MicroField.setup.Setup', {
         });
 
     },
-
-    // }}}
-    // {{{ getInitialDataQuery
-
-    /*
-    getInitialDataQuery: function() {
-
-        var me          = this,
-            crypto      = require('crypto'),
-            shasum      = crypto.createHash('sha512'),
-            date        = CLI.Date.format(new Date(), 'Y-m-d H:m:s'),
-            f           = CLI.String.format,
-            identity    = me.getAppSettings()['database']['default']['user'],
-            sql;
-
-        return f([
-            'INSERT INTO {0} (',
-            '    status,',
-            '    role,',
-            '    identity,',
-            '    password,',
-            '    modified,',
-            '    created',
-            ') VALUES (',
-            '    \'{1}\',',
-            '    \'{2}\',',
-            '    \'{3}\',',
-            '    \'{4}\',',
-            '    \'{5}\',',
-            '    \'{6}\'',
-            ')'
-        ].join("\n"),
-            me.getTableStructure().name,
-            1,
-            'administrator',
-            identity,
-            shasum.update(identity).digest('hex'),
-            date,
-            date
-        );
-
-    },
-   */
 
     // }}}
     // {{{ setupTables
@@ -672,7 +523,6 @@ CLI.define('MicroField.setup.Setup', {
 
             },
 
-            /*
             // ログイン:クリーンアップ
             function(next) {
                 login.cleanup.call(login, next);
@@ -682,14 +532,12 @@ CLI.define('MicroField.setup.Setup', {
             function(next) {
                 main.cleanup.call(main, next);
             },
-           */
 
             // データベーステーブルセットアップ
             function(next) {
                 me.setupTables(next);
             },
 
-            /*
             // ログイン:セットアップ実行
             function(next) {
                 login.execute.call(login, next);
@@ -776,7 +624,6 @@ CLI.define('MicroField.setup.Setup', {
             function(next) {
                 main.buildApplication.call(main, next);
             }
-           */
 
         ], function (err, result) {
 

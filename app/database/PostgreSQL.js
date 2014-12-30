@@ -137,9 +137,8 @@ CLI.define('MicroField.database.PostgreSQL', {
         var me      = this,
             conn    = me.conn;
 
-        conn.end(function(err) {
-            callback();
-        });
+        conn.end();
+        callback();
 
     },
 

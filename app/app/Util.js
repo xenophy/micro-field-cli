@@ -108,7 +108,11 @@ CLI.define('MicroField.app.Util', {
 
             write: function(tag, text) {
 
-                CLI.log(tag + ' ' + text);
+                if (text) {
+                    CLI.log(tag + ' ' + text);
+                } else {
+                    CLI.log(tag);
+                }
 
             },
 

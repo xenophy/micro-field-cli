@@ -6,7 +6,15 @@ CLI.define('MicroField.controller.config.Help', {
 
     // {{{ extend
 
-    extend: 'MicroField.controller.Controller',
+    extend: 'MicroField.Help',
+
+    // }}}
+    // {{{ config
+
+    config: {
+
+
+    },
 
     // }}}
     // {{{ run

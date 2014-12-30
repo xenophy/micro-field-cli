@@ -16,31 +16,46 @@ CLI.define('MicroField.controller.config.Main', {
     extend: 'MicroField.controller.Controller',
 
     // }}}
+    // {{{ mixins
+
+    mixins: [
+        'MicroField.mixin.Output'
+    ],
+
+    // }}}
     // {{{ run
 
     run: function() {
 
-        var me          = this,
-            args        = me.argv,
-            config      = MicroField.config.Config,
-            f           = CLI.String.format,
-            bold        = me.ansi.bold,
-            red         = me.colors.red,
-            green       = me.colors.green,
-            text        = '';
+        var me      = this,
+            args    = me.argv,
+            f       = CLI.String.format,
+            bold    = me.ansi.bold,
+            green   = me.colors.green,
+            config  = MicroField.config.Config,
+            text    = '';
 
-        text += MicroField.app.getTitle();
-        text += "\n";
-
+        // 現在の設定出力
         if (CLI.Object.getKeys(me.getOptions()).length < 1) {
 
-            text += "Current settings\n";
-            text += "\n";
+            me.getSettings = function() {
 
-            CLI.iterate(config.getValues(), function(key, value) {
+                var list = [];
 
-                text += f('  {0}\t: {1}', green(key), bold(value)) + "\n";
+                CLI.iterate(config.getValues(), function(key, value) {
+                    list.push({
+                        tag: key,
+                        text: value
+                    });
+                });
 
+                return list;
+            };
+
+            me.outputList([
+                'Settings'
+            ], {
+                tagColor: green
             });
 
         } else {
@@ -49,12 +64,14 @@ CLI.define('MicroField.controller.config.Main', {
                 configParams = config.getParams();
 
             CLI.iterate(me.getOptions(), function(key) {
-
                 if (CLI.Array.indexOf(configParams, key) === -1) {
                     invalidOpts.push(key);
                 }
-
             });
+
+            // MicroField CLI タイトル出力
+            text += MicroField.app.getTitle();
+            MicroField.app.log.write(text);
 
             if (invalidOpts.length === 0) {
 
@@ -64,7 +81,9 @@ CLI.define('MicroField.controller.config.Main', {
 
                         config['set' + CLI.String.capitalize(param)](args[param]);
 
-                        text += f('  {0}\t: {1}', green(param), bold(args[param])) + "\n";
+                        MicroField.app.log.info(
+                            f('Set {0} to "{1}"', green(param), bold(args[param]))
+                        );
 
                     }
 
@@ -72,17 +91,16 @@ CLI.define('MicroField.controller.config.Main', {
 
             } else {
 
-                text += red('Could not set invalid keys.') + "\n";
-
+                // 出力
                 CLI.iterate(invalidOpts, function(option) {
-                    text += f('  --{0}', option) + "\n";
+                    MicroField.app.log.error(
+                        f('Could not set {0} key.', bold('--' + option))
+                    );
                 });
 
             }
 
         }
-
-        CLI.log(text);
 
     }
 

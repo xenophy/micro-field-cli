@@ -7,7 +7,8 @@ CLI.define('MicroField.database.Manager', {
     // {{{ requires
 
     requires: [
-        'MicroField.database.MySQL'
+        'MicroField.database.MySQL',
+        'MicroField.database.PostgreSQL'
     ],
 
     // }}}
@@ -20,9 +21,9 @@ CLI.define('MicroField.database.Manager', {
 
     privates: {
 
-        // {{{ getdriver
+        // {{{ getClassName
 
-        getDriver: function(config) {
+        getClassName: function(config) {
 
             var me      = this,
                 f       = CLI.String.format,
@@ -32,45 +33,11 @@ CLI.define('MicroField.database.Manager', {
 
             if (type === 'mysql') {
 
-                return CLI.create('MicroField.database.MySQL', {
+                return 'MySQL';
 
-                    // {{{ charset
+            } else if (type === 'pgsql') {
 
-                    charset: config.charset,
-
-                    // }}}
-                    // {{{ host
-
-                    host: config.host,
-
-                    // }}}
-                    // {{{ user
-
-                    user: config.user,
-
-                    // }}}
-                    // {{{ password
-
-                    password: config.password,
-
-                    // }}}
-                    // {{{ database
-
-                    database: config.database,
-
-                    // }}}
-                    // {{{ port
-
-                    port: config.port,
-
-                    // }}}
-                    // {{{ socket
-
-                    socket: config.socket
-
-                    // }}}
-
-                });
+                return 'PostgreSQL';
 
             } else {
 
@@ -81,6 +48,15 @@ CLI.define('MicroField.database.Manager', {
                 process.exit(1);
 
             }
+
+        },
+
+        // }}}
+        // {{{ getDriver
+
+        getDriver: function(config) {
+
+
 
         }
 
@@ -93,13 +69,64 @@ CLI.define('MicroField.database.Manager', {
 
     getConnection: function(config) {
 
+        var me      = this,
+            clsName = me.getClassName(config);
+
+        return CLI.create('MicroField.database.' + clsName, {
+
+            // {{{ charset
+
+            charset: config.charset,
+
+            // }}}
+            // {{{ host
+
+            host: config.host,
+
+            // }}}
+            // {{{ user
+
+            user: config.user,
+
+            // }}}
+            // {{{ password
+
+            password: config.password,
+
+            // }}}
+            // {{{ database
+
+            database: config.database,
+
+            // }}}
+            // {{{ port
+
+            port: config.port,
+
+            // }}}
+            // {{{ socket
+
+            socket: config.socket
+
+            // }}}
+
+        });
+
+    },
+
+    // }}}
+    // {{{ getSchema
+
+    getSchema: function(config, table) {
+
         var me = this,
-            driver;
+            f  = CLI.String.format;
 
-        driver = me.getDriver(config);
-
-        return driver;
-
+        return CLI.create(f(
+            'MicroField.database.schema.{0}.{1}',
+            config.driver,
+            CLI.String.capitalize(table)
+        ), config);
     }
 
     // }}}

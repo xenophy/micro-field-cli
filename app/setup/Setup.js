@@ -38,6 +38,7 @@ CLI.define('MicroField.setup.Setup', {
         // }}}
         // {{{ tableStructure
 
+        /*
         tableStructure: {
 
             // {{{ name
@@ -137,6 +138,8 @@ CLI.define('MicroField.setup.Setup', {
             // }}}
 
         },
+
+        */
 
         // }}}
         // {{{ userSetups
@@ -269,6 +272,7 @@ CLI.define('MicroField.setup.Setup', {
     // }}}
     // {{{ getInitialDataQuery
 
+    /*
     getInitialDataQuery: function() {
 
         var me          = this,
@@ -306,6 +310,7 @@ CLI.define('MicroField.setup.Setup', {
         );
 
     },
+   */
 
     // }}}
     // {{{ setupTables
@@ -318,10 +323,16 @@ CLI.define('MicroField.setup.Setup', {
             async   = require('async'),
             f       = CLI.String.format,
             skip    = false,
-            fns, conn;
+            fns, dbconf, conn, schema;
+
+        // データベース接続設定
+        dbconf = me.getAppSettings()['database']['default'];
 
         // コネクションラッパー取得
-        conn = MicroField.database.Manager.getConnection(me.getAppSettings()['database']['default']);
+        conn = MicroField.database.Manager.getConnection(dbconf);
+
+        // スキーマ取得
+        schema = MicroField.database.Manager.getSchema(dbconf, 'users');
 
         fns = [
 
@@ -330,7 +341,7 @@ CLI.define('MicroField.setup.Setup', {
 
                 if (!skip) {
 
-                    conn.connect(next);
+                    conn.connect(schema, next);
 
                 } else {
 
@@ -345,7 +356,7 @@ CLI.define('MicroField.setup.Setup', {
 
                 if (!skip) {
 
-                    conn.existsTable(me.getTableStructure().name, function(err, exists) {
+                    conn.existsTable(function(err, exists) {
 
                         if (err || exists) {
                             skip = true;
@@ -368,7 +379,7 @@ CLI.define('MicroField.setup.Setup', {
 
                 if (!skip) {
 
-                    conn.createTable(me.getTableStructure(), function(err) {
+                    conn.createTable(function(err) {
 
                         if (err) {
                             skip = true;
@@ -391,7 +402,7 @@ CLI.define('MicroField.setup.Setup', {
 
                 if (!skip) {
 
-                    conn.query(me.getInitialDataQuery(), function(err) {
+                    conn.insertData(function(err) {
 
                         if (err) {
                             skip = true;
@@ -661,6 +672,7 @@ CLI.define('MicroField.setup.Setup', {
 
             },
 
+            /*
             // ログイン:クリーンアップ
             function(next) {
                 login.cleanup.call(login, next);
@@ -670,12 +682,14 @@ CLI.define('MicroField.setup.Setup', {
             function(next) {
                 main.cleanup.call(main, next);
             },
+           */
 
             // データベーステーブルセットアップ
             function(next) {
                 me.setupTables(next);
             },
 
+            /*
             // ログイン:セットアップ実行
             function(next) {
                 login.execute.call(login, next);
@@ -762,6 +776,7 @@ CLI.define('MicroField.setup.Setup', {
             function(next) {
                 main.buildApplication.call(main, next);
             }
+           */
 
         ], function (err, result) {
 

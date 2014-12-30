@@ -29,6 +29,11 @@ CLI.define('MicroField.database.Abstract', {
     createTable: CLI.emptyFn,
 
     // }}}
+    // {{{ insertData
+
+    insertData: CLI.emptyFn,
+
+    // }}}
     // {{{ existsTable
 
     existsTable: CLI.emptyFn

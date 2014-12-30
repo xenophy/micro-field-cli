@@ -1,8 +1,8 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-// {{{ MicroField.database.MySQL
+// {{{ MicroField.database.PostgreSQL
 
-CLI.define('MicroField.database.MySQL', {
+CLI.define('MicroField.database.PostgreSQL', {
 
     // {{{ extend
 
@@ -25,7 +25,7 @@ CLI.define('MicroField.database.MySQL', {
         // }}}
         // {{{ user
 
-        user: 'root',
+        user: 'postgres',
 
         // }}}
         // {{{ password
@@ -40,7 +40,7 @@ CLI.define('MicroField.database.MySQL', {
         // }}}
         // {{{ port
 
-        port: '3306',
+        port: '5432',
 
         // }}}
         // {{{ socket
@@ -70,7 +70,8 @@ CLI.define('MicroField.database.MySQL', {
     connect: function(schema, callback) {
 
         var me      = this,
-            mysql   = require('mysql'),
+            f       = CLI.String.format,
+            pg      = require('pg'),
             opts    = {},
             conn;
 
@@ -95,27 +96,36 @@ CLI.define('MicroField.database.MySQL', {
 
         });
 
-        opts.port       = opts.port || 3306;
+        opts.port       = opts.port || 5432;
         opts.password   = opts.password || '';
 
-        // データベースコネクション取得
-        conn = me.conn = mysql.createConnection(opts);
+        // データベース接続/コネクション取得
+        pg.connect(
+            f(
+                'tcp://{0}:{1}@{2}:{3}/{4}',
+                opts.user,
+                opts.password,
+                opts.host,
+                opts.port,
+                opts.database
+            ),
+            function(err, client) {
 
-        // 接続
-        conn.connect(function(err) {
+                if (err) {
 
-            if (err) {
+                    // [ERR] error connecting: ***************
+                    MicroField.app.log.error(f('error connecting: "{0}"', err.stack));
 
-                // [ERR] error connecting: ***************
-                MicroField.app.log.error(f('error connecting: "{0}"', err.stack));
+                    return;
 
-                return;
+                }
+
+                conn = me.conn = client;
+
+                callback(err);
 
             }
-
-            callback(err);
-
-        });
+        );
 
     },
 
@@ -142,10 +152,10 @@ CLI.define('MicroField.database.MySQL', {
             conn    = me.conn;
 
         // クエリー実行
-        conn.query(sql, function (err, rows, fields) {
+        conn.query(sql, function (err, result) {
 
             // コールバック関数実行
-            callback(err, rows, fields);
+            callback(err, result);
 
         });
 
@@ -185,9 +195,9 @@ CLI.define('MicroField.database.MySQL', {
         var me      = this,
             schema  = me.schema;
 
-        me.query(schema.getExists(), function(err, rows, fields) {
+        me.query(schema.getExists(), function(err, result) {
 
-            if (rows && rows.length === 1) {
+            if (result.rowCount === 1) {
 
                 callback(err, true);
 

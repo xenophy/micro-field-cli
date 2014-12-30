@@ -29,7 +29,7 @@ CLI.define('MicroField.controller.remove.Help', {
             text: [
                 'microfield remove [itemid] [target module]',
                 '',
-                '  ex# microfield remove text1 MyApp/Edit'
+                '  Example: microfield remove text1 MyApp/Edit'
             ].join("\n")
         }]
 

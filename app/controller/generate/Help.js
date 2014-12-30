@@ -6,42 +6,72 @@ CLI.define('MicroField.controller.generate.Help', {
 
     // {{{ extend
 
-    extend: 'MicroField.controller.Controller',
+    extend: 'MicroField.Help',
 
     // }}}
-    // {{{ run
+    // {{{ config
 
-    run: function() {
+    config: {
 
-        var me          = this,
-            f           = CLI.String.format,
-            bold        = me.ansi.bold,
-            underline   = me.ansi.underline,
-            green       = me.colors.green,
-            text        = '';
+        // {{{ title
 
-        text += MicroField.app.getTitle();
-        text += "\n";
-        text += "This category contains various commands for module template setup.\n";
-        text += "\n";
-        text += underline('Commands') + "\n";
-        text += f('  * {0}\t: Generates a simple header module', bold('header')) + "\n";
-        text += f('  * {0}\t: Generates a simple footer module', bold('footer')) + "\n";
-        text += f('  * {0}\t: Generates a tree panel based navigation module', bold('navigation')) + "\n";
-        text += f('  * {0}\t: Generates a tree panel based navigation module for tablet', bold('tabletnavigation')) + "\n";
-        text += f('  * {0}\t: Generates a plain module', bold('base')) + "\n";
-        text += f('  * {0}\t: Generates a edit pattern module. This pattern is edit and save, depends on user\'s id', bold('edit')) + "\n";
-        text += f('  * {0}\t: Generates a editlist pattern module. This pattern have "list screen" and "edit screen', bold('editlist')) + "\n";
-        text += "\n";
-        text += underline('Options') + "\n";
-        text += f('  * --{0} - Do not create database table when generate', bold('nodb')) + "\n";
-        text += "\n";
-        text += underline('Syntax') + "\n";
-        text += "  microfield generate [command] [Module Path]\n";
-        text += "\n";
-        text += f("  {0} microfield generate base MyApp/Base\n", green('ex:'));
+        title: 'microfield generate',
 
-        CLI.log(text);
+        // }}}
+        // {{{ desc
+
+        desc: 'This category contains various commands for module template setup.',
+
+        // }}}
+        // {{{ commands
+
+        commands: [{
+            tag     : 'header',
+            text    : 'Generates a simple header module'
+        }, {
+            tag     : 'footer',
+            text    : 'Generates a simple footer module'
+        }, {
+            tag     : 'navigation',
+            text    : 'Generates a tree panel based navigation module'
+        }, {
+            tag     : 'navigation',
+            text    : 'Generates a tree panel based navigation module'
+        }, {
+            tag     : 'tabletnavigation',
+            text    : 'Generates a tree panel based navigation module for tablet'
+        }, {
+            tag     : 'base',
+            text    : 'Generates a plain module'
+        }, {
+            tag     : 'edit',
+            text    : 'Generates a edit pattern module. This pattern is edit and save, depends on user\'s id'
+        }, {
+            tag     : 'editlist',
+            text    : 'Generates a editlist pattern module. This pattern have "list screen" and "edit screen'
+        }],
+
+        // }}}
+        // {{{ options
+
+        options: [{
+            tag     : 'nodb',
+            text    : 'Do not create database table when generate'
+        }],
+
+        // }}}
+        // {{{ syntax
+
+        syntax: [{
+            text: [
+                'microfield generate [command] [Module Path]',
+                '',
+                '  Example: microfield generate base MyApp/Base',
+            ].join("\n")
+        }]
+
+        // }}}
+
     }
 
     // }}}

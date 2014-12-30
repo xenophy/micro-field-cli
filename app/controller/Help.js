@@ -22,6 +22,9 @@ CLI.define('MicroField.controller.Help', {
             tag     : 'config',
             text    : 'Load a properties file or sets a configuration property'
         }, {
+            tag     : 'generate',
+            text    : 'Genarate module template'
+        }, {
             tag     : 'get',
             text    : 'Get packages from internet'
         }, {

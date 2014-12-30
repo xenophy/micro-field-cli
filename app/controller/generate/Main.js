@@ -73,31 +73,37 @@ CLI.define('MicroField.controller.generate.Main', {
 
     run: function(command, modPath) {
 
-        var me          = this,
-            modNs       = modPath.split('/')[0],
-            modName     = modPath.split('/')[1],
-            modScreen   = modPath.split('/')[1],
-            modDir      = modPath.split('/')[1];
+        var me          = this;
 
-        if (me.argv.name) {
-            modScreen = me.argv.name;
-        }
-
-        if (!me.findCommand(command)) {
-            CLI.create('MicroField.controller.generate.Help').run();
-            return;
-        }
-
+        // modPath 入力チェック
         if (!modPath) {
             CLI.create('MicroField.controller.generate.Help').run();
             return;
         }
 
+        // modPath 入力形式チェック
         if (modPath.split('/').length !== 2) {
             CLI.create('MicroField.controller.generate.Help').run();
             return;
         }
 
+        // 入力コマンドチェック
+        if (!me.findCommand(command)) {
+            CLI.create('MicroField.controller.generate.Help').run();
+            return;
+        }
+
+        // 任意のスクリーン名設定
+        if (me.argv.name) {
+            modScreen = me.argv.name;
+        }
+
+        var modNs       = modPath.split('/')[0],
+            modName     = modPath.split('/')[1],
+            modScreen   = modPath.split('/')[1],
+            modDir      = modPath.split('/')[1];
+
+        // 生成処理
         CLI.create('MicroField.module.generate.' + me.findCommand(command).cls).execute({
             ns      : modNs,
             name    : modName,

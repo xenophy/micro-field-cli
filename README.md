@@ -1,7 +1,4 @@
-micro-field-cli
-===============
-
-CLI for MicroField SDK.
+![Logo](https://github.com/xenophy/micro-field-cli/wiki/images/logo.png)
 
 Install
 -------

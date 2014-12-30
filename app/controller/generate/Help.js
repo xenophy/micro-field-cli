@@ -57,6 +57,9 @@ CLI.define('MicroField.controller.generate.Help', {
         options: [{
             tag     : 'nodb',
             text    : 'Do not create database table when generate'
+        }, {
+            tag     : 'table',
+            text    : 'Specify custom table name when generate'
         }],
 
         // }}}
@@ -64,9 +67,9 @@ CLI.define('MicroField.controller.generate.Help', {
 
         syntax: [{
             text: [
-                'microfield generate [command] [Module Path]',
+                'microfield generate [command] [Module Path] [Options]',
                 '',
-                '  Example: microfield generate base MyApp/Base',
+                '  Example: microfield generate edit MyApp/Edit --table=myedit',
             ].join("\n")
         }]
 

@@ -110,7 +110,8 @@ CLI.define('MicroField.controller.generate.Main', {
             sname   : modScreen,
             path    : modPath,
             dir     : modDir,
-            nodb    : me.argv.nodb
+            nodb    : me.argv.nodb,
+            table   : me.argv.table
         }, function() {
 
         });

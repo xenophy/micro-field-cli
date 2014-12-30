@@ -1,12 +1,27 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-// {{{ MicroField.database.schema.mysql.Users
+// {{{ MicroField.database.schema.mysql.EditList
 
-CLI.define('MicroField.database.schema.mysql.Users', {
+CLI.define('MicroField.database.schema.mysql.EditList', {
 
     // {{{ extend
 
     extend: 'MicroField.database.schema.Abstract',
+
+    // }}}
+    // {{{ constructor
+
+    constructor: function(config) {
+
+        var me  = this;
+
+        me.initConfig(config);
+        me.callParent(arguments);
+
+        // テーブル名設定
+        me.setName(config.table);
+
+    },
 
     // }}}
     // {{{ getDDL
@@ -24,9 +39,7 @@ CLI.define('MicroField.database.schema.mysql.Users', {
                 'CREATE TABLE `{0}` (',
                 '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
                 '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
-                '  `role` varchar(100) NOT NULL,',
-                '  `identity` varchar(255) NOT NULL,',
-                '  `password` char(255) NOT NULL,',
+                '  `textdata` varchar(255) NOT NULL,',
                 '  `modified` datetime NOT NULL,',
                 '  `created` datetime NOT NULL,',
                 '  PRIMARY KEY (`pk`)',
@@ -50,17 +63,6 @@ CLI.define('MicroField.database.schema.mysql.Users', {
 
         return f(
             [
-                'INSERT INTO',
-                '  `{0}`',
-                'VALUES (',
-                '  \'1\',',
-                '  \'1\',',
-                '  \'administrator\',',
-                '  \'{1}\',',
-                '  \'{2}\',',
-                '  \'{3}\',',
-                '  \'{4}\'',
-                ');'
             ].join("\n"),
             me.getName(),
             me.getUser(),

@@ -122,6 +122,11 @@ CLI.define('MicroField.database.Manager', {
         var me = this,
             f  = CLI.String.format;
 
+        if (CLI.isObject(table)) {
+            config.table = table.table;
+            table = table.cls;
+        }
+
         return CLI.create(f(
             'MicroField.database.schema.{0}.{1}',
             config.driver,

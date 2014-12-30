@@ -1,12 +1,27 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-// {{{ MicroField.database.schema.pgsql.Users
+// {{{ MicroField.database.schema.pgsql.Edit
 
-CLI.define('MicroField.database.schema.pgsql.Users', {
+CLI.define('MicroField.database.schema.pgsql.Edit', {
 
     // {{{ extend
 
     extend: 'MicroField.database.schema.Abstract',
+
+    // }}}
+    // {{{ constructor
+
+    constructor: function(config) {
+
+        var me  = this;
+
+        me.initConfig(config);
+        me.callParent(arguments);
+
+        // テーブル名設定
+        me.setName(config.table);
+
+    },
 
     // }}}
     // {{{ getDDL
@@ -30,16 +45,14 @@ CLI.define('MicroField.database.schema.pgsql.Users', {
                 '-- ----------------------------',
                 'DROP TABLE IF EXISTS "public"."{0}";',
                 'CREATE TABLE "public"."{0}" (',
-                '  "pk" int8 NOT NULL DEFAULT nextval(\'{0}_pk_seq\'::regclass),',
-                '  "status" int2 DEFAULT 1,',
-                '  "role" varchar(100) COLLATE "default",',
-                '  "identity" varchar(255) COLLATE "default",',
-                '  "password" char(255) COLLATE "default",',
-                '  "modified" timestamp(6) NULL,',
-                '  "created" timestamp(6) NULL',
+                '	"pk" int8 NOT NULL DEFAULT nextval(\'{0}_pk_seq\'::regclass),',
+                '	"status" int2 DEFAULT 1,',
+                '	"textdata" varchar(255) COLLATE "default",',
+                '	"modified" timestamp(6) NULL,',
+                '	"created" timestamp(6) NULL',
                 ')',
                 'WITH (OIDS=FALSE);',
-                'ALTER TABLE "public"."{0}" OWNER TO "{1}";'
+                'ALTER TABLE "public"."{0}" OWNER TO "{1}";',
             ].join("\n"),
             me.getName(),
             me.getUser()
@@ -60,17 +73,6 @@ CLI.define('MicroField.database.schema.pgsql.Users', {
 
         return f(
             [
-                'INSERT INTO',
-                '  "public"."{0}"',
-                'VALUES (',
-                '  \'1\',',
-                '  \'1\',',
-                '  \'administrator\',',
-                '  \'{1}\',',
-                '  \'{2}\',',
-                '\'{3}\',',
-                '\'{4}\'',
-                ');'
             ].join("\n"),
             me.getName(),
             me.getUser(),
@@ -100,6 +102,7 @@ CLI.define('MicroField.database.schema.pgsql.Users', {
                 'AND',
                 '  relname = \'{0}\''
             ].join("\n"),
+            me.getDatabase(),
             me.getName()
         );
 

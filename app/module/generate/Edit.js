@@ -13,82 +13,9 @@ CLI.define('MicroField.module.generate.Edit', {
 
     config: {
 
-        // {{{ tableStructure
+        // {{{ tableName
 
-        tableStructure: {
-
-            // {{{ name
-
-            name: 'edit',
-
-            // }}}
-            // {{{ fields
-
-            fields: [{
-
-                // {{{ pk
-
-                name            : 'pk',
-                type            : 'bigint',
-                length          : 20,
-                notnull         : true,
-                auto_increment  : true
-
-                // }}}
-
-            }, {
-
-                // {{{ status
-
-                name            : 'status',
-                type            : 'tinyint',
-                length          : 4,
-                notnull         : true,
-                'default'       : 1
-
-                // }}}
-
-            }, {
-
-                // {{{ textdata
-
-                name            : 'textdata',
-                type            : 'varchar',
-                length          : 255,
-                notnull         : true
-
-                // }}}
-
-            }, {
-
-                // {{{ modified
-
-                name            : 'modified',
-                type            : 'datetime',
-                notnull         : true
-
-                // }}}
-
-            }, {
-
-                // {{{ created
-
-                name            : 'created',
-                type            : 'datetime',
-                notnull         : true
-
-                // }}}
-
-            }],
-
-            // }}}
-
-            primary_key         : 'pk',
-            charset             : 'utf8',
-            engine              : 'InnoDB',
-            auto_increment      : 1
-
-        }
+        tableName: 'edit'
 
         // }}}
 
@@ -174,7 +101,7 @@ CLI.define('MicroField.module.generate.Edit', {
 
                 if (!skip && !o.nodb) {
 
-                    me.setupTables(function() {
+                    me.setupTables(o, function() {
                         next();
                     });
 

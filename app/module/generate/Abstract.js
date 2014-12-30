@@ -79,8 +79,8 @@ CLI.define('MicroField.module.generate.Abstract', {
             generator   : MicroField.app.getSign()
         });
 
-        if (this.getTableStructure().name) {
-            tmp['tableName'] = this.getTableStructure().name;
+        if (this.getTableName) {
+            tmp['tableName'] = o.table || this.getTableName();
         }
 
         return tmp;
@@ -184,16 +184,9 @@ CLI.define('MicroField.module.generate.Abstract', {
     },
 
     // }}}
-    // {{{ getInitialDataQuery
-
-    getInitialDataQuery: function() {
-        return false;
-    },
-
-    // }}}
     // {{{ setupTables
 
-    setupTables: function(callback) {
+    setupTables: function(options, callback) {
 
         var me      = this,
             fs      = require('fs'),
@@ -203,8 +196,22 @@ CLI.define('MicroField.module.generate.Abstract', {
             skip    = false,
             fns, conn;
 
+        options = options || {};
+
+        // データベース接続設定
+        dbconf = me.getAppSettings()['database']['default'];
+
         // コネクションラッパー取得
-        conn = MicroField.database.Manager.getConnection(me.getAppSettings()['database']['default']);
+        conn = MicroField.database.Manager.getConnection(dbconf);
+
+        // スキーマ取得
+        schema = MicroField.database.Manager.getSchema(
+            dbconf,
+            {
+                cls     : CLI.getClassName(me).split('.').pop(),
+                table   : options.table || me.getTableName()
+            }
+        );
 
         fns = [
 
@@ -213,7 +220,7 @@ CLI.define('MicroField.module.generate.Abstract', {
 
                 if (!skip) {
 
-                    conn.connect(next);
+                    conn.connect(schema, next);
 
                 } else {
 
@@ -228,7 +235,7 @@ CLI.define('MicroField.module.generate.Abstract', {
 
                 if (!skip) {
 
-                    conn.existsTable(me.getTableStructure().name, function(err, exists) {
+                    conn.existsTable(function(err, exists) {
 
                         if (err || exists) {
                             skip = true;
@@ -251,7 +258,7 @@ CLI.define('MicroField.module.generate.Abstract', {
 
                 if (!skip) {
 
-                    conn.createTable(me.getTableStructure(), function(err) {
+                    conn.createTable(function(err) {
 
                         if (err) {
                             skip = true;
@@ -272,9 +279,9 @@ CLI.define('MicroField.module.generate.Abstract', {
             // 初期データ挿入
             function(next) {
 
-                if (!skip && me.getInitialDataQuery() !== false) {
+                if (!skip) {
 
-                    conn.query(me.getInitialDataQuery(), function(err) {
+                    conn.insertData(function(err) {
 
                         if (err) {
                             skip = true;

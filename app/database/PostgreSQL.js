@@ -208,6 +208,75 @@ CLI.define('MicroField.database.PostgreSQL', {
 
         });
 
+    },
+
+    // }}}
+    // {{{ existsColumn
+
+    existsColumn: function(fieldName, callback) {
+
+        var me      = this,
+            schema  = me.schema,
+            exists  = false;
+
+        me.query(schema.getColumns(), function(err, result) {
+
+            // TODO: エラー処理
+
+            CLI.iterate(result.rows, function(row) {
+
+                if (row.column_name === fieldName) {
+                    exists = true;
+                }
+
+            });
+
+            callback(exists);
+
+        });
+
+    },
+
+    // }}}
+    // {{{ getColumns
+
+    getColumns: function(callback) {
+
+        var me      = this,
+            schema  = me.schema,
+            columns = [];
+
+        me.query(schema.getColumns(), function(err, result) {
+
+            // TODO: エラー処理
+
+
+            CLI.iterate(result.rows, function(row) {
+                columns.push(row.column_name);
+            });
+
+            callback(columns);
+
+        });
+
+    },
+
+    // }}}
+    // {{{ addColumn
+
+    addColumn: function(fieldName, fieldType, afterField, callback) {
+
+        var me      = this,
+            schema  = me.schema;
+
+        me.query(schema.addColumn(fieldName, fieldType, afterField), function(err, result) {
+
+            // TODO: エラー処理
+
+
+            callback();
+        });
+
     }
 
     // }}}

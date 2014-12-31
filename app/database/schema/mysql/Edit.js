@@ -93,6 +93,48 @@ CLI.define('MicroField.database.schema.mysql.Edit', {
             me.getName()
         );
 
+    },
+
+    // }}}
+    // {{{ getColumns
+
+    getColumns: function() {
+
+        var me  = this,
+            f   = CLI.String.format;
+
+        return f(
+            [
+                'SHOW COLUMNS FROM `{0}`'
+            ].join("\n"),
+            me.getName()
+        );
+
+    },
+
+    // }}}
+    // {{{ addColumn
+
+    addColumn: function(fieldName, fieldType, afterField) {
+
+        var me  = this,
+            f   = CLI.String.format;
+
+        return f(
+            [
+                'ALTER TABLE',
+                '    `{0}`',
+                'ADD',
+                '    `{1}` {2} NOT NULL',
+                'AFTER',
+                '    `{3}`'
+            ].join("\n"),
+            me.getName(),
+            fieldName,
+            fieldType,
+            afterField
+        );
+
     }
 
     // }}}

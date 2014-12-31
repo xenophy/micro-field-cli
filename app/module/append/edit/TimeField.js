@@ -22,7 +22,16 @@ CLI.define('MicroField.module.append.edit.TimeField', {
 
         columnType: {
 
-            mysql: 'varchar(255)'
+            // {{{ mysql
+
+            mysql: 'varchar(255)',
+
+            // }}}
+            // {{{ pgsql
+
+            pgsql: 'varchar(255)'
+
+            // }}}
 
         }
 

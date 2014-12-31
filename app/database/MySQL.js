@@ -199,6 +199,74 @@ CLI.define('MicroField.database.MySQL', {
 
         });
 
+    },
+
+    // }}}
+    // {{{ existsColumn
+
+    existsColumn: function(fieldName, callback) {
+
+        var me      = this,
+            schema  = me.schema,
+            exists  = false;
+
+        me.query(schema.getColumns(), function(err, result) {
+
+            // TODO: エラー処理
+
+            CLI.iterate(result, function(row) {
+
+                if (row.Field === fieldName) {
+                    exists = true;
+                }
+
+            });
+
+            callback(exists);
+
+        });
+
+    },
+
+    // }}}
+    // {{{ getColumns
+
+    getColumns: function(callback) {
+
+        var me      = this,
+            schema  = me.schema,
+            columns = [];
+
+        me.query(schema.getColumns(), function(err, result) {
+
+            // TODO: エラー処理
+
+
+            CLI.iterate(result, function(row) {
+                columns.push(row.Field);
+            });
+
+            callback(columns);
+
+        });
+
+    },
+
+    // }}}
+    // {{{ addColumn
+
+    addColumn: function(fieldName, fieldType, afterField, callback) {
+
+        var me      = this,
+            schema  = me.schema;
+
+        me.query(schema.addColumn(fieldName, fieldType, afterField), function(err, result) {
+
+            // TODO: エラー処理
+
+            callback();
+        });
+
     }
 
     // }}}

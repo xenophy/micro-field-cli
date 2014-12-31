@@ -36,7 +36,22 @@ CLI.define('MicroField.database.Abstract', {
     // }}}
     // {{{ existsTable
 
-    existsTable: CLI.emptyFn
+    existsTable: CLI.emptyFn,
+
+    // }}}
+    // {{{ existsColumn
+
+    existsColumn: CLI.emptyFn,
+
+    // }}}
+    // {{{ getColumns
+
+    getColumns: CLI.emptyFn,
+
+    // }}}
+    // {{{ addColumn
+
+    addColumn: CLI.emptyFn
 
     // }}}
 

@@ -22,7 +22,16 @@ CLI.define('MicroField.module.append.edit.NumberField', {
 
         columnType: {
 
-            mysql: 'bigint(20)'
+            // {{{ mysql
+
+            mysql: 'bigint(20)',
+
+            // }}}
+            // {{{ pgsql
+
+            pgsql: 'int8'
+
+            // }}}
 
         }
 

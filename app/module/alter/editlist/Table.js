@@ -6,7 +6,20 @@ CLI.define('MicroField.module.alter.editlist.Table', {
 
     // {{{ extend
 
-    extend: 'MicroField.module.alter.Table'
+    extend: 'MicroField.module.alter.Table',
+
+    // }}}
+    // {{{ config
+
+    config: {
+
+        // {{{ clsName
+
+        clsName: 'EditList'
+
+        // }}}
+
+    }
 
     // }}}
 

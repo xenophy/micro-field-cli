@@ -106,6 +106,58 @@ CLI.define('MicroField.database.schema.pgsql.Edit', {
             me.getName()
         );
 
+    },
+
+    // }}}
+    // {{{ getColumns
+
+    getColumns: function(fieldName) {
+
+        var me  = this,
+            f   = CLI.String.format;
+
+        return f(
+            [
+                'SELECT',
+                '  *',
+                'FROM',
+                '  information_schema.columns',
+                'WHERE',
+                '  table_catalog=\'{0}\'',
+                'AND',
+                '  table_name=\'{1}\'',
+                'ORDER BY',
+                '  ordinal_position;'
+            ].join("\n"),
+            me.getDatabase(),
+            me.getName()
+        );
+
+    },
+
+    // }}}
+    // {{{ addColumn
+
+    addColumn: function(fieldName, fieldType, afterField) {
+
+        var me  = this,
+            f   = CLI.String.format;
+
+        return f(
+            [
+                'ALTER TABLE',
+                '    {0}',
+                'ADD COLUMN',
+                '    {1} {2}',
+//                'AFTER',
+//                '    \'{3}\''
+            ].join("\n"),
+            me.getName(),
+            fieldName,
+            fieldType,
+            afterField
+        );
+
     }
 
     // }}}

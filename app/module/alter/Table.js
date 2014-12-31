@@ -13,6 +13,11 @@ CLI.define('MicroField.module.alter.Table', {
 
     config: {
 
+        // {{{ clsName
+
+        clsName: '',
+
+        // }}}
         // {{{ tableName
 
         tableName: {}
@@ -134,13 +139,18 @@ CLI.define('MicroField.module.alter.Table', {
             classes     = me.getClasses(),
             connInfo    = me.getAppSettings()['database']['default'],
             skip        = false,
-            afterfield, tplCls, fns;
+            afterfield, tplCls, fns, schema;
 
         // テンプレート情報クラス生成
         tplCls = CLI.create(f('MicroField.module.append.{0}.{1}', me.getTplType().toLowerCase(), classes[fieldType]), {});
 
         // コネクションラッパー取得
         conn = MicroField.database.Manager.getConnection(connInfo);
+
+        // スキーマ取得
+        schema = MicroField.database.Manager.getSchema(connInfo, {
+            cls: me.getClsName()
+        });
 
         fns = [
 
@@ -159,6 +169,9 @@ CLI.define('MicroField.module.alter.Table', {
 
                     me.setTableName(m[4]);
 
+                    // スキーマにテーブル名設定
+                    schema.setName(me.getTableName());
+
                     next();
 
                 });
@@ -173,7 +186,7 @@ CLI.define('MicroField.module.alter.Table', {
                 // TODO: エラー処理：接続できなかったとき
 
                 if (!skip) {
-                    conn.connect(next);
+                    conn.connect(schema, next);
                 } else {
                     next();
                 }
@@ -185,31 +198,43 @@ CLI.define('MicroField.module.alter.Table', {
 
             function(next) {
 
-                var sql = f('SHOW COLUMNS FROM `{0}`', me.getTableName());
+                if (!skip) {
+                    conn.getColumns(function(columns) {
 
-                conn.query(sql, function(err, columns) {
+                        var pos = false;
 
-                    // TODO: エラー処理: クエリーエラー、テーブルが見つからなかった時
+                        // modifiedの前のカラム名を取得
+                        CLI.iterate(columns, function(column, i) {
+                            if (column === 'modified') {
+                                pos = i-1;
+                            }
+                        });
 
-                    var pos = false;
+                        afterfield = columns[pos];
+                        next();
 
-                    // modifiedの前のカラム名を取得
-                    CLI.iterate(columns, function(col, i) {
-                        if (col.Field === 'modified') {
-                            pos = i-1;
-                        }
                     });
-
-                    afterfield = columns[pos].Field;
+                } else {
                     next();
+                }
 
-                });
             },
 
             // }}}
             // {{{ フィールド挿入
 
             function(next) {
+
+                if (!skip) {
+                    conn.addColumn(fieldName, tplCls.getColumnType()[connInfo.driver.toString()], afterfield, next);
+                } else {
+                    next();
+                }
+
+                /*
+
+                console.log(afterfield);
+                return;
 
                 var sql = [
                     'ALTER TABLE',
@@ -228,6 +253,7 @@ CLI.define('MicroField.module.alter.Table', {
 
                     next();
                 });
+               */
 
             },
 
@@ -271,6 +297,8 @@ CLI.define('MicroField.module.alter.Table', {
 
         // コネクションラッパー取得
         conn = MicroField.database.Manager.getConnection(connInfo);
+
+        // スキーマ取得
 
         fns = [
 
@@ -374,7 +402,7 @@ CLI.define('MicroField.module.alter.Table', {
             skip        = false,
             exists      = false,
             bold        = me.ansi.bold,
-            connInfo, conn, tplCls, fns;
+            connInfo, conn, schema, tplCls, fns;
 
         fns = [
 
@@ -395,6 +423,11 @@ CLI.define('MicroField.module.alter.Table', {
 
                     // コネクションラッパー取得
                     conn = MicroField.database.Manager.getConnection(connInfo);
+
+                    // スキーマ取得
+                    schema = MicroField.database.Manager.getSchema(connInfo, {
+                        cls: me.getClsName()
+                    });
 
                     next();
                 });
@@ -417,6 +450,9 @@ CLI.define('MicroField.module.alter.Table', {
 
                     me.setTableName(m[4]);
 
+                    // スキーマにテーブル名設定
+                    schema.setName(me.getTableName());
+
                     next();
 
                 });
@@ -431,7 +467,7 @@ CLI.define('MicroField.module.alter.Table', {
                 // TODO: エラー処理：接続できなかったとき
 
                 if (!skip) {
-                    conn.connect(next);
+                    conn.connect(schema, next);
                 } else {
                     next();
                 }
@@ -439,22 +475,17 @@ CLI.define('MicroField.module.alter.Table', {
             },
 
             // }}}
-            // {{{ 挿入先フィールド名取得
+            // {{{ 挿入フィールド存在確認
 
             function(next) {
 
-                var sql = f('SHOW COLUMNS FROM `{0}`', me.getTableName());
+                if (!skip) {
 
-                conn.query(sql, function(err, columns) {
+                    conn.existsColumn(fieldName, function(exists) {
 
-                    // TODO: エラー処理: クエリーエラー、テーブルが見つからなかった時
+                        if (exists === true) {
 
-                    // 存在確認
-                    CLI.iterate(columns, function(col, i) {
-
-                        if (col.Field === fieldName) {
-
-                            exists = true;
+                            skip = true;
 
                             MicroField.app.log.error(f(
                                 '"{0}.{1}" already exists in database table.',
@@ -464,11 +495,14 @@ CLI.define('MicroField.module.alter.Table', {
 
                         }
 
+                        next();
+
                     });
 
+                } else {
                     next();
+                }
 
-                });
             },
 
             // }}}

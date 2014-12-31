@@ -60,7 +60,12 @@ CLI.define('MicroField.database.schema.Abstract', {
     // }}}
     // {{{ getExists
 
-    getExists: CLI.emptyFn
+    getExists: CLI.emptyFn,
+
+    // }}}
+    // {{{ getColumns
+
+    getColumns: CLI.emptyFn
 
     // }}}
 

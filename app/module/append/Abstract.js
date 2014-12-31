@@ -247,6 +247,7 @@ CLI.define('MicroField.module.append.Abstract', {
             // {{{ 重複チェック
 
             function(next) {
+
                 me.duplicatecheck(function(duplicate) {
 
                     if (duplicate) {

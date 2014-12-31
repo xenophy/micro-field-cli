@@ -158,6 +158,27 @@ CLI.define('MicroField.database.schema.pgsql.Edit', {
             afterField
         );
 
+    },
+
+    // }}}
+    // {{{ removeColumn
+
+    removeColumn: function(fieldName) {
+
+        var me  = this,
+            f   = CLI.String.format;
+
+        return f(
+            [
+                'ALTER TABLE',
+                '    {0}',
+                'DROP COLUMN',
+                '    {1}',
+            ].join("\n"),
+            me.getName(),
+            fieldName
+        );
+
     }
 
     // }}}

@@ -231,30 +231,6 @@ CLI.define('MicroField.module.alter.Table', {
                     next();
                 }
 
-                /*
-
-                console.log(afterfield);
-                return;
-
-                var sql = [
-                    'ALTER TABLE',
-                    '    `{0}`',
-                    'ADD',
-                    '    `{1}` {2} NOT NULL',
-                    'AFTER',
-                    '    `{3}`'
-                ].join("\n");
-
-                sql = f(sql, me.getTableName(), fieldName, tplCls.getColumnType()[connInfo.driver.toString()], afterfield);
-
-                conn.query(sql, function(err) {
-
-                    // TODO: エラー処理：フィールドの追加に失敗したとき
-
-                    next();
-                });
-               */
-
             },
 
             // }}}
@@ -299,6 +275,9 @@ CLI.define('MicroField.module.alter.Table', {
         conn = MicroField.database.Manager.getConnection(connInfo);
 
         // スキーマ取得
+        schema = MicroField.database.Manager.getSchema(connInfo, {
+            cls: me.getClsName()
+        });
 
         fns = [
 
@@ -317,6 +296,9 @@ CLI.define('MicroField.module.alter.Table', {
 
                     me.setTableName(m[4]);
 
+                    // スキーマにテーブル名設定
+                    schema.setName(me.getTableName());
+
                     next();
 
                 });
@@ -331,7 +313,7 @@ CLI.define('MicroField.module.alter.Table', {
                 // TODO: エラー処理：接続できなかったとき
 
                 if (!skip) {
-                    conn.connect(next);
+                    conn.connect(schema, next);
                 } else {
                     next();
                 }
@@ -343,23 +325,11 @@ CLI.define('MicroField.module.alter.Table', {
 
             function(next) {
 
-                var sql = [
-                    'ALTER TABLE',
-                    '    `{0}`',
-                    'DROP COLUMN',
-                    '    `{1}`',
-                ].join("\n");
-
-                sql = f(sql, me.getTableName(), fieldName);
-
-                conn.query(sql, function(err) {
-
-                    // TODO: エラー処理：フィールドの追加に失敗したとき
-
-                    // TODO: 処理報告表示
-
+                if (!skip) {
+                    conn.removeColumn(fieldName, next);
+                } else {
                     next();
-                });
+                }
 
             },
 

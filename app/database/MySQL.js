@@ -267,6 +267,23 @@ CLI.define('MicroField.database.MySQL', {
             callback();
         });
 
+    },
+
+    // }}}
+    // {{{ removeColumn
+
+    removeColumn: function(fieldName, callback) {
+
+        var me      = this,
+            schema  = me.schema;
+
+        me.query(schema.removeColumn(fieldName), function(err, result) {
+
+            // TODO: エラー処理
+
+            callback();
+        });
+
     }
 
     // }}}

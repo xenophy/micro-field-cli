@@ -73,7 +73,7 @@ CLI.define('MicroField.controller.config.Main', {
             me.outputList([
                 'Settings'
             ], {
-                tagColor: green
+                tagColor: 'green'
             });
 
         } else {
@@ -100,7 +100,7 @@ CLI.define('MicroField.controller.config.Main', {
                         config['set' + CLI.String.capitalize(param)](args[param]);
 
                         MicroField.app.log.info(
-                            f('Set {0} to "{1}"', green(param), bold(args[param]))
+                            f('Set {0} to "{1}"', param.green, String(args[param]).bold)
                         );
 
                     }
@@ -112,7 +112,7 @@ CLI.define('MicroField.controller.config.Main', {
                 // 出力
                 CLI.iterate(invalidOpts, function(option) {
                     MicroField.app.log.error(
-                        f('Could not set {0} key.', bold('--' + option))
+                        f('Could not set {0} key.', ('--' + option).bold)
                     );
                 });
 

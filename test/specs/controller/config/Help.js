@@ -41,9 +41,9 @@ describe("microfield help config", function() {
                 '',
                 'Options'.underline,
                 '  * {1}: Sets the access token for MicroField repository',
-                '  * {2}: Sets the Ext JS SDK directory path',
-                '  * {3}: Sets the release url for MicroField repository',
-                '  * {4}: Sets the archive url for MicroField repository',
+                '  * {2}: Sets the setup domain',
+                '  * {3}: Sets the Ext JS SDK directory path',
+                '  * {4}: Sets the release url for MicroField repository',
                 '',
                 ''
             ].join("\n");
@@ -51,10 +51,10 @@ describe("microfield help config", function() {
             comp = CLI.String.format(
                 comp,
                 MicroField.manifest.version,
-                tagSpacer('accessToken').bold.blue,
-                tagSpacer('extPath').bold.blue,
-                tagSpacer('releasesUrl').bold.blue,
-                tagSpacer('archiveUrl').bold.blue
+                tagSpacer('--accessToken').bold.blue,
+                tagSpacer('--domain').bold.blue,
+                tagSpacer('--extPath').bold.blue,
+                tagSpacer('--releasesUrl').bold.blue
             );
 
             assert.equal(stdout, comp);

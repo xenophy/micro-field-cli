@@ -26,17 +26,17 @@ CLI.define('MicroField.controller.config.Help', {
         // {{{ opts
 
         opts: [{
-            tag     : 'accessToken',
+            tag     : '--accessToken',
             text    : 'Sets the access token for MicroField repository'
         }, {
-            tag     : 'extPath',
+            tag     : '--domain',
+            text    : 'Sets the setup domain'
+        }, {
+            tag     : '--extPath',
             text    : 'Sets the Ext JS SDK directory path'
         }, {
-            tag     : 'releasesUrl',
+            tag     : '--releasesUrl',
             text    : 'Sets the release url for MicroField repository'
-        }, {
-            tag     : 'archiveUrl',
-            text    : 'Sets the archive url for MicroField repository'
         }]
 
         // }}}

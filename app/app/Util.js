@@ -124,9 +124,7 @@ CLI.define('MicroField.app.Util', {
                 var me = MicroField.getApplication();
 
                 MicroField.app.log.write(
-                    me.ansi.bold(
-                        me.colors.green('[INF]')
-                    ),
+                    '[INF]'.green.bold,
                     text
                 );
 
@@ -140,9 +138,7 @@ CLI.define('MicroField.app.Util', {
                 var me = MicroField.getApplication();
 
                 MicroField.app.log.write(
-                    me.ansi.bold(
-                        me.colors.red('[ERR]')
-                    ),
+                    '[ERR]'.red.bold,
                     text
                 );
 

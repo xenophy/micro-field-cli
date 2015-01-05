@@ -353,6 +353,7 @@ describe("microfield config", function() {
     });
 
     // }}}
+
 });
 
 // }}}

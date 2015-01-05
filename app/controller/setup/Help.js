@@ -6,31 +6,24 @@ CLI.define('MicroField.controller.setup.Help', {
 
     // {{{ extend
 
-    extend: 'MicroField.controller.Controller',
+    extend: 'MicroField.Help',
 
     // }}}
-    // {{{ run
+    // {{{ config
 
-    run: function() {
+    config: {
 
-        var me          = this,
-            app         = MicroField.getApplication(),
-            f           = CLI.String.format,
-            bold        = me.ansi.bold,
-            underline   = me.ansi.underline,
-            text        = '';
+        // {{{ title
 
-        text += app.getTitle();
-        text += "This command builds the current application.\n";
+        title: 'microfield setup',
 
-        /*
-        text += underline('Options') + "\n";
-        text += f('  * --{0} - Sets the access token for MicroField repository', bold('accessToken')) + "\n";
-        text += f('  * --{0} - Sets the release url for MicroField repository', bold('releasesUrl')) + "\n";
-        text += f('  * --{0} - Sets the archive url for MicroField repository', bold('archiveUrl')) + "\n";
-       */
+        // }}}
+        // {{{ desc
 
-        CLI.log(text);
+        desc: 'This command builds the current application.',
+
+        // }}}
+
     }
 
     // }}}

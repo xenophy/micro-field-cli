@@ -23,6 +23,24 @@ CLI.define('MicroField.controller.config.Main', {
     ],
 
     // }}}
+    // {{{ config
+
+    config: {
+
+        // {{{ title
+
+        title: 'microfield config',
+
+        // }}}
+        // {{{ desc
+
+        desc: 'Management MicroField CLI configuration.'
+
+        // }}}
+
+    },
+
+    // }}}
     // {{{ run
 
     run: function() {

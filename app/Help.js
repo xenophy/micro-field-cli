@@ -40,9 +40,9 @@ CLI.define('MicroField.Help', {
         commands: [],
 
         // }}}
-        // {{{ options
+        // {{{ opts
 
-        options: [],
+        opts: [],
 
         // }}}
         // {{{ syntax
@@ -73,7 +73,7 @@ CLI.define('MicroField.Help', {
         this.outputList([
             'Categories',
             'Commands',
-            'Options',
+            'Opts',
             'Syntax'
         ]);
 

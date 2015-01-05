@@ -13,29 +13,34 @@ CLI.define('MicroField.controller.config.Help', {
 
     config: {
 
+        // {{{ title
 
-    },
+        title: 'microfield config',
 
-    // }}}
-    // {{{ run
+        // }}}
+        // {{{ desc
 
-    run: function() {
+        desc: 'Management MicroField CLI configuration.',
 
-        var me          = this,
-            f           = CLI.String.format,
-            bold        = me.ansi.bold,
-            underline   = me.ansi.underline,
-            text        = '';
+        // }}}
+        // {{{ opts
 
-        text += MicroField.app.getTitle();
-        text += "\n";
-        text += underline('Options') + "\n";
-        text += f('  * --{0} - Sets the access token for MicroField repository', bold('accessToken')) + "\n";
-        text += f('  * --{0} - Sets the Ext JS SDK directory path', bold('extPath')) + "\n";
-        text += f('  * --{0} - Sets the release url for MicroField repository', bold('releasesUrl')) + "\n";
-        text += f('  * --{0} - Sets the archive url for MicroField repository', bold('archiveUrl')) + "\n";
+        opts: [{
+            tag     : 'accessToken',
+            text    : 'Sets the access token for MicroField repository'
+        }, {
+            tag     : 'extPath',
+            text    : 'Sets the Ext JS SDK directory path'
+        }, {
+            tag     : 'releasesUrl',
+            text    : 'Sets the release url for MicroField repository'
+        }, {
+            tag     : 'archiveUrl',
+            text    : 'Sets the archive url for MicroField repository'
+        }]
 
-        CLI.log(text);
+        // }}}
+
     }
 
     // }}}

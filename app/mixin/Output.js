@@ -65,7 +65,11 @@ CLI.define('MicroField.mixin.Output', {
 
         CLI.iterate(active, function(item, num, list) {
 
-            text += underline(item) + "\n";
+            if (item === 'Opts') {
+                text += underline('Options') + "\n";
+            } else {
+                text += underline(item) + "\n";
+            }
 
             CLI.iterate(me['get' + item](), function(item) {
                 text += line(item.tag, item.text);

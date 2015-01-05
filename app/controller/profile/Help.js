@@ -31,9 +31,9 @@ CLI.define('MicroField.controller.profile.Help', {
         }],
 
         // }}}
-        // {{{ options
+        // {{{ opts
 
-        options: [{
+        opts: [{
             tag     : '--json',
             text    : 'Output json format'
         }],

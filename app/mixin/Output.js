@@ -44,7 +44,7 @@ CLI.define('MicroField.mixin.Output', {
 
         // タイトル出力
         if (me.getTitle()) {
-            text += yellow(me.getTitle()) + "\n";
+            text += me.getTitle().yellow + "\n";
         }
 
         // 説明出力

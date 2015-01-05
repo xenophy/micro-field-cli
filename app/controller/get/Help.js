@@ -13,6 +13,16 @@ CLI.define('MicroField.controller.get.Help', {
 
     config: {
 
+        // {{{ title
+
+        title: 'microfield get',
+
+        // }}}
+        // {{{ desc
+
+        desc: 'This category contains various commands for get packages from internet.',
+
+        // }}}
         // {{{ commands
 
         commands: [{

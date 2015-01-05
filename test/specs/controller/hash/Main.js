@@ -28,13 +28,13 @@ describe("microfield hash", function() {
 
     it("generate hash", function(next) {
 
-        execChildProcess('node bin/index.js hash --target=package.json --secret=MicroFieldCLITest', function(err, stdout, stderr) {
+        execChildProcess('node bin/index.js hash --target=app/controller/hash/Main.js --secret=MicroFieldCLITest', function(err, stdout, stderr) {
 
             assert.equal(err, null);
             assert.equal(stderr, '');
 
-            // バージョンにより変わるので、その都度修正
-            assert.equal(stdout, 'b9983915fb17b1d24863530f7dd86c03b7691e06c98c5cb594f0710f96810a43' + "\n");
+            // app/controller/hash/Main.js のソースが変化したら修正
+            assert.equal(stdout, '2d89c3722d5f5daeafa6650478e94a7784a512abf0a4a89b534d412990a4ec47' + "\n");
 
             next();
 

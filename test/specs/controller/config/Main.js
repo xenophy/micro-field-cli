@@ -127,9 +127,34 @@ describe("microfield config", function() {
             // 設定した内容がファイルに反映されていること
             assert.equal(JSON.parse(fs.readFileSync(path.join(filepath, filename))).accessToken, '123456789');
 
-            // TODO 設定表示
+            execChildProcess('node bin/index.js config', function(err, stdout, stderr) {
 
-            next();
+                assert.equal(err, null);
+                assert.equal(stderr, '');
+
+                // 設定が反映されていること
+                var comp = [
+                    'MicroField CLI v{0}'.bold,
+                    '',
+                    'microfield config'.yellow,
+                    'Management MicroField CLI configuration.',
+                    '',
+                    'Settings'.underline,
+                    '  * {1}: 123456789',
+                    '',
+                    ''
+                ].join("\n");
+
+                comp = CLI.String.format(
+                    comp,
+                    MicroField.manifest.version,
+                    tagSpacer('accessToken').bold.green
+                );
+
+                assert.equal(stdout, comp);
+
+                next();
+            });
 
         });
 
@@ -166,10 +191,34 @@ describe("microfield config", function() {
             // 設定した内容がファイルに反映されていること
             assert.equal(JSON.parse(fs.readFileSync(path.join(filepath, filename))).extPath, '~/Library/Sencha/ext-5.1.0');
 
+            execChildProcess('node bin/index.js config', function(err, stdout, stderr) {
 
-            // TODO 設定表示
+                assert.equal(err, null);
+                assert.equal(stderr, '');
 
-            next();
+                // 設定が反映されていること
+                var comp = [
+                    'MicroField CLI v{0}'.bold,
+                    '',
+                    'microfield config'.yellow,
+                    'Management MicroField CLI configuration.',
+                    '',
+                    'Settings'.underline,
+                    '  * {1}: ~/Library/Sencha/ext-5.1.0',
+                    '',
+                    ''
+                ].join("\n");
+
+                comp = CLI.String.format(
+                    comp,
+                    MicroField.manifest.version,
+                    tagSpacer('extPath').bold.green
+                );
+
+                assert.equal(stdout, comp);
+
+                next();
+            });
 
         });
 
@@ -206,10 +255,34 @@ describe("microfield config", function() {
             // 設定した内容がファイルに反映されていること
             assert.equal(JSON.parse(fs.readFileSync(path.join(filepath, filename))).releasesUrl, 'https://api.github.com/repos/xenophy/micro-field/releases');
 
+            execChildProcess('node bin/index.js config', function(err, stdout, stderr) {
 
-            // TODO 設定表示
+                assert.equal(err, null);
+                assert.equal(stderr, '');
 
-            next();
+                // 設定が反映されていること
+                var comp = [
+                    'MicroField CLI v{0}'.bold,
+                    '',
+                    'microfield config'.yellow,
+                    'Management MicroField CLI configuration.',
+                    '',
+                    'Settings'.underline,
+                    '  * {1}: https://api.github.com/repos/xenophy/micro-field/releases',
+                    '',
+                    ''
+                ].join("\n");
+
+                comp = CLI.String.format(
+                    comp,
+                    MicroField.manifest.version,
+                    tagSpacer('releasesUrl').bold.green
+                );
+
+                assert.equal(stdout, comp);
+
+                next();
+            });
 
         });
 
@@ -246,10 +319,34 @@ describe("microfield config", function() {
             // 設定した内容がファイルに反映されていること
             assert.equal(JSON.parse(fs.readFileSync(path.join(filepath, filename))).domain, 'localhost');
 
+            execChildProcess('node bin/index.js config', function(err, stdout, stderr) {
 
-            // TODO 設定表示
+                assert.equal(err, null);
+                assert.equal(stderr, '');
 
-            next();
+                // 設定が反映されていること
+                var comp = [
+                    'MicroField CLI v{0}'.bold,
+                    '',
+                    'microfield config'.yellow,
+                    'Management MicroField CLI configuration.',
+                    '',
+                    'Settings'.underline,
+                    '  * {1}: localhost',
+                    '',
+                    ''
+                ].join("\n");
+
+                comp = CLI.String.format(
+                    comp,
+                    MicroField.manifest.version,
+                    tagSpacer('domain').bold.green
+                );
+
+                assert.equal(stdout, comp);
+
+                next();
+            });
 
         });
 

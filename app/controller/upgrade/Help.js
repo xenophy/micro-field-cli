@@ -6,24 +6,24 @@ CLI.define('MicroField.controller.upgrade.Help', {
 
     // {{{ extend
 
-    extend: 'MicroField.controller.Controller',
+    extend: 'MicroField.Help',
 
     // }}}
-    // {{{ run
+    // {{{ config
 
-    run: function() {
+    config: {
 
-        var me          = this,
-            app         = MicroField.getApplication(),
-            f           = CLI.String.format,
-            bold        = me.ansi.bold,
-            underline   = me.ansi.underline,
-            text        = '';
+        // {{{ title
 
-        text += app.getTitle();
-        text += "This command upgrade to latest version the current application.\n";
+        title: 'microfield upgrade',
 
-        CLI.log(text);
+        // }}}
+        // {{{ desc
+
+        desc: 'This command upgrade to latest version the current application.',
+
+        // }}}
+
     }
 
     // }}}

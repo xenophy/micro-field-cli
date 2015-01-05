@@ -25,14 +25,14 @@ CLI.define('MicroField.mixin.Output', {
         if (options.tagColor) {
             tagColor = options.tagColor;
         } else {
-            tagColor = blue;
+            tagColor = 'blue';
         }
 
         // ライン出力関数
         line = function(tag, text) {
             if (tag) {
                 tag += CLI.String.repeat(' ', 16 - tag.length);
-                return f('  * {0}: {1}', bold(tagColor(tag)), text) + "\n";
+                return f('  * {0}: {1}', tag.bold[tagColor], text) + "\n";
             } else {
                 return f('  {0}', text) + "\n";
             }
@@ -66,9 +66,9 @@ CLI.define('MicroField.mixin.Output', {
         CLI.iterate(active, function(item, num, list) {
 
             if (item === 'Opts') {
-                text += underline('Options') + "\n";
+                text += 'Options'.underline + "\n";
             } else {
-                text += underline(item) + "\n";
+                text += item.underline + "\n";
             }
 
             CLI.iterate(me['get' + item](), function(item) {
@@ -80,7 +80,7 @@ CLI.define('MicroField.mixin.Output', {
             }
         });
 
-        text = text.replace(/Example: /, blue("Example: "));
+        text = text.replace(/Example: /, 'Example: '.blue);
 
         // 出力
         MicroField.app.log.write(text);

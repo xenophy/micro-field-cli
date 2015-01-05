@@ -163,7 +163,7 @@ CLI.define('MicroField.app.Util', {
                 f       = CLI.String.format,
                 text    = '';
 
-            text += me.ansi.bold(f('{1} v{0}', version, MicroField.app.getName())) + "\n";
+            text += f('{1} v{0}', version, MicroField.app.getName()).bold + "\n";
 
             return text;
 

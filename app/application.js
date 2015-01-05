@@ -54,6 +54,11 @@ CLI.application({
         CLI.setVersion(name, manifest.version);
 
         // }}}
+        // {{{ colors読み込み
+
+        require('colors');
+
+        // }}}
 
     },
 

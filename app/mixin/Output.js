@@ -31,7 +31,7 @@ CLI.define('MicroField.mixin.Output', {
         // ライン出力関数
         line = function(tag, text) {
             if (tag) {
-                tag += CLI.String.repeat(' ', 16 - tag.length);
+                tag += CLI.String.repeat(' ', 18 - tag.length);
                 return f('  * {0}: {1}', tag.bold[tagColor], text) + "\n";
             } else {
                 return f('  {0}', text) + "\n";

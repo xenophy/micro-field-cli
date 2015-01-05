@@ -35,9 +35,6 @@ CLI.define('MicroField.controller.generate.Help', {
             tag     : 'navigation',
             text    : 'Generates a tree panel based navigation module'
         }, {
-            tag     : 'navigation',
-            text    : 'Generates a tree panel based navigation module'
-        }, {
             tag     : 'tabletnavigation',
             text    : 'Generates a tree panel based navigation module for tablet'
         }, {

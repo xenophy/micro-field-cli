@@ -20,7 +20,7 @@ var assert = require('power-assert');
 var colors = require('colors');
 
 // }}}
-// {{{ microfield help
+// {{{ microfield help append
 
 describe("microfield help append", function() {
 

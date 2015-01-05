@@ -24,6 +24,37 @@ var colors = require('colors');
 
 describe("microfield help", function() {
 
+    var comp = [
+        'MicroField CLI v{0}'.bold,
+        '',
+        'Categories'.underline,
+        '  * {1}: Append field to specified module',
+        '  * {2}: Load a properties file or sets a configuration property',
+        '  * {3}: Genarate module template',
+        '  * {4}: Get packages from internet',
+        '  * {5}: Displays help for commands',
+        '  * {6}: Displays about already exists module status',
+        '  * {7}: Remove field from specified module',
+        '',
+        'Commands'.underline,
+        '  * {8}: Executes the setup process for an application',
+        '',
+        ''
+    ].join("\n");
+
+    comp = CLI.String.format(
+        comp,
+        MicroField.manifest.version,
+        tagSpacer('append').bold.blue,
+        tagSpacer('config').bold.blue,
+        tagSpacer('generate').bold.blue,
+        tagSpacer('get').bold.blue,
+        tagSpacer('help').bold.blue,
+        tagSpacer('profile').bold.blue,
+        tagSpacer('remove').bold.blue,
+        tagSpacer('setup').bold.blue
+    );
+
     // {{{ stdout
 
     it("stdout(do not specify 'help')", function(next) {
@@ -32,38 +63,6 @@ describe("microfield help", function() {
 
             assert.equal(err, null);
             assert.equal(stderr, '');
-
-            var comp = [
-                'MicroField CLI v{0}'.bold,
-                '',
-                'Categories'.underline,
-                '  * {1}: Append field to specified module',
-                '  * {2}: Load a properties file or sets a configuration property',
-                '  * {3}: Genarate module template',
-                '  * {4}: Get packages from internet',
-                '  * {5}: Displays help for commands',
-                '  * {6}: Displays about already exists module status',
-                '  * {7}: Remove field from specified module',
-                '',
-                'Commands'.underline,
-                '  * {8}: Executes the setup process for an application',
-                '',
-                ''
-            ].join("\n");
-
-            comp = CLI.String.format(
-                comp,
-                MicroField.manifest.version,
-                tagSpacer('append').bold.blue,
-                tagSpacer('config').bold.blue,
-                tagSpacer('generate').bold.blue,
-                tagSpacer('get').bold.blue,
-                tagSpacer('help').bold.blue,
-                tagSpacer('profile').bold.blue,
-                tagSpacer('remove').bold.blue,
-                tagSpacer('setup').bold.blue
-            );
-
             assert.equal(stdout, comp);
 
             next();
@@ -81,38 +80,6 @@ describe("microfield help", function() {
 
             assert.equal(err, null);
             assert.equal(stderr, '');
-
-            var comp = [
-                'MicroField CLI v{0}'.bold,
-                '',
-                'Categories'.underline,
-                '  * {1}: Append field to specified module',
-                '  * {2}: Load a properties file or sets a configuration property',
-                '  * {3}: Genarate module template',
-                '  * {4}: Get packages from internet',
-                '  * {5}: Displays help for commands',
-                '  * {6}: Displays about already exists module status',
-                '  * {7}: Remove field from specified module',
-                '',
-                'Commands'.underline,
-                '  * {8}: Executes the setup process for an application',
-                '',
-                ''
-            ].join("\n");
-
-            comp = CLI.String.format(
-                comp,
-                MicroField.manifest.version,
-                tagSpacer('append').bold.blue,
-                tagSpacer('config').bold.blue,
-                tagSpacer('generate').bold.blue,
-                tagSpacer('get').bold.blue,
-                tagSpacer('help').bold.blue,
-                tagSpacer('profile').bold.blue,
-                tagSpacer('remove').bold.blue,
-                tagSpacer('setup').bold.blue
-            );
-
             assert.equal(stdout, comp);
 
             next();

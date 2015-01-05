@@ -29,7 +29,7 @@
     // {{{ spacer
 
     global.tagSpacer = function(tag) {
-        return tag + CLI.String.repeat(' ', 16 - tag.length);
+        return tag + CLI.String.repeat(' ', 18 - tag.length);
     };
 
     // }}}

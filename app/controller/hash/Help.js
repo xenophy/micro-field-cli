@@ -6,27 +6,36 @@ CLI.define('MicroField.controller.hash.Help', {
 
     // {{{ extend
 
-    extend: 'MicroField.controller.Controller',
+    extend: 'MicroField.Help',
 
     // }}}
-    // {{{ run
+    // {{{ config
 
-    run: function() {
+    config: {
 
-        var me          = this,
-            f           = CLI.String.format,
-            bold        = me.ansi.bold,
-            underline   = me.ansi.underline,
-            text        = '';
+        // {{{ title
 
-        text += MicroField.app.getTitle();
-        text += "\n";
-        text += "This category contains various commands for hash genetation.\n";
-        text += "To hash needs string.\n";
-        text += "\n";
-        text += "  microfield hash --target=[filepath] --secret=[secret]\n";
+        title: 'microfield hash',
 
-        CLI.log(text);
+        // }}}
+        // {{{ desc
+
+        desc: [
+            'This category contains various commands for hash genetation.',
+            'To hash needs string.'
+        ],
+
+        // }}}
+        // {{{ syntax
+
+        syntax: [{
+            text: [
+                'microfield hash --target=[filepath] --secret=[secret]'
+            ].join("\n")
+        }]
+
+        // }}}
+
     }
 
     // }}}

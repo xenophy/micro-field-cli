@@ -49,7 +49,11 @@ CLI.define('MicroField.mixin.Output', {
 
         // 説明出力
         if (me.getDesc()) {
-            text += me.getDesc() + "\n\n";
+            if (CLI.isArray(me.getDesc())) {
+                text += me.getDesc().join("\n") + "\n\n";
+            } else {
+                text += me.getDesc() + "\n\n";
+            }
         }
 
         // リスト内容作成

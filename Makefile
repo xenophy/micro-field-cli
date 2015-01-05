@@ -26,6 +26,9 @@ SPECS = $(shell find test/specs -type f -name '*.js')
 test:
 	$(MOCHA) $(SPECS)
 
+test-tap:
+	$(MOCHA) --reporter tap $(SPECS)
+
 test-coverage:
 	$(MOCHA) -R html-cov $(SPECS) > coverage.html
 

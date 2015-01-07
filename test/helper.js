@@ -175,6 +175,15 @@
     };
 
     // }}}
+    // {{{ setupAchive
+
+    global.setupAchive = function(rewriteBase, callback) {
+
+
+
+    };
+
+    // }}}
     // {{{ MicroField
 
     global.MicroField = {

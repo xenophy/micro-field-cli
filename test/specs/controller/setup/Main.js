@@ -27,7 +27,7 @@ describe("microfield setup", function() {
     var fs          = require('fs-extra'),
         path        = require('path'),
         homePath    = path.resolve(path.join(process.env[CLI.isWindows ? 'USERPROFILE' : 'HOME'])),
-        rewriteBase = 'micro-field-cli-setuptest',
+        rewriteBase = 'micro-field-cli-test-setup',
         userdir     = path.join('UserDir', rewriteBase),
         filename    = '.microfieldclicfg.json',
         targetpath  = path.join(homePath, userdir),

@@ -118,8 +118,11 @@ CLI.define('MicroField.setup.Abstract', {
 
             // プログレスバー動作停止
             clearInterval(timer);
-            bar.stream.clearLine();
-            bar.stream.cursorTo(0);
+
+            if (bar.stream && bar.stream.clearLine && bar.stream.cursorTo) {
+                bar.stream.clearLine();
+                bar.stream.cursorTo(0);
+            }
 
             if (error !== null) {
 
@@ -196,8 +199,11 @@ CLI.define('MicroField.setup.Abstract', {
 
             // プログレスバー動作停止
             clearInterval(timer);
-            bar.stream.clearLine();
-            bar.stream.cursorTo(0);
+
+            if (bar.stream && bar.stream.clearLine && bar.stream.cursorTo) {
+                bar.stream.clearLine();
+                bar.stream.cursorTo(0);
+            }
 
             if (error !== null) {
 

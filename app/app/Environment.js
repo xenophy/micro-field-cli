@@ -210,7 +210,6 @@ CLI.define('MicroField.app.Environment', {
 
                     }
 
-
                 }).on('response', function (res) {
 
                     res.setEncoding('binary');

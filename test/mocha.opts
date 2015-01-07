@@ -1,2 +1,2 @@
 --require blanket
---timeout 3600000
+--timeout 10000000

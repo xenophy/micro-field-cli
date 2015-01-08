@@ -13,9 +13,7 @@ require('../../../helper.js');
 
 describe("microfield setup", function() {
 
-    var fs          = require('fs-extra'),
-        path        = require('path'),
-        cfg         = getMicroFieldConfig(),
+    var cfg         = getMicroFieldConfig(),
         rewriteBase = 'micro-field-cli-test-setup';
 
     // {{{ setup

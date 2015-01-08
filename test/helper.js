@@ -8,6 +8,11 @@
 
     "use strict";
 
+    // {{{ cli-framework
+
+    require('cli-framework');
+
+    // }}}
     // {{{ assert
 
     global.assert = require('power-assert');
@@ -18,34 +23,29 @@
     global.colors = require('colors');
 
     // }}}
-    // {{{ cli-framework
-
-    require('cli-framework');
-
-    // }}}
-    // {{{ request
-
-    var request = require("request");
-
-    // }}}
-    // {{{ temp
-
-    var temp = require("temp");
-
-    // }}}
-    // {{{ amdzip
-
-    var amdzip = require('adm-zip');
-
-    // }}}
     // {{{ fs
 
-    var fs = require('fs-extra');
+    global.fs = require('fs-extra');
 
     // }}}
     // {{{ path
 
-    var path = require('path');
+    global.path = require('path');
+
+    // }}}
+    // {{{ request
+
+    global.request = require("request");
+
+    // }}}
+    // {{{ temp
+
+    global.temp = require("temp");
+
+    // }}}
+    // {{{ amdzip
+
+    global.amdzip = require('adm-zip');
 
     // }}}
     // {{{ execChildProcess
@@ -251,6 +251,20 @@
             });
 
         });
+
+    };
+
+    // }}}
+    // {{{ moveToWorkDirectory
+
+    global.moveToWorkDirectory = function(rewriteBase) {
+
+        // カレントディレクトリ取得
+        var currentPath = process.cwd(),
+            targetPath  = path.join(homePath, path.join('UserDir', rewriteBase));
+
+        // 作業ディレクトリへ移動
+        process.chdir(targetPath);
 
     };
 

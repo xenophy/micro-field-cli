@@ -10,16 +10,6 @@
 require('../../../helper.js');
 
 // }}}
-// {{{ assert
-
-var assert = require('power-assert');
-
-// }}}
-// {{{ colors
-
-var colors = require('colors');
-
-// }}}
 // {{{ microfield help append
 
 describe("microfield help append", function() {

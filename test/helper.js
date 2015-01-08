@@ -8,6 +8,16 @@
 
     "use strict";
 
+    // {{{ assert
+
+    global.assert = require('power-assert');
+
+    // }}}
+    // {{{ colors
+
+    global.colors = require('colors');
+
+    // }}}
     // {{{ cli-framework
 
     require('cli-framework');
@@ -177,9 +187,107 @@
     // }}}
     // {{{ setupAchive
 
-    global.setupAchive = function(rewriteBase, callback) {
+    global.setupAchive = function(rewriteBase, before, callback) {
 
+        var fs          = require('fs-extra'),
+            path        = require('path'),
+            homePath    = getHomePath(),
+            cfg         = getMicroFieldConfig(),
+            userdir     = path.join('UserDir', rewriteBase),
+            targetPath  = path.join(homePath, userdir);
 
+        before = before || function(next) {
+            next();
+        };
+
+        // ターゲットディレクトリにpublic_htmlを追加
+        targetPath = path.join(targetPath, 'public_html');
+
+        // ユーザーディレクトリ作成
+        fs.mkdirsSync(targetPath);
+
+        // 最新バージョン情報取得
+        getLatestVersion(cfg.releasesUrl, cfg.accessToken, function(latest) {
+
+            // 最新アーカイブ取得
+            getArchive(latest, cfg.accessToken, function(archivePath) {
+
+                // アーカイブ内容をユーザーディレクトリにコピー
+                fs.copySync(archivePath, targetPath);
+
+                // .htaccessの内容取得、変更
+                fs.writeFileSync(
+                    path.join(targetPath, '.htaccess'),
+                    fs.readFileSync(
+                        path.join(targetPath, '.htaccess')
+                    ).toString().replace(
+                        /[\r\s]*RewriteBase (.*?)[\s]*\n/,
+                        "\n    RewriteBase /~" + rewriteBase + "\n\n"
+                    ),
+                    'utf8'
+                );
+
+                // カレントディレクトリ取得
+                var currentPath = process.cwd();
+
+                // 作業ディレクトリへ移動
+                process.chdir(targetPath);
+
+                // setupコマンド実行
+                execChildProcess('node ' + currentPath + '/bin/index.js setup', function(err, stdout, stderr) {
+
+                    before(function() {
+
+                        // カレントディレクトリ復元
+                        process.chdir(currentPath);
+
+                        // コールバック実行
+                        callback(targetPath);
+
+                    });
+
+                });
+
+            });
+
+        });
+
+    };
+
+    // }}}
+    // {{{ getMicroFieldConfig
+
+    global.getMicroFieldConfig = function() {
+
+        var fs          = require('fs-extra'),
+            path        = require('path'),
+            homePath    = getHomePath(),
+            filename    = '.microfieldclicfg.json',
+            exists      = false,
+            cfg         = false;
+
+        if (fs.existsSync(path.join(homePath, filename))) {
+            exists = true;
+        }
+
+        if (exists) {
+
+            cfg = JSON.parse(fs.readFileSync(path.join(homePath, filename)));
+
+        }
+
+        return cfg;
+
+    };
+
+    // }}}
+    // {{{ getHomePath
+
+    global.getHomePath = function() {
+
+        var path = require('path');
+
+        return path.resolve(path.join(process.env[CLI.isWindows ? 'USERPROFILE' : 'HOME']));
 
     };
 

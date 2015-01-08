@@ -4,20 +4,9 @@
  * This file is part of MicroField CLI
  */
 
-
 // {{{ helper
 
 require('../../../helper.js');
-
-// }}}
-// {{{ assert
-
-var assert = require('power-assert');
-
-// }}}
-// {{{ colors
-
-var colors = require('colors');
 
 // }}}
 // {{{ microfield help remove

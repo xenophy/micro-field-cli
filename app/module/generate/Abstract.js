@@ -326,7 +326,7 @@ CLI.define('MicroField.module.generate.Abstract', {
 
         if (type === 'exists') {
 
-            MicroField.app.log.error(f('Could not generate "{0}" directory, that is already exists.', bold(o.modPath)));
+            MicroField.app.log.error(f('Could not generate "{0}" directory, that is already exists.', o.modPath.bold));
 
         }
 

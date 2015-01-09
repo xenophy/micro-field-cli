@@ -47,6 +47,45 @@
 
     global.amdzip = require('adm-zip');
 
+    // {{{ currentPath
+
+    global.currentPath = process.cwd();
+
+    // }}}
+    // {{{ programPath
+
+    global.programPath = 'node ' + currentPath + '/bin/index.js';
+
+    // }}}
+    // {{{ getTargetPath
+
+    global.getTargetPath = function(rewriteBase) {
+        return path.join(getHomePath(), 'UserDir', rewriteBase, 'public_html');
+    };
+
+    // }}}
+    // {{{ removeComment
+
+    global.removeComment = function(src) {
+
+        // ソースコードコメント、スペース、改行削除
+        src = src.replace(/\/\/.*?\n/g, '');
+        src = src.split("\n");
+        CLI.iterate(src, function(line, i) {
+            src[i] = line.replace(/^[\s　]+|[\s　]+$/g, '');
+        });
+        src = src.join("\n");
+
+        // 複数行のコメント削除
+        src = src.replace(/\/\**([^\/]|[^\*]\/)*\*\//g, '');
+
+        // 単行コメント削除
+        src = src.replace(/\s*\/\/.*$/g, '');
+
+        return src;
+
+    };
+
     // }}}
     // {{{ execChildProcess
 

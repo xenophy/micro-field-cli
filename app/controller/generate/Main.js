@@ -73,7 +73,7 @@ CLI.define('MicroField.controller.generate.Main', {
 
     run: function(command, modPath) {
 
-        var me          = this;
+        var me = this;
 
         // modPath 入力チェック
         if (!modPath) {
@@ -93,15 +93,15 @@ CLI.define('MicroField.controller.generate.Main', {
             return;
         }
 
-        // 任意のスクリーン名設定
-        if (me.argv.name) {
-            modScreen = me.argv.name;
-        }
-
         var modNs       = modPath.split('/')[0],
             modName     = modPath.split('/')[1],
             modScreen   = modPath.split('/')[1],
             modDir      = modPath.split('/')[1];
+
+        // 任意のスクリーン名設定
+        if (me.argv.name) {
+            modScreen = me.argv.name;
+        }
 
         // 生成処理
         CLI.create('MicroField.module.generate.' + me.findCommand(command).cls).execute({

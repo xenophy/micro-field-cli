@@ -19,17 +19,15 @@ describe("microfield generate", function() {
         decidedIt   = ((!cfg || !cfg.releasesUrl || !cfg.accessToken) ? it.skip : it);
 
         // TODO: とりあえずテストから外すため、後で削除
-//        decidedIt = it.skip;
+        decidedIt = it.skip;
 
     // {{{ setup for generate test
 
-    /*
     decidedIt("setup for generate test", function(next) {
         setupAchive(rewriteBase, null, function(targetPath) {
             next();
         });
     });
-   */
 
     // }}}
     // {{{ generate header
@@ -855,7 +853,7 @@ describe("microfield generate", function() {
     // }}}
     // {{{ generate base other name
 
-    decidedIt("generate base  other name", function(next) {
+    decidedIt("generate base other name", function(next) {
 
         // 作業ディレクトリへ移動
         process.chdir(targetPath);
@@ -953,6 +951,107 @@ describe("microfield generate", function() {
     });
 
     // }}}
+    // {{{ generate base other screen name
+
+    decidedIt("generate base other screen name", function(next) {
+
+        // 作業ディレクトリへ移動
+        process.chdir(targetPath);
+
+        execChildProcess(programPath + ' generate base MFTest/BaseOtherScreenName --name=basesetothername', function(err, stdout, stderr) {
+
+            assert.equal(err, null);
+            assert.equal(stderr, '');
+
+            // ファイル配置テスト
+            CLI.iterate([
+                'mods/MFTest/BaseOtherScreenName/app',
+                'mods/MFTest/BaseOtherScreenName/app/view',
+                'mods/MFTest/BaseOtherScreenName/app/view/main',
+                'mods/MFTest/BaseOtherScreenName/app/view/main/Main.js',
+                'mods/MFTest/BaseOtherScreenName/app/view/main/MainController.js',
+                'mods/MFTest/BaseOtherScreenName/app/view/main/MainModel.js',
+                'mods/MFTest/BaseOtherScreenName/locales',
+                'mods/MFTest/BaseOtherScreenName/locales/lang-en.json',
+                'mods/MFTest/BaseOtherScreenName/locales/lang-ja.json',
+                'mods/MFTest/BaseOtherScreenName/module.json',
+                'mods/MFTest/BaseOtherScreenName/resources',
+                'mods/MFTest/BaseOtherScreenName/resources/images',
+                'mods/MFTest/BaseOtherScreenName/resources/images/Readme.md',
+                'mods/MFTest/BaseOtherScreenName/sass',
+                'mods/MFTest/BaseOtherScreenName/sass/all.scss'
+            ], function(filePath) {
+                assert.ok(fs.existsSync(path.join(targetPath, filePath)));
+            });
+
+            // JSON生成テスト
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/BaseOtherScreenName/module.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    screen: 'basesetothername',
+                    xtype: 'mftest-baseotherscreenname',
+                    controllers: [],
+                    views: [
+                        'main.Main',
+                        'main.MainController',
+                        'main.MainModel'
+                    ],
+                    stores: [],
+                    styles: []
+                }
+            );
+
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/BaseOtherScreenName/locales/lang-en.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    'MFTest.BaseOtherScreenName': {
+                        Html: 'This is simple screen example.',
+                        Title: 'MFTest.BaseOtherScreenName'
+                    }
+                }
+            );
+
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/BaseOtherScreenName/locales/lang-ja.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    'MFTest.BaseOtherScreenName': {
+                        Html: 'シンプルなスクリーンの例です。',
+                        Title: 'MFTest.BaseOtherScreenName'
+                    }
+                }
+            );
+
+            // カレントディレクトリ復元
+            process.chdir(currentPath);
+
+            next();
+        });
+
+    });
+
+    // }}}
+
     // {{{ generate base duplicate
 
     decidedIt("generate base duplicate", function(next) {
@@ -1349,6 +1448,222 @@ describe("microfield generate", function() {
                 {
                     screen: 'editothername',
                     xtype: 'mftest-editothername',
+                    controllers: [],
+                    views: [
+                        'main.Main',
+                        'main.MainController',
+                        'main.MainModel'
+                    ],
+                    stores: [],
+                    styles: [],
+                    test: {
+                        fieldName: 'textdatatextfield',
+                        columnName: 'textdata',
+                        dummyText: 'dummy text',
+                        modifiedText: 'modified text'
+                    }
+                }
+            );
+
+            // データベーステーブル生成テスト
+            var dbconf = getTargetConfig(targetPath).database.default;
+
+            // コネクションラッパー取得
+            var conn = MicroField.database.Manager.getConnection(dbconf);
+
+            // スキーマ取得
+            var schema = MicroField.database.Manager.getSchema(dbconf, {
+                cls     : 'Edit',
+                table   : 'edit'
+            });
+
+            // 接続
+            conn.connect(schema, function() {
+
+                // テーブル存在確認
+                conn.existsTable(function(err, exists) {
+
+                    // 存在確認
+                    assert.ok(exists);
+
+                    // テーブル定義確認
+                    conn.query('SHOW CREATE TABLE ' + schema.getName(), function(err, tbl) {
+
+                        assert.deepEqual(
+                            tbl,
+                            [{
+                                Table: 'edit',
+                                'Create Table': [
+                                    'CREATE TABLE `edit` (',
+                                    '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
+                                    '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
+                                    '  `textdata` varchar(255) NOT NULL,',
+                                    '  `modified` datetime NOT NULL,',
+                                    '  `created` datetime NOT NULL,',
+                                    '  PRIMARY KEY (`pk`)',
+                                    ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
+                                ].join("\n")
+                            }]
+                        );
+
+                    });
+
+                    // カレントディレクトリ復元
+                    process.chdir(currentPath);
+
+                    next();
+
+                });
+
+            });
+
+        });
+
+    });
+
+    // }}}
+    // {{{ generate edit other screen name
+
+    decidedIt("generate edit other screen name", function(next) {
+
+        // 作業ディレクトリへ移動
+        process.chdir(targetPath);
+
+        execChildProcess(programPath + ' generate edit MFTest/EditOtherScreenName --name=editsetothername', function(err, stdout, stderr) {
+
+            assert.equal(err, null);
+            assert.equal(stderr, '');
+
+            // ファイル配置テスト
+            CLI.iterate([
+                'mods/MFTest/EditOtherScreenName/api.json',
+                'mods/MFTest/EditOtherScreenName/app',
+                'mods/MFTest/EditOtherScreenName/app/view',
+                'mods/MFTest/EditOtherScreenName/app/view/edit',
+                'mods/MFTest/EditOtherScreenName/app/view/edit/Edit.js',
+                'mods/MFTest/EditOtherScreenName/app/view/edit/EditController.js',
+                'mods/MFTest/EditOtherScreenName/app/view/edit/EditModel.js',
+                'mods/MFTest/EditOtherScreenName/app/view/main',
+                'mods/MFTest/EditOtherScreenName/app/view/main/Main.js',
+                'mods/MFTest/EditOtherScreenName/app/view/main/MainController.js',
+                'mods/MFTest/EditOtherScreenName/app/view/main/MainModel.js',
+                'mods/MFTest/EditOtherScreenName/classes',
+                'mods/MFTest/EditOtherScreenName/classes/Tests.php',
+                'mods/MFTest/EditOtherScreenName/classes/Users.php',
+                'mods/MFTest/EditOtherScreenName/data.txt',
+                'mods/MFTest/EditOtherScreenName/locales',
+                'mods/MFTest/EditOtherScreenName/locales/lang-en.json',
+                'mods/MFTest/EditOtherScreenName/locales/lang-ja.json',
+                'mods/MFTest/EditOtherScreenName/module.json',
+                'mods/MFTest/EditOtherScreenName/resources',
+                'mods/MFTest/EditOtherScreenName/resources/images',
+                'mods/MFTest/EditOtherScreenName/resources/images/Readme.md',
+                'mods/MFTest/EditOtherScreenName/sass',
+                'mods/MFTest/EditOtherScreenName/sass/all.scss',
+                'mods/MFTest/EditOtherScreenName/tests',
+                'mods/MFTest/EditOtherScreenName/tests/Operation',
+                'mods/MFTest/EditOtherScreenName/tests/Operation/ResetButton.js',
+                'mods/MFTest/EditOtherScreenName/tests/Operation/SaveButton.js',
+                'mods/MFTest/EditOtherScreenName/tests/Status',
+                'mods/MFTest/EditOtherScreenName/tests/Status/ResetButton.js',
+                'mods/MFTest/EditOtherScreenName/tests/Status/SaveButton.js'
+            ], function(filePath) {
+                assert.ok(fs.existsSync(path.join(targetPath, filePath)));
+            });
+
+            // JSON生成テスト
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/EditOtherScreenName/api.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    MFTest_EditOtherScreenName_Users: {
+                        before: {
+                            User: 'isLogin'
+                        },
+                        methods: {
+                            readData: {
+                                len: 0
+                            },
+                            updateData: {
+                                formHandler: true,
+                                len: 1
+                            }
+                        }
+                    },
+                    MFTest_EditOtherScreenName_Tests: {
+                        before: {
+                            User: 'isLogin'
+                        },
+                        methods: {
+                            testSetUp: {
+                                len: 0
+                            },
+                            testTearDown: {
+                                len: 0
+                            }
+                        }
+                    }
+                }
+            );
+
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/EditOtherScreenName/locales/lang-en.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    'MFTest.EditOtherScreenName': {
+                        Title: 'MFTest.EditOtherScreenName',
+                        'Please enter textdata': 'Please enter textdata.',
+                        field: {
+                            Text: 'Text'
+                        }
+                    }
+                }
+            );
+
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/EditOtherScreenName/locales/lang-ja.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    'MFTest.EditOtherScreenName': {
+                        Title: 'MFTest.EditOtherScreenName',
+                        'Please enter textdata': 'テキストを入力してください。',
+                        field: {
+                            Text: 'テキスト'
+                        }
+                    }
+                }
+            );
+
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/EditOtherScreenName/module.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    screen: 'editsetothername',
+                    xtype: 'mftest-editotherscreenname',
                     controllers: [],
                     views: [
                         'main.Main',
@@ -2409,6 +2724,314 @@ describe("microfield generate", function() {
                 {
                     screen: 'editlistothername',
                     xtype: 'mftest-editlistothername',
+                    controllers: [
+                        'Main'
+                    ],
+                    views: [
+                        'main.Main',
+                        'main.MainController',
+                        'main.MainModel'
+                    ],
+                    stores: [
+                        'Lists'
+                    ],
+                    styles: [],
+                    test: {
+                        fieldName: 'textdatatextfield',
+                        columnName: 'textdata',
+                        dummyText: 'dummy text',
+                        modifiedText: 'modified text'
+                    }
+                }
+            );
+
+            // データベーステーブル生成テスト
+            var dbconf = getTargetConfig(targetPath).database.default;
+
+            // コネクションラッパー取得
+            var conn = MicroField.database.Manager.getConnection(dbconf);
+
+            // スキーマ取得
+            var schema = MicroField.database.Manager.getSchema(dbconf, {
+                cls     : 'EditList',
+                table   : 'editlist'
+            });
+
+            // 接続
+            conn.connect(schema, function() {
+
+                // テーブル存在確認
+                conn.existsTable(function(err, exists) {
+
+                    // 存在確認
+                    assert.ok(exists);
+
+                    // テーブル定義確認
+                    conn.query('SHOW CREATE TABLE ' + schema.getName(), function(err, tbl) {
+
+                        assert.deepEqual(
+                            tbl,
+                            [{
+                                Table: 'editlist',
+                                'Create Table': [
+                                    'CREATE TABLE `editlist` (',
+                                    '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
+                                    '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
+                                    '  `textdata` varchar(255) NOT NULL,',
+                                    '  `modified` datetime NOT NULL,',
+                                    '  `created` datetime NOT NULL,',
+                                    '  PRIMARY KEY (`pk`)',
+                                    ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
+                                ].join("\n")
+                            }]
+                        );
+
+                    });
+
+                    // カレントディレクトリ復元
+                    process.chdir(currentPath);
+
+                    next();
+
+                });
+
+            });
+
+        });
+
+    });
+
+    // }}}
+    // {{{ generate editlist other screen name
+
+    decidedIt("generate editlist other screen name", function(next) {
+
+        // 作業ディレクトリへ移動
+        process.chdir(targetPath);
+
+        execChildProcess(programPath + ' generate editlist MFTest/EditListOtherScreenName --name=editlistsetothername', function(err, stdout, stderr) {
+
+            assert.equal(err, null);
+            assert.equal(stderr, '');
+
+            // ファイル配置テスト
+            CLI.iterate([
+                'mods/MFTest/EditListOtherScreenName/api.json',
+                'mods/MFTest/EditListOtherScreenName/app',
+                'mods/MFTest/EditListOtherScreenName/app/controller',
+                'mods/MFTest/EditListOtherScreenName/app/controller/Main.js',
+                'mods/MFTest/EditListOtherScreenName/app/model',
+                'mods/MFTest/EditListOtherScreenName/app/model/List.js',
+                'mods/MFTest/EditListOtherScreenName/app/store',
+                'mods/MFTest/EditListOtherScreenName/app/store/Lists.js',
+                'mods/MFTest/EditListOtherScreenName/app/view',
+                'mods/MFTest/EditListOtherScreenName/app/view/edit',
+                'mods/MFTest/EditListOtherScreenName/app/view/edit/Edit.js',
+                'mods/MFTest/EditListOtherScreenName/app/view/edit/EditController.js',
+                'mods/MFTest/EditListOtherScreenName/app/view/edit/EditModel.js',
+                'mods/MFTest/EditListOtherScreenName/app/view/list',
+                'mods/MFTest/EditListOtherScreenName/app/view/list/List.js',
+                'mods/MFTest/EditListOtherScreenName/app/view/list/ListController.js',
+                'mods/MFTest/EditListOtherScreenName/app/view/list/ListModel.js',
+                'mods/MFTest/EditListOtherScreenName/app/view/main',
+                'mods/MFTest/EditListOtherScreenName/app/view/main/Main.js',
+                'mods/MFTest/EditListOtherScreenName/app/view/main/MainController.js',
+                'mods/MFTest/EditListOtherScreenName/app/view/main/MainModel.js',
+                'mods/MFTest/EditListOtherScreenName/classes',
+                'mods/MFTest/EditListOtherScreenName/classes/Lists.php',
+                'mods/MFTest/EditListOtherScreenName/classes/Tests.php',
+                'mods/MFTest/EditListOtherScreenName/locales',
+                'mods/MFTest/EditListOtherScreenName/locales/lang-en.json',
+                'mods/MFTest/EditListOtherScreenName/locales/lang-ja.json',
+                'mods/MFTest/EditListOtherScreenName/module.json',
+                'mods/MFTest/EditListOtherScreenName/resources',
+                'mods/MFTest/EditListOtherScreenName/resources/images',
+                'mods/MFTest/EditListOtherScreenName/resources/images/Readme.md',
+                'mods/MFTest/EditListOtherScreenName/sass',
+                'mods/MFTest/EditListOtherScreenName/sass/all.scss',
+                'mods/MFTest/EditListOtherScreenName/tests',
+                'mods/MFTest/EditListOtherScreenName/tests/data.txt',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Operation',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Operation/CancelButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Operation/Confirm Cancel Message',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Operation/Confirm Cancel Message/NoButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Operation/Confirm Cancel Message/YesButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Operation/Confirm Remove Message',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Operation/Confirm Remove Message/NoButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Operation/Confirm Remove Message/YesButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Operation/RemoveButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Operation/ResetButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Operation/SaveButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Status',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Status/CancelButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Status/RemoveButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Status/ResetButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/Edit Screen/Status/SaveButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/EditButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/NewButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/Paging Toolbar',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/Paging Toolbar/FirstButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/Paging Toolbar/LastButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/Paging Toolbar/NextButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/Paging Toolbar/NumberField.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/Paging Toolbar/PrevButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/Paging Toolbar/RefreshButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/RefreshButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/RemoveButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/Search Field',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/Search Field/Edit.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/Search Field/Paging.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/Search Field/Remove.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Operation/Search Field/Search.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Status',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Status/EditButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Status/NewButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Status/Paging Toolbar',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Status/Paging Toolbar/FirstButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Status/Paging Toolbar/LastButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Status/Paging Toolbar/NextButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Status/Paging Toolbar/PrevButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Status/Paging Toolbar/RefreshButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Status/RefreshButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/List Screen/Status/RemoveButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/New Screen',
+                'mods/MFTest/EditListOtherScreenName/tests/New Screen/Operation',
+                'mods/MFTest/EditListOtherScreenName/tests/New Screen/Operation/CancelButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/New Screen/Operation/Confirm Cancel Message',
+                'mods/MFTest/EditListOtherScreenName/tests/New Screen/Operation/Confirm Cancel Message/NoButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/New Screen/Operation/Confirm Cancel Message/YesButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/New Screen/Operation/RemoveButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/New Screen/Operation/ResetButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/New Screen/Operation/SaveButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/New Screen/Status',
+                'mods/MFTest/EditListOtherScreenName/tests/New Screen/Status/CancelButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/New Screen/Status/RemoveButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/New Screen/Status/ResetButton.js',
+                'mods/MFTest/EditListOtherScreenName/tests/New Screen/Status/SaveButton.js'
+            ], function(filePath) {
+                assert.ok(fs.existsSync(path.join(targetPath, filePath)));
+            });
+
+            // JSON生成テスト
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/EditListOtherScreenName/api.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    MFTest_EditListOtherScreenName_Lists: {
+                        tests: {
+                            getRoles: 'MFTest_EditListOtherScreenName_Tests.getRoles',
+                            getGrid: 'MFTest_EditListOtherScreenName_Tests.getGrid',
+                            readData: 'MFTest_EditListOtherScreenName_Tests.readData',
+                            updateData: 'MFTest_EditListOtherScreenName_Tests.updateData',
+                            removeData: 'MFTest_EditListOtherScreenName_Tests.removeData' },
+                            before: {
+                                User: 'isLogin'
+                            },
+                            methods: {
+                                getRoles: {
+                                    len: 0
+                                },
+                                getGrid: {
+                                    len: 1
+                                },
+                                readData: {
+                                    len: 1
+                                },
+                                updateData: {
+                                    formHandler: true,
+                                    len: 1
+                                },
+                                removeData: {
+                                    len: 1
+                                }
+                            }
+                    },
+                    MFTest_EditListOtherScreenName_Tests: {
+                        before: {
+                            User: 'isLogin'
+                        },
+                        methods: {
+                            testSetUp: {
+                                len: 0
+                            },
+                            testTearDown: {
+                                len: 0
+                            },
+                            insertTestData: {
+                                len: 0
+                            }
+                        }
+                    }
+                }
+            );
+
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/EditListOtherScreenName/locales/lang-en.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    'MFTest.EditListOtherScreenName': {
+                        'Please enter textdata': 'Please enter textdata.',
+                        Title: 'MFTest.EditListOtherScreenName',
+                        column: {
+                            Textdata: 'Textdata'
+                        },
+                        field: {
+                            Textdata: 'Textdata'
+                        }
+                    }
+                }
+            );
+
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/EditListOtherScreenName/locales/lang-ja.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    'MFTest.EditListOtherScreenName': {
+                        'Please enter textdata': 'テキストを入力してください。',
+                        Title: 'MFTest.EditListOtherScreenName',
+                        column: {
+                            Textdata: 'テキスト'
+                        },
+                        field: {
+                            Textdata: 'テキスト'
+                        }
+                    }
+                }
+            );
+
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/EditListOtherScreenName/module.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    screen: 'editlistsetothername',
+                    xtype: 'mftest-editlistotherscreenname',
                     controllers: [
                         'Main'
                     ],

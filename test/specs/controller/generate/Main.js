@@ -19,13 +19,15 @@ describe("microfield generate", function() {
         decidedIt   = ((!cfg || !cfg.releasesUrl || !cfg.accessToken) ? it.skip : it);
 
         // TODO: とりあえずテストから外すため、後で削除
-        decidedIt = it.skip;
+        //decidedIt = it.skip;
 
     // {{{ setup for generate test
 
     decidedIt("setup for generate test", function(next) {
-        setupAchive(rewriteBase, null, function(targetPath) {
-            next();
+        execChildProcess('cat ' + currentPath + '/test/clear.sql|mysql -uroot', function(err, stdout, stderr) {
+            setupAchive(rewriteBase, null, function(targetPath) {
+                next();
+            });
         });
     });
 
@@ -1489,6 +1491,8 @@ describe("microfield generate", function() {
                     // テーブル定義確認
                     conn.query('SHOW CREATE TABLE ' + schema.getName(), function(err, tbl) {
 
+                        try {
+
                         assert.deepEqual(
                             tbl,
                             [{
@@ -1505,6 +1509,10 @@ describe("microfield generate", function() {
                                 ].join("\n")
                             }]
                         );
+
+                        } catch(e) {
+                            console.log(e);
+                        }
 
                     });
 

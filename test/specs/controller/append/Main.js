@@ -19,17 +19,19 @@ describe("microfield append", function() {
         decidedIt   = ((!cfg || !cfg.releasesUrl || !cfg.accessToken) ? it.skip : it);
 
         // TODO: とりあえずテストから外すため、後で削除
-        //decidedIt = it.skip;
+        // decidedIt = it.skip;
 
     // {{{ setup for append test
 
     decidedIt("setup for append test", function(next) {
-        setupAchive(rewriteBase, null, function(targetPath) {
-            process.chdir(targetPath);
-            execChildProcess(programPath + ' generate edit MFTest/Edit', function(err, stdout, stderr) {
-                execChildProcess(programPath + ' generate editlist MFTest/EditList', function(err, stdout, stderr) {
-                    process.chdir(currentPath);
-                    next();
+        execChildProcess('cat ' + currentPath + '/test/clear.sql|mysql -uroot', function(err, stdout, stderr) {
+            setupAchive(rewriteBase, null, function(targetPath) {
+                process.chdir(targetPath);
+                execChildProcess(programPath + ' generate edit MFTest/Edit', function(err, stdout, stderr) {
+                    execChildProcess(programPath + ' generate editlist MFTest/EditList', function(err, stdout, stderr) {
+                        process.chdir(currentPath);
+                        next();
+                    });
                 });
             });
         });

@@ -24,37 +24,41 @@ describe("microfield setup", function() {
 
     decidedIt("setup", function(next) {
 
-        setupAchive(rewriteBase, null, function(targetPath) {
+        execChildProcess('cat ' + currentPath + '/test/clear.sql|mysql -uroot', function(err, stdout, stderr) {
 
-            // .senchaディレクトリが作成されること
-            assert.ok(fs.existsSync(path.join(targetPath, '.sencha')));
+            setupAchive(rewriteBase, null, function(targetPath) {
 
-            // app.jsが存在すること
-            assert.ok(fs.existsSync(path.join(targetPath, 'app.js')));
+                // .senchaディレクトリが作成されること
+                assert.ok(fs.existsSync(path.join(targetPath, '.sencha')));
 
-            // app.jsonが存在すること
-            assert.ok(fs.existsSync(path.join(targetPath, 'app.json')));
+                // app.jsが存在すること
+                assert.ok(fs.existsSync(path.join(targetPath, 'app.js')));
 
-            // app.jsとapp.js_overrideの内容が一致すること
-            assert.equal(
-                fs.readFileSync(path.join(targetPath, 'app.js')).toString(),
-                fs.readFileSync(path.join(targetPath, 'app.js_override')).toString()
-            );
+                // app.jsonが存在すること
+                assert.ok(fs.existsSync(path.join(targetPath, 'app.json')));
 
-            // login/.senchaディレクトリが作成されること
-            assert.ok(fs.existsSync(path.join(targetPath, 'login', '.sencha')));
+                // app.jsとapp.js_overrideの内容が一致すること
+                assert.equal(
+                    fs.readFileSync(path.join(targetPath, 'app.js')).toString(),
+                    fs.readFileSync(path.join(targetPath, 'app.js_override')).toString()
+                );
 
-            // login/app.jsが存在すること
-            assert.ok(fs.existsSync(path.join(targetPath, 'login', 'app.js')));
+                // login/.senchaディレクトリが作成されること
+                assert.ok(fs.existsSync(path.join(targetPath, 'login', '.sencha')));
 
-            // login/app.jsonが存在すること
-            assert.ok(fs.existsSync(path.join(targetPath, 'login', 'app.json')));
+                // login/app.jsが存在すること
+                assert.ok(fs.existsSync(path.join(targetPath, 'login', 'app.js')));
 
-            // ログインができること
+                // login/app.jsonが存在すること
+                assert.ok(fs.existsSync(path.join(targetPath, 'login', 'app.json')));
 
-            // ログイン後のページが表示されること
+                // ログインができること
 
-            next();
+                // ログイン後のページが表示されること
+
+                next();
+
+            });
 
         });
 

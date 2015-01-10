@@ -1,0 +1,12 @@
+SET NAMES utf8;
+SET FOREIGN_KEY_CHECKS = 0;
+
+USE `microfield`;
+
+DROP TABLE IF EXISTS `edit`;
+DROP TABLE IF EXISTS `editlist`;
+DROP TABLE IF EXISTS `editlistothertable`;
+DROP TABLE IF EXISTS `editothertable`;
+DROP TABLE IF EXISTS `users`;
+
+SET FOREIGN_KEY_CHECKS = 1;

@@ -23,11 +23,13 @@ describe("microfield generate", function() {
 
     // {{{ setup for generate test
 
+    /*
     decidedIt("setup for generate test", function(next) {
         setupAchive(rewriteBase, null, function(targetPath) {
             next();
         });
     });
+   */
 
     // }}}
     // {{{ generate header

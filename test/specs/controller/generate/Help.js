@@ -38,29 +38,31 @@ describe("microfield help generate", function() {
                 '  * {7}: Generates a editlist pattern module. This pattern have "list screen" and "edit screen',
                 '',
                 'Options'.underline,
-                '  * {8}: Do not create database table when generate',
-                '  * {9}: Specify custom table name when generate',
+                '  * {8}: Sets custom screen name',
+                '  * {9}: Do not create database table when generate',
+                '  * {10}: Sets custom table name when generate',
                 '',
                 'Syntax'.underline,
                 '  microfield generate [command] [Module Path] [Options]',
                 '',
-                '  {10}microfield generate edit MyApp/Edit --table=myedit',
+                '  {11}microfield generate edit MyApp/Edit --table=myedit',
                 '',
                 ''
             ].join("\n");
 
             comp = CLI.String.format(
-                comp,
-                MicroField.manifest.version,
-                tagSpacer('header').bold.blue,
-                tagSpacer('footer').bold.blue,
-                tagSpacer('navigation').bold.blue,
-                tagSpacer('tabletnavigation').bold.blue,
-                tagSpacer('base').bold.blue,
-                tagSpacer('edit').bold.blue,
-                tagSpacer('editlist').bold.blue,
-                tagSpacer('--nodb').bold.blue,
-                tagSpacer('--table').bold.blue,
+                comp,                                       // {0}
+                MicroField.manifest.version,                // {1}
+                tagSpacer('header').bold.blue,              // {2}
+                tagSpacer('footer').bold.blue,              // {3}
+                tagSpacer('navigation').bold.blue,          // {4}
+                tagSpacer('tabletnavigation').bold.blue,    // {5}
+                tagSpacer('base').bold.blue,                // {6}
+                tagSpacer('edit').bold.blue,                // {7}
+                tagSpacer('editlist').bold.blue,            // {8}
+                tagSpacer('--name').bold.blue,              // {9}
+                tagSpacer('--nodb').bold.blue,              // {10}
+                tagSpacer('--table').bold.blue,             // {11}
                 'Example: '.blue
             );
 

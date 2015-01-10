@@ -52,11 +52,14 @@ CLI.define('MicroField.controller.generate.Help', {
         // {{{ opts
 
         opts: [{
+            tag     : '--name',
+            text    : 'Sets custom screen name'
+        }, {
             tag     : '--nodb',
             text    : 'Do not create database table when generate'
         }, {
             tag     : '--table',
-            text    : 'Specify custom table name when generate'
+            text    : 'Sets custom table name when generate'
         }],
 
         // }}}

@@ -49,13 +49,20 @@ describe("microfield generate", function() {
 
             // ファイル配置テスト
             CLI.iterate([
-                'mods/MFTest/Header/module.json',
+                'mods/MFTest/Header/app',
+                'mods/MFTest/Header/app/view',
+                'mods/MFTest/Header/app/view/main',
                 'mods/MFTest/Header/app/view/main/Main.js',
                 'mods/MFTest/Header/app/view/main/MainController.js',
                 'mods/MFTest/Header/app/view/main/MainModel.js',
+                'mods/MFTest/Header/locales',
                 'mods/MFTest/Header/locales/lang-en.json',
                 'mods/MFTest/Header/locales/lang-ja.json',
+                'mods/MFTest/Header/module.json',
+                'mods/MFTest/Header/resources',
+                'mods/MFTest/Header/resources/images',
                 'mods/MFTest/Header/resources/images/Readme.md',
+                'mods/MFTest/Header/sass',
                 'mods/MFTest/Header/sass/all.scss',
                 'mods/MFTest/Header/sass/button.scss'
             ], function(filePath) {
@@ -199,13 +206,20 @@ describe("microfield generate", function() {
 
             // ファイル配置テスト
             CLI.iterate([
-                'mods/MFTest/Footer/module.json',
+                'mods/MFTest/Footer/app',
+                'mods/MFTest/Footer/app/view',
+                'mods/MFTest/Footer/app/view/main',
                 'mods/MFTest/Footer/app/view/main/Main.js',
                 'mods/MFTest/Footer/app/view/main/MainController.js',
                 'mods/MFTest/Footer/app/view/main/MainModel.js',
+                'mods/MFTest/Footer/locales',
                 'mods/MFTest/Footer/locales/lang-en.json',
                 'mods/MFTest/Footer/locales/lang-ja.json',
+                'mods/MFTest/Footer/module.json',
+                'mods/MFTest/Footer/resources',
+                'mods/MFTest/Footer/resources/images',
                 'mods/MFTest/Footer/resources/images/Readme.md',
+                'mods/MFTest/Footer/sass',
                 'mods/MFTest/Footer/sass/all.scss'
             ], function(filePath) {
                 assert.ok(fs.existsSync(path.join(targetPath, filePath)));
@@ -323,17 +337,26 @@ describe("microfield generate", function() {
             // ファイル配置テスト
             CLI.iterate([
                 'mods/MFTest/Navigation/api.json',
-                'mods/MFTest/Navigation/module.json',
-                'mods/MFTest/Navigation/navigation.json',
+                'mods/MFTest/Navigation/app',
+                'mods/MFTest/Navigation/app/store',
                 'mods/MFTest/Navigation/app/store/Tree.js',
+                'mods/MFTest/Navigation/app/view',
+                'mods/MFTest/Navigation/app/view/main',
                 'mods/MFTest/Navigation/app/view/main/Main.js',
                 'mods/MFTest/Navigation/app/view/main/MainController.js',
                 'mods/MFTest/Navigation/app/view/main/MainModel.js',
+                'mods/MFTest/Navigation/classes',
                 'mods/MFTest/Navigation/classes/Filter.php',
                 'mods/MFTest/Navigation/classes/Tree.php',
+                'mods/MFTest/Navigation/locales',
                 'mods/MFTest/Navigation/locales/lang-en.json',
                 'mods/MFTest/Navigation/locales/lang-ja.json',
+                'mods/MFTest/Navigation/module.json',
+                'mods/MFTest/Navigation/navigation.json',
+                'mods/MFTest/Navigation/resources',
+                'mods/MFTest/Navigation/resources/images',
                 'mods/MFTest/Navigation/resources/images/Readme.md',
+                'mods/MFTest/Navigation/sass',
                 'mods/MFTest/Navigation/sass/all.scss',
                 'mods/MFTest/Navigation/sass/tree.scss'
             ], function(filePath) {
@@ -525,15 +548,23 @@ describe("microfield generate", function() {
             // ファイル配置テスト
             CLI.iterate([
                 'mods/MFTest/TabletNavigation/api.json',
-                'mods/MFTest/TabletNavigation/module.json',
-                'mods/MFTest/TabletNavigation/navigation.json',
+                'mods/MFTest/TabletNavigation/app',
+                'mods/MFTest/TabletNavigation/app/view',
+                'mods/MFTest/TabletNavigation/app/view/main',
                 'mods/MFTest/TabletNavigation/app/view/main/Main.js',
                 'mods/MFTest/TabletNavigation/app/view/main/MainController.js',
                 'mods/MFTest/TabletNavigation/app/view/main/MainModel.js',
+                'mods/MFTest/TabletNavigation/classes',
                 'mods/MFTest/TabletNavigation/classes/Menu.php',
+                'mods/MFTest/TabletNavigation/locales',
                 'mods/MFTest/TabletNavigation/locales/lang-en.json',
                 'mods/MFTest/TabletNavigation/locales/lang-ja.json',
+                'mods/MFTest/TabletNavigation/module.json',
+                'mods/MFTest/TabletNavigation/navigation.json',
+                'mods/MFTest/TabletNavigation/resources',
+                'mods/MFTest/TabletNavigation/resources/images',
                 'mods/MFTest/TabletNavigation/resources/images/Readme.md',
+                'mods/MFTest/TabletNavigation/sass',
                 'mods/MFTest/TabletNavigation/sass/all.scss',
                 'mods/MFTest/TabletNavigation/sass/button.scss'
             ], function(filePath) {
@@ -739,13 +770,20 @@ describe("microfield generate", function() {
 
             // ファイル配置テスト
             CLI.iterate([
-                'mods/MFTest/Base/module.json',
+                'mods/MFTest/Base/app',
+                'mods/MFTest/Base/app/view',
+                'mods/MFTest/Base/app/view/main',
                 'mods/MFTest/Base/app/view/main/Main.js',
                 'mods/MFTest/Base/app/view/main/MainController.js',
                 'mods/MFTest/Base/app/view/main/MainModel.js',
+                'mods/MFTest/Base/locales',
                 'mods/MFTest/Base/locales/lang-en.json',
                 'mods/MFTest/Base/locales/lang-ja.json',
+                'mods/MFTest/Base/module.json',
+                'mods/MFTest/Base/resources',
+                'mods/MFTest/Base/resources/images',
                 'mods/MFTest/Base/resources/images/Readme.md',
+                'mods/MFTest/Base/sass',
                 'mods/MFTest/Base/sass/all.scss'
             ], function(filePath) {
                 assert.ok(fs.existsSync(path.join(targetPath, filePath)));
@@ -868,8 +906,152 @@ describe("microfield generate", function() {
             assert.equal(err, null);
             assert.equal(stderr, '');
 
-            // Editテンプレート生成テスト
+            // ファイル配置テスト
+            CLI.iterate([
+                'mods/MFTest/Edit/api.json',
+                'mods/MFTest/Edit/app',
+                'mods/MFTest/Edit/app/view',
+                'mods/MFTest/Edit/app/view/edit',
+                'mods/MFTest/Edit/app/view/edit/Edit.js',
+                'mods/MFTest/Edit/app/view/edit/EditController.js',
+                'mods/MFTest/Edit/app/view/edit/EditModel.js',
+                'mods/MFTest/Edit/app/view/main',
+                'mods/MFTest/Edit/app/view/main/Main.js',
+                'mods/MFTest/Edit/app/view/main/MainController.js',
+                'mods/MFTest/Edit/app/view/main/MainModel.js',
+                'mods/MFTest/Edit/classes',
+                'mods/MFTest/Edit/classes/Tests.php',
+                'mods/MFTest/Edit/classes/Users.php',
+                'mods/MFTest/Edit/data.txt',
+                'mods/MFTest/Edit/locales',
+                'mods/MFTest/Edit/locales/lang-en.json',
+                'mods/MFTest/Edit/locales/lang-ja.json',
+                'mods/MFTest/Edit/module.json',
+                'mods/MFTest/Edit/resources',
+                'mods/MFTest/Edit/resources/images',
+                'mods/MFTest/Edit/resources/images/Readme.md',
+                'mods/MFTest/Edit/sass',
+                'mods/MFTest/Edit/sass/all.scss',
+                'mods/MFTest/Edit/tests',
+                'mods/MFTest/Edit/tests/Operation',
+                'mods/MFTest/Edit/tests/Operation/ResetButton.js',
+                'mods/MFTest/Edit/tests/Operation/SaveButton.js',
+                'mods/MFTest/Edit/tests/Status',
+                'mods/MFTest/Edit/tests/Status/ResetButton.js',
+                'mods/MFTest/Edit/tests/Status/SaveButton.js'
+            ], function(filePath) {
+                assert.ok(fs.existsSync(path.join(targetPath, filePath)));
+            });
 
+            // JSON生成テスト
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/Edit/api.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    MFTest_Edit_Users: {
+                        before: {
+                            User: 'isLogin'
+                        },
+                        methods: {
+                            readData: {
+                                len: 0
+                            },
+                            updateData: {
+                                formHandler: true,
+                                len: 1
+                            }
+                        }
+                    },
+                    MFTest_Edit_Tests: {
+                        before: {
+                            User: 'isLogin'
+                        },
+                        methods: {
+                            testSetUp: {
+                                len: 0
+                            },
+                            testTearDown: {
+                                len: 0
+                            }
+                        }
+                    }
+                }
+            );
+
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/Edit/locales/lang-en.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    'MFTest.Edit': {
+                        Title: 'MFTest.Edit',
+                        'Please enter textdata': 'Please enter textdata.',
+                        field: {
+                            Text: 'Text'
+                        }
+                    }
+                }
+            );
+
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/Edit/locales/lang-ja.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    'MFTest.Edit': {
+                        Title: 'MFTest.Edit',
+                        'Please enter textdata': 'テキストを入力してください。',
+                        field: {
+                            Text: 'テキスト'
+                        }
+                    }
+                }
+            );
+
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/Edit/module.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    screen: 'edit',
+                    xtype: 'mftest-edit',
+                    controllers: [],
+                    views: [
+                        'main.Main',
+                        'main.MainController',
+                        'main.MainModel'
+                    ],
+                    stores: [],
+                    styles: [],
+                    test: {
+                        fieldName: 'textdatatextfield',
+                        columnName: 'textdata',
+                        dummyText: 'dummy text',
+                        modifiedText: 'modified text'
+                    }
+                }
+            );
 
             // カレントディレクトリ復元
             process.chdir(currentPath);
@@ -930,9 +1112,244 @@ describe("microfield generate", function() {
             assert.equal(err, null);
             assert.equal(stderr, '');
 
-            // EditListテンプレート生成テスト
+            // ファイル配置テスト
+            CLI.iterate([
+                'mods/MFTest/EditList/api.json',
+                'mods/MFTest/EditList/app',
+                'mods/MFTest/EditList/app/controller',
+                'mods/MFTest/EditList/app/controller/Main.js',
+                'mods/MFTest/EditList/app/model',
+                'mods/MFTest/EditList/app/model/List.js',
+                'mods/MFTest/EditList/app/store',
+                'mods/MFTest/EditList/app/store/Lists.js',
+                'mods/MFTest/EditList/app/view',
+                'mods/MFTest/EditList/app/view/edit',
+                'mods/MFTest/EditList/app/view/edit/Edit.js',
+                'mods/MFTest/EditList/app/view/edit/EditController.js',
+                'mods/MFTest/EditList/app/view/edit/EditModel.js',
+                'mods/MFTest/EditList/app/view/list',
+                'mods/MFTest/EditList/app/view/list/List.js',
+                'mods/MFTest/EditList/app/view/list/ListController.js',
+                'mods/MFTest/EditList/app/view/list/ListModel.js',
+                'mods/MFTest/EditList/app/view/main',
+                'mods/MFTest/EditList/app/view/main/Main.js',
+                'mods/MFTest/EditList/app/view/main/MainController.js',
+                'mods/MFTest/EditList/app/view/main/MainModel.js',
+                'mods/MFTest/EditList/classes',
+                'mods/MFTest/EditList/classes/Lists.php',
+                'mods/MFTest/EditList/classes/Tests.php',
+                'mods/MFTest/EditList/locales',
+                'mods/MFTest/EditList/locales/lang-en.json',
+                'mods/MFTest/EditList/locales/lang-ja.json',
+                'mods/MFTest/EditList/module.json',
+                'mods/MFTest/EditList/resources',
+                'mods/MFTest/EditList/resources/images',
+                'mods/MFTest/EditList/resources/images/Readme.md',
+                'mods/MFTest/EditList/sass',
+                'mods/MFTest/EditList/sass/all.scss',
+                'mods/MFTest/EditList/tests',
+                'mods/MFTest/EditList/tests/data.txt',
+                'mods/MFTest/EditList/tests/Edit Screen',
+                'mods/MFTest/EditList/tests/Edit Screen/Operation',
+                'mods/MFTest/EditList/tests/Edit Screen/Operation/CancelButton.js',
+                'mods/MFTest/EditList/tests/Edit Screen/Operation/Confirm Cancel Message',
+                'mods/MFTest/EditList/tests/Edit Screen/Operation/Confirm Cancel Message/NoButton.js',
+                'mods/MFTest/EditList/tests/Edit Screen/Operation/Confirm Cancel Message/YesButton.js',
+                'mods/MFTest/EditList/tests/Edit Screen/Operation/Confirm Remove Message',
+                'mods/MFTest/EditList/tests/Edit Screen/Operation/Confirm Remove Message/NoButton.js',
+                'mods/MFTest/EditList/tests/Edit Screen/Operation/Confirm Remove Message/YesButton.js',
+                'mods/MFTest/EditList/tests/Edit Screen/Operation/RemoveButton.js',
+                'mods/MFTest/EditList/tests/Edit Screen/Operation/ResetButton.js',
+                'mods/MFTest/EditList/tests/Edit Screen/Operation/SaveButton.js',
+                'mods/MFTest/EditList/tests/Edit Screen/Status',
+                'mods/MFTest/EditList/tests/Edit Screen/Status/CancelButton.js',
+                'mods/MFTest/EditList/tests/Edit Screen/Status/RemoveButton.js',
+                'mods/MFTest/EditList/tests/Edit Screen/Status/ResetButton.js',
+                'mods/MFTest/EditList/tests/Edit Screen/Status/SaveButton.js',
+                'mods/MFTest/EditList/tests/List Screen',
+                'mods/MFTest/EditList/tests/List Screen/Operation',
+                'mods/MFTest/EditList/tests/List Screen/Operation/EditButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Operation/NewButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Operation/Paging Toolbar',
+                'mods/MFTest/EditList/tests/List Screen/Operation/Paging Toolbar/FirstButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Operation/Paging Toolbar/LastButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Operation/Paging Toolbar/NextButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Operation/Paging Toolbar/NumberField.js',
+                'mods/MFTest/EditList/tests/List Screen/Operation/Paging Toolbar/PrevButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Operation/Paging Toolbar/RefreshButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Operation/RefreshButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Operation/RemoveButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Operation/Search Field',
+                'mods/MFTest/EditList/tests/List Screen/Operation/Search Field/Edit.js',
+                'mods/MFTest/EditList/tests/List Screen/Operation/Search Field/Paging.js',
+                'mods/MFTest/EditList/tests/List Screen/Operation/Search Field/Remove.js',
+                'mods/MFTest/EditList/tests/List Screen/Operation/Search Field/Search.js',
+                'mods/MFTest/EditList/tests/List Screen/Status',
+                'mods/MFTest/EditList/tests/List Screen/Status/EditButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Status/NewButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Status/Paging Toolbar',
+                'mods/MFTest/EditList/tests/List Screen/Status/Paging Toolbar/FirstButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Status/Paging Toolbar/LastButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Status/Paging Toolbar/NextButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Status/Paging Toolbar/PrevButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Status/Paging Toolbar/RefreshButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Status/RefreshButton.js',
+                'mods/MFTest/EditList/tests/List Screen/Status/RemoveButton.js',
+                'mods/MFTest/EditList/tests/New Screen',
+                'mods/MFTest/EditList/tests/New Screen/Operation',
+                'mods/MFTest/EditList/tests/New Screen/Operation/CancelButton.js',
+                'mods/MFTest/EditList/tests/New Screen/Operation/Confirm Cancel Message',
+                'mods/MFTest/EditList/tests/New Screen/Operation/Confirm Cancel Message/NoButton.js',
+                'mods/MFTest/EditList/tests/New Screen/Operation/Confirm Cancel Message/YesButton.js',
+                'mods/MFTest/EditList/tests/New Screen/Operation/RemoveButton.js',
+                'mods/MFTest/EditList/tests/New Screen/Operation/ResetButton.js',
+                'mods/MFTest/EditList/tests/New Screen/Operation/SaveButton.js',
+                'mods/MFTest/EditList/tests/New Screen/Status',
+                'mods/MFTest/EditList/tests/New Screen/Status/CancelButton.js',
+                'mods/MFTest/EditList/tests/New Screen/Status/RemoveButton.js',
+                'mods/MFTest/EditList/tests/New Screen/Status/ResetButton.js',
+                'mods/MFTest/EditList/tests/New Screen/Status/SaveButton.js'
+            ], function(filePath) {
+                assert.ok(fs.existsSync(path.join(targetPath, filePath)));
+            });
 
+            // JSON生成テスト
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/EditList/api.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    MFTest_EditList_Lists: {
+                        tests: {
+                            getRoles: 'MFTest_EditList_Tests.getRoles',
+                            getGrid: 'MFTest_EditList_Tests.getGrid',
+                            readData: 'MFTest_EditList_Tests.readData',
+                            updateData: 'MFTest_EditList_Tests.updateData',
+                            removeData: 'MFTest_EditList_Tests.removeData' },
+                            before: {
+                                User: 'isLogin'
+                            },
+                            methods: {
+                                getRoles: {
+                                    len: 0
+                                },
+                                getGrid: {
+                                    len: 1
+                                },
+                                readData: {
+                                    len: 1
+                                },
+                                updateData: {
+                                    formHandler: true,
+                                    len: 1
+                                },
+                                removeData: {
+                                    len: 1
+                                }
+                            }
+                    },
+                    MFTest_EditList_Tests: {
+                        before: {
+                            User: 'isLogin'
+                        },
+                        methods: {
+                            testSetUp: {
+                                len: 0
+                            },
+                            testTearDown: {
+                                len: 0
+                            },
+                            insertTestData: {
+                                len: 0
+                            }
+                        }
+                    }
+                }
+            );
 
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/EditList/locales/lang-en.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    'MFTest.EditList': {
+                        'Please enter textdata': 'Please enter textdata.',
+                        Title: 'MFTest.EditList',
+                        column: {
+                            Textdata: 'Textdata'
+                        },
+                        field: {
+                            Textdata: 'Textdata'
+                        }
+                    }
+                }
+            );
+
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/EditList/locales/lang-ja.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    'MFTest.EditList': {
+                        'Please enter textdata': 'テキストを入力してください。',
+                        Title: 'MFTest.EditList',
+                        column: {
+                            Textdata: 'テキスト'
+                        },
+                        field: {
+                            Textdata: 'テキスト'
+                        }
+                    }
+                }
+            );
+
+            assert.deepEqual(
+                CLI.decode(
+                    removeComment(
+                        fs.readFileSync(
+                            path.join(targetPath, 'mods/MFTest/EditList/module.json')
+                        ).toString()
+                    ),
+                    true
+                ),
+                {
+                    screen: 'editlist',
+                    xtype: 'mftest-editlist',
+                    controllers: [
+                        'Main'
+                    ],
+                    views: [
+                        'main.Main',
+                        'main.MainController',
+                        'main.MainModel'
+                    ],
+                    stores: [
+                        'Lists'
+                    ],
+                    styles: [],
+                    test: {
+                        fieldName: 'textdatatextfield',
+                        columnName: 'textdata',
+                        dummyText: 'dummy text',
+                        modifiedText: 'modified text'
+                    }
+                }
+            );
 
             // カレントディレクトリ復元
             process.chdir(currentPath);

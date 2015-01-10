@@ -9,12 +9,12 @@
 require('../../../helper.js');
 
 // }}}
-// {{{ microfield append
+// {{{ microfield append/remove
 
-describe("microfield append", function() {
+describe("microfield append/remove", function() {
 
     var cfg         = getMicroFieldConfig(),
-        rewriteBase = 'micro-field-cli-test-append',
+        rewriteBase = 'micro-field-cli-test-append-remove',
         targetPath  = getTargetPath(rewriteBase),
         decidedIt   = ((!cfg || !cfg.releasesUrl || !cfg.accessToken) ? it.skip : it);
 
@@ -357,6 +357,15 @@ describe("microfield append", function() {
         });
 
         // }}}
+
+    });
+
+    // }}}
+    // {{{ append fields for editlist
+
+    describe("append fields for editlist", function() {
+
+
 
     });
 

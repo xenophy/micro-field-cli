@@ -1053,10 +1053,58 @@ describe("microfield generate", function() {
                 }
             );
 
-            // カレントディレクトリ復元
-            process.chdir(currentPath);
+            // データベーステーブル生成テスト
+            var dbconf = getTargetConfig(targetPath).database.default;
 
-            next();
+            // コネクションラッパー取得
+            var conn = MicroField.database.Manager.getConnection(dbconf);
+
+            // スキーマ取得
+            var schema = MicroField.database.Manager.getSchema(dbconf, {
+                cls     : 'Edit',
+                table   : 'edit'
+            });
+
+            // 接続
+            conn.connect(schema, function() {
+
+                // テーブル存在確認
+                conn.existsTable(function(err, exists) {
+
+                    // 存在確認
+                    assert.ok(exists);
+
+                    // テーブル定義確認
+                    conn.query('SHOW CREATE TABLE ' + schema.getName(), function(err, tbl) {
+
+                        assert.deepEqual(
+                            tbl,
+                            [{
+                                Table: 'edit',
+                                'Create Table': [
+                                    'CREATE TABLE `edit` (',
+                                    '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
+                                    '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
+                                    '  `textdata` varchar(255) NOT NULL,',
+                                    '  `modified` datetime NOT NULL,',
+                                    '  `created` datetime NOT NULL,',
+                                    '  PRIMARY KEY (`pk`)',
+                                    ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
+                                ].join("\n")
+                            }]
+                        );
+
+                    });
+
+                    // カレントディレクトリ復元
+                    process.chdir(currentPath);
+
+                    next();
+
+                });
+
+            });
+
         });
 
     });
@@ -1351,10 +1399,58 @@ describe("microfield generate", function() {
                 }
             );
 
-            // カレントディレクトリ復元
-            process.chdir(currentPath);
+            // データベーステーブル生成テスト
+            var dbconf = getTargetConfig(targetPath).database.default;
 
-            next();
+            // コネクションラッパー取得
+            var conn = MicroField.database.Manager.getConnection(dbconf);
+
+            // スキーマ取得
+            var schema = MicroField.database.Manager.getSchema(dbconf, {
+                cls     : 'EditList',
+                table   : 'editlist'
+            });
+
+            // 接続
+            conn.connect(schema, function() {
+
+                // テーブル存在確認
+                conn.existsTable(function(err, exists) {
+
+                    // 存在確認
+                    assert.ok(exists);
+
+                    // テーブル定義確認
+                    conn.query('SHOW CREATE TABLE ' + schema.getName(), function(err, tbl) {
+
+                        assert.deepEqual(
+                            tbl,
+                            [{
+                                Table: 'editlist',
+                                'Create Table': [
+                                    'CREATE TABLE `editlist` (',
+                                    '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
+                                    '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
+                                    '  `textdata` varchar(255) NOT NULL,',
+                                    '  `modified` datetime NOT NULL,',
+                                    '  `created` datetime NOT NULL,',
+                                    '  PRIMARY KEY (`pk`)',
+                                    ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
+                                ].join("\n")
+                            }]
+                        );
+
+                    });
+
+                    // カレントディレクトリ復元
+                    process.chdir(currentPath);
+
+                    next();
+
+                });
+
+            });
+
         });
 
     });

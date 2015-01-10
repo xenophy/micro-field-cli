@@ -77,7 +77,7 @@
         src = src.join("\n");
 
         // 複数行のコメント削除
-        src = src.replace(/\/\**([^\/]|[^\*]\/)*\*\//g, '');
+        src = src.replace(/\/\*[\s\S]*?\*\//g, '');
 
         // 単行コメント削除
         src = src.replace(/\s*\/\/.*$/g, '');
@@ -354,7 +354,33 @@
     };
 
     // }}}
+    // {{{ getTargetConfig
 
+    global.getTargetConfig = function(targetPath) {
+
+        return CLI.decode(
+            removeComment(
+                fs.readFileSync(path.join(targetPath, 'mods/microfield.json')).toString()
+            )
+        );
+    };
+
+    // }}}
+    // {{{ CLIクラスローダー設定
+
+    CLI.Loader.setConfig({
+        enabled : true,
+        paths   : {
+            'MicroField' : currentPath + '/app'
+        }
+    });
+
+    // }}}
+    // {{{ MicroField.database.Manager
+
+    CLI.require('MicroField.database.Manager');
+
+    // }}}
 
 })();
 

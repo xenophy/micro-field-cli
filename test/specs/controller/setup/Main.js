@@ -18,8 +18,7 @@ describe("microfield setup", function() {
         decidedIt   = ((!cfg || !cfg.releasesUrl || !cfg.accessToken) ? it.skip : it);
 
         // TODO: とりあえずテストから外すため、後で削除
-        decidedIt = it.skip;
-
+        // decidedIt = it.skip;
 
     // {{{ setup
 

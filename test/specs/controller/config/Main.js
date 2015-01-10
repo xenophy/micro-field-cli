@@ -55,7 +55,7 @@ describe("microfield config", function() {
 
     it("new", function(next) {
 
-        execChildProcess('node bin/index.js config', function(err, stdout, stderr) {
+        execChildProcess(programPath + ' config', function(err, stdout, stderr) {
 
             assert.equal(err, null);
             assert.equal(stderr, '');
@@ -91,7 +91,7 @@ describe("microfield config", function() {
 
     it("apply accessToken", function(next) {
 
-        execChildProcess('node bin/index.js config --accessToken=123456789', function(err, stdout, stderr) {
+        execChildProcess(programPath + ' config --accessToken=123456789', function(err, stdout, stderr) {
 
             assert.equal(err, null);
             assert.equal(stderr, '');
@@ -117,7 +117,7 @@ describe("microfield config", function() {
             // 設定した内容がファイルに反映されていること
             assert.equal(JSON.parse(fs.readFileSync(path.join(filepath, filename))).accessToken, '123456789');
 
-            execChildProcess('node bin/index.js config', function(err, stdout, stderr) {
+            execChildProcess(programPath + ' config', function(err, stdout, stderr) {
 
                 assert.equal(err, null);
                 assert.equal(stderr, '');
@@ -155,7 +155,7 @@ describe("microfield config", function() {
 
     it("apply extPath", function(next) {
 
-        execChildProcess('node bin/index.js config --extPath=~/Library/Sencha/ext-5.1.0', function(err, stdout, stderr) {
+        execChildProcess(programPath + ' config --extPath=~/Library/Sencha/ext-5.1.0', function(err, stdout, stderr) {
 
             assert.equal(err, null);
             assert.equal(stderr, '');
@@ -181,7 +181,7 @@ describe("microfield config", function() {
             // 設定した内容がファイルに反映されていること
             assert.equal(JSON.parse(fs.readFileSync(path.join(filepath, filename))).extPath, '~/Library/Sencha/ext-5.1.0');
 
-            execChildProcess('node bin/index.js config', function(err, stdout, stderr) {
+            execChildProcess(programPath + ' config', function(err, stdout, stderr) {
 
                 assert.equal(err, null);
                 assert.equal(stderr, '');
@@ -219,7 +219,7 @@ describe("microfield config", function() {
 
     it("apply releasesUrl", function(next) {
 
-        execChildProcess('node bin/index.js config --releasesUrl=https://api.github.com/repos/xenophy/micro-field/releases', function(err, stdout, stderr) {
+        execChildProcess(programPath + ' config --releasesUrl=https://api.github.com/repos/xenophy/micro-field/releases', function(err, stdout, stderr) {
 
             assert.equal(err, null);
             assert.equal(stderr, '');
@@ -245,7 +245,7 @@ describe("microfield config", function() {
             // 設定した内容がファイルに反映されていること
             assert.equal(JSON.parse(fs.readFileSync(path.join(filepath, filename))).releasesUrl, 'https://api.github.com/repos/xenophy/micro-field/releases');
 
-            execChildProcess('node bin/index.js config', function(err, stdout, stderr) {
+            execChildProcess(programPath + ' config', function(err, stdout, stderr) {
 
                 assert.equal(err, null);
                 assert.equal(stderr, '');
@@ -283,7 +283,7 @@ describe("microfield config", function() {
 
     it("apply domain", function(next) {
 
-        execChildProcess('node bin/index.js config --domain=localhost', function(err, stdout, stderr) {
+        execChildProcess(programPath + ' config --domain=localhost', function(err, stdout, stderr) {
 
             assert.equal(err, null);
             assert.equal(stderr, '');
@@ -309,7 +309,7 @@ describe("microfield config", function() {
             // 設定した内容がファイルに反映されていること
             assert.equal(JSON.parse(fs.readFileSync(path.join(filepath, filename))).domain, 'localhost');
 
-            execChildProcess('node bin/index.js config', function(err, stdout, stderr) {
+            execChildProcess(programPath + ' config', function(err, stdout, stderr) {
 
                 assert.equal(err, null);
                 assert.equal(stderr, '');

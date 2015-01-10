@@ -20,7 +20,18 @@ CLI.define('MicroField.controller.append.Help', {
         // }}}
         // {{{ desc
 
-        desc: 'This command appends a new component to already exists module.',
+        desc: [
+            'This command appends a new component to already exists module.',
+            '',
+            'Fieldtypes'.underline,
+            '  * datefield',
+            '  * htmleditor',
+            '  * numberfield',
+            '  * textarea',
+            '  * textfield',
+            '  * timefield',
+            '  * triggerfield'
+        ].join("\n"),
 
         // }}}
         // {{{ syntax

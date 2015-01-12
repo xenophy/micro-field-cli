@@ -17,7 +17,7 @@ describe("microfield append/remove", function() {
         rewriteBase = 'micro-field-cli-test-append-remove',
         targetPath  = getTargetPath(rewriteBase),
         decidedIt   = ((!cfg || !cfg.releasesUrl || !cfg.accessToken) ? it.skip : it),
-        replaceRegexWS, genAppendTestFn, genRemoveTestFn, fieldTests, tests;
+        replaceRegexWS, genAppendTestFn, genRemoveTestFn, fieldTests, dbTests, tests;
 
 
     // TODO: とりあえずテストから外すため、後で削除
@@ -64,11 +64,57 @@ describe("microfield append/remove", function() {
                 assert.ok(removeComment(fs.readFileSync(item.file).toString()).match(new RegExp(item.regex)));
             });
 
-            // カレントディレクトリ復元
-            process.chdir(currentPath);
+            // データベースフィールド
+            if (dbTests[type][fieldType]) {
 
-            // コールバック実行
-            done();
+                var t = dbTests[type][fieldType];
+
+                // データベーステーブル生成テスト
+                var dbconf = getTargetConfig(targetPath).database.default;
+
+                // コネクションラッパー取得
+                var conn = MicroField.database.Manager.getConnection(dbconf);
+
+                // スキーマ取得
+                var schema = MicroField.database.Manager.getSchema(dbconf, t.schema);
+
+                // 接続
+                conn.connect(schema, function() {
+
+                    // テーブル存在確認
+                    conn.existsTable(function(err, exists) {
+
+                        // 存在確認
+                        assert.ok(exists);
+
+                        // フィールド定義確認
+                        conn.query('SHOW COLUMNS FROM ' + schema.getName(), function(err, result) {
+
+                            var fieldExists = false;
+
+                            CLI.iterate(result, function(item) {
+
+                                if(item.Field == t.fieldName) {
+                                    fieldExists = true;
+                                }
+
+                            });
+
+                            assert.ok(fieldExists);
+
+                            done();
+
+                        });
+
+                    });
+
+                });
+
+            } else {
+
+                done();
+
+            }
 
         };
 
@@ -103,15 +149,166 @@ describe("microfield append/remove", function() {
                 assert.equal(removeComment(fs.readFileSync(item.file).toString()).match(new RegExp(item.regex)), null);
             });
 
-            // カレントディレクトリ復元
-            process.chdir(currentPath);
+            // データベースフィールド
+            if (dbTests[type][fieldType]) {
 
-            // コールバック実行
-            done();
+                var t = dbTests[type][fieldType];
+
+                // データベーステーブル生成テスト
+                var dbconf = getTargetConfig(targetPath).database.default;
+
+                // コネクションラッパー取得
+                var conn = MicroField.database.Manager.getConnection(dbconf);
+
+                // スキーマ取得
+                var schema = MicroField.database.Manager.getSchema(dbconf, t.schema);
+
+                // 接続
+                conn.connect(schema, function() {
+
+                    // テーブル存在確認
+                    conn.existsTable(function(err, exists) {
+
+                        // 存在確認
+                        assert.ok(exists);
+
+                        // フィールド定義確認
+                        conn.query('SHOW COLUMNS FROM ' + schema.getName(), function(err, result) {
+
+                            var fieldExists = false;
+
+                            CLI.iterate(result, function(item) {
+
+                                if(item.Field == t.fieldName) {
+                                    fieldExists = true;
+                                }
+
+                            });
+
+                            assert.ok(!fieldExists);
+
+                            done();
+
+                        });
+
+                    });
+
+                });
+
+            } else {
+
+                done();
+
+            }
 
         };
 
     }
+
+    dbTests = {
+        'MFTest/Edit': {
+            'datefield': {
+                schema: {
+                    cls     : 'Edit',
+                    table   : 'edit'
+                },
+                fieldName   : 'field1'
+            },
+            'htmleditor': {
+                schema: {
+                    cls     : 'Edit',
+                    table   : 'edit'
+                },
+                fieldName   : 'field2'
+            },
+            'numberfield': {
+                schema: {
+                    cls     : 'Edit',
+                    table   : 'edit'
+                },
+                fieldName   : 'field3'
+            },
+            'textarea': {
+                schema: {
+                    cls     : 'Edit',
+                    table   : 'edit'
+                },
+                fieldName   : 'field4'
+            },
+            'textfield': {
+                schema: {
+                    cls     : 'Edit',
+                    table   : 'edit'
+                },
+                fieldName   : 'field5'
+            },
+            'timefield': {
+                schema: {
+                    cls     : 'Edit',
+                    table   : 'edit'
+                },
+                fieldName   : 'field6'
+            },
+            'triggerfield': {
+                schema: {
+                    cls     : 'Edit',
+                    table   : 'edit'
+                },
+                fieldName   : 'field7'
+            }
+        },
+        'MFTest/EditList': {
+            'datefield': {
+                schema: {
+                    cls     : 'EditList',
+                    table   : 'editlist'
+                },
+                fieldName   : 'field1'
+            },
+            'htmleditor': {
+                schema: {
+                    cls     : 'EditList',
+                    table   : 'editlist'
+                },
+                fieldName   : 'field2'
+            },
+            'numberfield': {
+                schema: {
+                    cls     : 'EditList',
+                    table   : 'editlist'
+                },
+                fieldName   : 'field3'
+            },
+            'textarea': {
+                schema: {
+                    cls     : 'EditList',
+                    table   : 'editlist'
+                },
+                fieldName   : 'field4'
+            },
+            'textfield': {
+                schema: {
+                    cls     : 'EditList',
+                    table   : 'editlist'
+                },
+                fieldName   : 'field5'
+            },
+            'timefield': {
+                schema: {
+                    cls     : 'EditList',
+                    table   : 'editlist'
+                },
+                fieldName   : 'field6'
+            },
+            'triggerfield': {
+                schema: {
+                    cls     : 'EditList',
+                    table   : 'editlist'
+                },
+                fieldName   : 'field7'
+            }
+        }
+    };
 
 
     fieldTests = {

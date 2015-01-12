@@ -19,7 +19,7 @@ describe("microfield generate", function() {
         decidedIt   = ((!cfg || !cfg.releasesUrl || !cfg.accessToken) ? it.skip : it),
         filelist    = {},
         jsonlist    = {},
-        genTestFn;
+        genTestFn, genDuplicateTestFn;
 
     // テスト実行関数
     genTestFn = function(type, callback) {
@@ -112,6 +112,40 @@ describe("microfield generate", function() {
 
     };
 
+    genDuplicateTestFn = function(type, callback) {
+
+        return function(err, stdout, stderr) {
+
+            assert.equal(err, null);
+            assert.equal(stderr, '');
+
+            // 重複エラーテスト
+            var comp = [
+                'MicroField CLI v{0}'.bold,
+                '',
+                '{1} Could not generate "{2}" directory, that is already exists.',
+                ''
+            ].join("\n");
+
+            comp = CLI.String.format(
+                comp,
+                MicroField.manifest.version,
+                '[ERR]'.red.bold,
+                type.bold
+            );
+
+            assert.equal(stdout, comp);
+
+            // カレントディレクトリ復元
+            process.chdir(currentPath);
+
+            // コールバック
+            callback();
+
+        };
+
+    };
+
         // TODO: とりあえずテストから外すため、後で削除
         //decidedIt = it.skip;
 
@@ -148,33 +182,8 @@ describe("microfield generate", function() {
         // 作業ディレクトリへ移動
         process.chdir(targetPath);
 
-        execChildProcess(programPath + ' generate header MFTest/Header', function(err, stdout, stderr) {
-
-            assert.equal(err, null);
-            assert.equal(stderr, '');
-
-            // 重複エラーテスト
-            var comp = [
-                'MicroField CLI v{0}'.bold,
-                '',
-                '{1} Could not generate "{2}" directory, that is already exists.',
-                ''
-            ].join("\n");
-
-            comp = CLI.String.format(
-                comp,
-                MicroField.manifest.version,
-                '[ERR]'.red.bold,
-                'MFTest/Header'.bold
-            );
-
-            assert.equal(stdout, comp);
-
-            // カレントディレクトリ復元
-            process.chdir(currentPath);
-
-            next();
-        });
+        // テスト実行
+        execChildProcess(programPath + ' generate header MFTest/Header', genDuplicateTestFn('MFTest/Header', next));
 
     });
 
@@ -199,33 +208,8 @@ describe("microfield generate", function() {
         // 作業ディレクトリへ移動
         process.chdir(targetPath);
 
-        execChildProcess(programPath + ' generate footer MFTest/Footer', function(err, stdout, stderr) {
-
-            assert.equal(err, null);
-            assert.equal(stderr, '');
-
-            // 重複エラーテスト
-            var comp = [
-                'MicroField CLI v{0}'.bold,
-                '',
-                '{1} Could not generate "{2}" directory, that is already exists.',
-                ''
-            ].join("\n");
-
-            comp = CLI.String.format(
-                comp,
-                MicroField.manifest.version,
-                '[ERR]'.red.bold,
-                'MFTest/Footer'.bold
-            );
-
-            assert.equal(stdout, comp);
-
-            // カレントディレクトリ復元
-            process.chdir(currentPath);
-
-            next();
-        });
+        // テスト実行
+        execChildProcess(programPath + ' generate footer MFTest/Footer', genDuplicateTestFn('MFTest/Footer', next));
 
     });
 
@@ -250,33 +234,8 @@ describe("microfield generate", function() {
         // 作業ディレクトリへ移動
         process.chdir(targetPath);
 
-        execChildProcess(programPath + ' generate navigation MFTest/Navigation', function(err, stdout, stderr) {
-
-            assert.equal(err, null);
-            assert.equal(stderr, '');
-
-            // 重複エラーテスト
-            var comp = [
-                'MicroField CLI v{0}'.bold,
-                '',
-                '{1} Could not generate "{2}" directory, that is already exists.',
-                ''
-            ].join("\n");
-
-            comp = CLI.String.format(
-                comp,
-                MicroField.manifest.version,
-                '[ERR]'.red.bold,
-                'MFTest/Navigation'.bold
-            );
-
-            assert.equal(stdout, comp);
-
-            // カレントディレクトリ復元
-            process.chdir(currentPath);
-
-            next();
-        });
+        // テスト実行
+        execChildProcess(programPath + ' generate navigation MFTest/Navigation', genDuplicateTestFn('MFTest/Navigation', next));
 
     });
 
@@ -302,33 +261,8 @@ describe("microfield generate", function() {
         // 作業ディレクトリへ移動
         process.chdir(targetPath);
 
-        execChildProcess(programPath + ' generate tabletnavigation MFTest/TabletNavigation', function(err, stdout, stderr) {
-
-            assert.equal(err, null);
-            assert.equal(stderr, '');
-
-            // 重複エラーテスト
-            var comp = [
-                'MicroField CLI v{0}'.bold,
-                '',
-                '{1} Could not generate "{2}" directory, that is already exists.',
-                ''
-            ].join("\n");
-
-            comp = CLI.String.format(
-                comp,
-                MicroField.manifest.version,
-                '[ERR]'.red.bold,
-                'MFTest/TabletNavigation'.bold
-            );
-
-            assert.equal(stdout, comp);
-
-            // カレントディレクトリ復元
-            process.chdir(currentPath);
-
-            next();
-        });
+        // テスト実行
+        execChildProcess(programPath + ' generate tabletnavigation MFTest/TabletNavigation', genDuplicateTestFn('MFTest/TabletNavigation', next));
 
     });
 
@@ -342,6 +276,7 @@ describe("microfield generate", function() {
 
         // テスト実行
         execChildProcess(programPath + ' generate base MFTest/Base', genTestFn('MFTest/Base', next));
+
     });
 
     // }}}
@@ -354,6 +289,7 @@ describe("microfield generate", function() {
 
         // テスト実行
         execChildProcess(programPath + ' generate base MFTest/BaseOtherName', genTestFn('MFTest/BaseOtherName', next));
+
     });
 
     // }}}
@@ -377,33 +313,8 @@ describe("microfield generate", function() {
         // 作業ディレクトリへ移動
         process.chdir(targetPath);
 
-        execChildProcess(programPath + ' generate base MFTest/Base', function(err, stdout, stderr) {
-
-            assert.equal(err, null);
-            assert.equal(stderr, '');
-
-            // 重複エラーテスト
-            var comp = [
-                'MicroField CLI v{0}'.bold,
-                '',
-                '{1} Could not generate "{2}" directory, that is already exists.',
-                ''
-            ].join("\n");
-
-            comp = CLI.String.format(
-                comp,
-                MicroField.manifest.version,
-                '[ERR]'.red.bold,
-                'MFTest/Base'.bold
-            );
-
-            assert.equal(stdout, comp);
-
-            // カレントディレクトリ復元
-            process.chdir(currentPath);
-
-            next();
-        });
+        // テスト実行
+        execChildProcess(programPath + ' generate base MFTest/Base', genDuplicateTestFn('MFTest/Base', next));
 
     });
 
@@ -732,33 +643,8 @@ describe("microfield generate", function() {
         // 作業ディレクトリへ移動
         process.chdir(targetPath);
 
-        execChildProcess(programPath + ' generate edit MFTest/Edit', function(err, stdout, stderr) {
-
-            assert.equal(err, null);
-            assert.equal(stderr, '');
-
-            // 重複エラーテスト
-            var comp = [
-                'MicroField CLI v{0}'.bold,
-                '',
-                '{1} Could not generate "{2}" directory, that is already exists.',
-                ''
-            ].join("\n");
-
-            comp = CLI.String.format(
-                comp,
-                MicroField.manifest.version,
-                '[ERR]'.red.bold,
-                'MFTest/Edit'.bold
-            );
-
-            assert.equal(stdout, comp);
-
-            // カレントディレクトリ復元
-            process.chdir(currentPath);
-
-            next();
-        });
+        // テスト実行
+        execChildProcess(programPath + ' generate edit MFTest/Edit', genDuplicateTestFn('MFTest/Edit', next));
 
     });
 
@@ -1083,33 +969,8 @@ describe("microfield generate", function() {
         // 作業ディレクトリへ移動
         process.chdir(targetPath);
 
-        execChildProcess(programPath + ' generate editlist MFTest/EditList', function(err, stdout, stderr) {
-
-            assert.equal(err, null);
-            assert.equal(stderr, '');
-
-            // 重複エラーテスト
-            var comp = [
-                'MicroField CLI v{0}'.bold,
-                '',
-                '{1} Could not generate "{2}" directory, that is already exists.',
-                ''
-            ].join("\n");
-
-            comp = CLI.String.format(
-                comp,
-                MicroField.manifest.version,
-                '[ERR]'.red.bold,
-                'MFTest/EditList'.bold
-            );
-
-            assert.equal(stdout, comp);
-
-            // カレントディレクトリ復元
-            process.chdir(currentPath);
-
-            next();
-        });
+        // テスト実行
+        execChildProcess(programPath + ' generate editlist MFTest/EditList', genDuplicateTestFn('MFTest/EditList', next));
 
     });
 

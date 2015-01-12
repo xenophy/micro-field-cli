@@ -322,6 +322,32 @@ describe("microfield append/remove", function() {
                     ");"
                 ])
             }, {
+                // fieldsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/model/List.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.model.List' , {",
+                    "        fields : [",
+                    "            \"field1\" ,",
+                    "        ]",
+                    ");"
+                ])
+            }, {
+                // columnsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/view/list/List.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.view.list.List' , {",
+                    "        columns : [",
+                    "        {",
+                    "            text : 'field1' ,",
+                    "            dataIndex : 'field1' ,",
+                    "            flex : 1",
+                    "        }",
+                    "        ]",
+                    ");"
+                ])
+            }, {
                 // $fieldsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/EditList/classes/Lists.php'),
                 regex   : replaceRegexWS([
@@ -350,6 +376,32 @@ describe("microfield append/remove", function() {
                     "        fieldLabel : 'field2' ,",
                     "        width : 300",
                     "    }",
+                    ");"
+                ])
+            }, {
+                // fieldsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/model/List.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.model.List' , {",
+                    "        fields : [",
+                    "            \"field2\" ,",
+                    "        ]",
+                    ");"
+                ])
+            }, {
+                // columnsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/view/list/List.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.view.list.List' , {",
+                    "        columns : [",
+                    "        {",
+                    "            text : 'field2' ,",
+                    "            dataIndex : 'field2' ,",
+                    "            flex : 1",
+                    "        }",
+                    "        ]",
                     ");"
                 ])
             }, {
@@ -384,6 +436,32 @@ describe("microfield append/remove", function() {
                     ");"
                 ])
             }, {
+                // fieldsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/model/List.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.model.List' , {",
+                    "        fields : [",
+                    "            \"field3\" ,",
+                    "        ]",
+                    ");"
+                ])
+            }, {
+                // columnsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/view/list/List.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.view.list.List' , {",
+                    "        columns : [",
+                    "        {",
+                    "            text : 'field3' ,",
+                    "            dataIndex : 'field3' ,",
+                    "            flex : 1",
+                    "        }",
+                    "        ]",
+                    ");"
+                ])
+            }, {
                 // $fieldsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/EditList/classes/Lists.php'),
                 regex   : replaceRegexWS([
@@ -412,6 +490,32 @@ describe("microfield append/remove", function() {
                     "        fieldLabel : 'field4' ,",
                     "        width : 300",
                     "    }",
+                    ");"
+                ])
+            }, {
+                // fieldsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/model/List.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.model.List' , {",
+                    "        fields : [",
+                    "            \"field4\" ,",
+                    "        ]",
+                    ");"
+                ])
+            }, {
+                // columnsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/view/list/List.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.view.list.List' , {",
+                    "        columns : [",
+                    "        {",
+                    "            text : 'field4' ,",
+                    "            dataIndex : 'field4' ,",
+                    "            flex : 1",
+                    "        }",
+                    "        ]",
                     ");"
                 ])
             }, {
@@ -446,6 +550,32 @@ describe("microfield append/remove", function() {
                     ");"
                 ])
             }, {
+                // fieldsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/model/List.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.model.List' , {",
+                    "        fields : [",
+                    "            \"field5\" ,",
+                    "        ]",
+                    ");"
+                ])
+            }, {
+                // columnsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/view/list/List.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.view.list.List' , {",
+                    "        columns : [",
+                    "        {",
+                    "            text : 'field5' ,",
+                    "            dataIndex : 'field5' ,",
+                    "            flex : 1",
+                    "        }",
+                    "        ]",
+                    ");"
+                ])
+            }, {
                 // $fieldsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/EditList/classes/Lists.php'),
                 regex   : replaceRegexWS([
@@ -477,6 +607,32 @@ describe("microfield append/remove", function() {
                     ");"
                 ])
             }, {
+                // fieldsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/model/List.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.model.List' , {",
+                    "        fields : [",
+                    "            \"field6\" ,",
+                    "        ]",
+                    ");"
+                ])
+            }, {
+                // columnsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/view/list/List.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.view.list.List' , {",
+                    "        columns : [",
+                    "        {",
+                    "            text : 'field6' ,",
+                    "            dataIndex : 'field6' ,",
+                    "            flex : 1",
+                    "        }",
+                    "        ]",
+                    ");"
+                ])
+            }, {
                 // $fieldsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/EditList/classes/Lists.php'),
                 regex   : replaceRegexWS([
@@ -505,6 +661,32 @@ describe("microfield append/remove", function() {
                     "        fieldLabel : 'field7' ,",
                     "        width : 300",
                     "    }",
+                    ");"
+                ])
+            }, {
+                // fieldsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/model/List.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.model.List' , {",
+                    "        fields : [",
+                    "            \"field7\" ,",
+                    "        ]",
+                    ");"
+                ])
+            }, {
+                // columnsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/view/list/List.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.view.list.List' , {",
+                    "        columns : [",
+                    "        {",
+                    "            text : 'field7' ,",
+                    "            dataIndex : 'field7' ,",
+                    "            flex : 1",
+                    "        }",
+                    "        ]",
                     ");"
                 ])
             }, {

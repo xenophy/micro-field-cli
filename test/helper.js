@@ -366,6 +366,13 @@
     };
 
     // }}}
+    // {{{ preg_quote
+
+    global.preg_quote = function(str, delimiter) {
+        return (str + '').replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + (delimiter || '') + '-]', 'g'), '\\$&');
+    };
+
+    // }}}
     // {{{ CLIクラスローダー設定
 
     CLI.Loader.setConfig({

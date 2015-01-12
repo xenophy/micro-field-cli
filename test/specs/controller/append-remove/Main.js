@@ -17,11 +17,27 @@ describe("microfield append/remove", function() {
         rewriteBase = 'micro-field-cli-test-append-remove',
         targetPath  = getTargetPath(rewriteBase),
         decidedIt   = ((!cfg || !cfg.releasesUrl || !cfg.accessToken) ? it.skip : it),
-        genTestFn, fieldTests, tests;
+        replaceRegexWS, genTestFn, fieldTests, tests;
 
 
     // TODO: とりあえずテストから外すため、後で削除
     //decidedIt = it.skip;
+
+    replaceRegexWS = function(str) {
+
+        if (CLI.isArray(str)) {
+
+            CLI.iterate(str, function(line, num) {
+                str[num] = preg_quote(line);
+            });
+
+            str = str.join("[\\s\\S]*?");
+        } else {
+            str = preg_quote(str);
+        }
+
+        return str.replace(/ +/g, "[\\s\\S]*?");
+    };
 
     genTestFn = function(type, fieldType, callback) {
 
@@ -58,178 +74,179 @@ describe("microfield append/remove", function() {
         'MFTest/Edit': {
             'datefield': [{
                 file    : path.join(targetPath, 'mods/MFTest/Edit/app/view/edit/Edit.js'),
-                regex   : CLI.String.format([
-                    "Ext\.define\({0}'MFTest\.Edit\.view\.edit\.Edit'{0},{0}{",
-                    "{0}items{0}:{0}[",
-                    "{0}{",
-                    "{0}xtype{0}:{0}'datefield'{0},",
-                    "{0}itemId{0}:{0}'field1'{0},",
-                    "{0}labelAlign{0}:{0}'top'{0},",
-                    "{0}name{0}:{0}'field1'{0},",
-                    "{0}fieldLabel{0}:{0}'field1'{0},",
-                    "{0}width{0}:{0}300",
-                    "{0}}",
-                    "{0}\);"
-                ].join(""), "[\\s\\S]*?")
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.Edit.view.edit.Edit' , {",
+                    "        items : [",
+                    "        {",
+                    "            xtype : 'datefield' ,",
+                    "            itemId : 'field1' ,",
+                    "            labelAlign : 'top' ,",
+                    "            name : 'field1' ,",
+                    "            fieldLabel : 'field1' ,",
+                    "            width : 300",
+                    "        }",
+                    ");"
+                ])
             }, {
                 file    : path.join(targetPath, 'mods/MFTest/Edit/classes/Users.php'),
-                regex   : CLI.String.format([
-                    "class{0}MFTest_Edit_Users{0}extends{0}EditEdit{0}{",
-                    "{0}public{0}\\$fields{0}={0}array\\(",
-                    "{0}'field1'",
-                    "{0}\\){0};",
-                    "{0}}"
-                ].join(""), "[\\s\\S]*?")
+                regex   : replaceRegexWS([
+                    "class MFTest_Edit_Users extends EditEdit {",
+                    "    public $fields = array(",
+                    "        'field1'",
+                    "    ) ;",
+                    "}"
+                ])
             }],
             'htmleditor': [{
                 file    : path.join(targetPath, 'mods/MFTest/Edit/app/view/edit/Edit.js'),
-                regex   : CLI.String.format([
-                    "Ext\.define\({0}'MFTest\.Edit\.view\.edit\.Edit'{0},{0}{",
-                    "{0}items{0}:{0}[",
-                    "{0}{",
-                    "{0}xtype{0}:{0}'htmleditor'{0},",
-                    "{0}itemId{0}:{0}'field2'{0},",
-                    "{0}labelAlign{0}:{0}'top'{0},",
-                    "{0}name{0}:{0}'field2'{0},",
-                    "{0}fieldLabel{0}:{0}'field2'{0},",
-                    "{0}width{0}:{0}300",
-                    "{0}}",
-                    "{0}\);"
-                ].join(""), "[\\s\\S]*?")
+                regex   : replaceRegexWS([
+                    "Ext.define( 'MFTest.Edit.view.edit.Edit' , {",
+                    "    items : [",
+                    "    {",
+                    "        xtype : 'htmleditor' ,",
+                    "        itemId : 'field2' ,",
+                    "        labelAlign : 'top' ,",
+                    "        name : 'field2' ,",
+                    "        fieldLabel : 'field2' ,",
+                    "        width : 300",
+                    "    }",
+                    ");"
+                ])
             }, {
                 file    : path.join(targetPath, 'mods/MFTest/Edit/classes/Users.php'),
-                regex   : CLI.String.format([
-                    "class{0}MFTest_Edit_Users{0}extends{0}EditEdit{0}{",
-                    "{0}public{0}\\$fields{0}={0}array\\(",
-                    "{0}'field2'",
-                    "{0}\\){0};",
-                    "{0}}"
-                ].join(""), "[\\s\\S]*?")
+                regex   : replaceRegexWS([
+                    "class MFTest_Edit_Users extends EditEdit {",
+                    "    public $fields = array(",
+                    "        'field2'",
+                    "    ) ;",
+                    "}"
+                ])
             }],
             'numberfield': [{
                 file    : path.join(targetPath, 'mods/MFTest/Edit/app/view/edit/Edit.js'),
-                regex   : CLI.String.format([
-                    "Ext\.define\({0}'MFTest\.Edit\.view\.edit\.Edit'{0},{0}{",
-                    "{0}items{0}:{0}[",
-                    "{0}{",
-                    "{0}xtype{0}:{0}'numberfield'{0},",
-                    "{0}itemId{0}:{0}'field3'{0},",
-                    "{0}labelAlign{0}:{0}'top'{0},",
-                    "{0}name{0}:{0}'field3'{0},",
-                    "{0}fieldLabel{0}:{0}'field3'{0},",
-                    "{0}width{0}:{0}300",
-                    "{0}}",
-                    "{0}\);"
-                ].join(""), "[\\s\\S]*?")
+                regex   : replaceRegexWS([
+                    "Ext.define( 'MFTest.Edit.view.edit.Edit' , {",
+                    "    items : [",
+                    "    {",
+                    "        xtype : 'numberfield' ,",
+                    "        itemId : 'field3' ,",
+                    "        labelAlign : 'top' ,",
+                    "        name : 'field3' ,",
+                    "        fieldLabel : 'field3' ,",
+                    "        width : 300",
+                    "    }",
+                    ");"
+                ])
             }, {
                 file    : path.join(targetPath, 'mods/MFTest/Edit/classes/Users.php'),
-                regex   : CLI.String.format([
-                    "class{0}MFTest_Edit_Users{0}extends{0}EditEdit{0}{",
-                    "{0}public{0}\\$fields{0}={0}array\\(",
-                    "{0}'field3'",
-                    "{0}\\){0};",
-                    "{0}}"
-                ].join(""), "[\\s\\S]*?")
+                regex   : replaceRegexWS([
+                    "class MFTest_Edit_Users extends EditEdit {",
+                    "    public $fields = array(",
+                    "    'field3'",
+                    "    ) ;",
+                    "}"
+                ])
             }],
             'textarea': [{
                 file    : path.join(targetPath, 'mods/MFTest/Edit/app/view/edit/Edit.js'),
-                regex   : CLI.String.format([
-                    "Ext\.define\({0}'MFTest\.Edit\.view\.edit\.Edit'{0},{0}{",
-                    "{0}items{0}:{0}[",
-                    "{0}{",
-                    "{0}xtype{0}:{0}'textareafield'{0},",
-                    "{0}itemId{0}:{0}'field4'{0},",
-                    "{0}labelAlign{0}:{0}'top'{0},",
-                    "{0}name{0}:{0}'field4'{0},",
-                    "{0}fieldLabel{0}:{0}'field4'{0},",
-                    "{0}width{0}:{0}300",
-                    "{0}}",
-                    "{0}\);"
-                ].join(""), "[\\s\\S]*?")
+                regex   : replaceRegexWS([
+                    "Ext.define( 'MFTest.Edit.view.edit.Edit' , {",
+                    "    items : [",
+                    "    {",
+                    "        xtype : 'textareafield' ,",
+                    "        itemId : 'field4' ,",
+                    "        labelAlign : 'top' ,",
+                    "        name : 'field4' ,",
+                    "        fieldLabel : 'field4' ,",
+                    "        width : 300",
+                    "    }",
+                    ");"
+                ])
             }, {
                 file    : path.join(targetPath, 'mods/MFTest/Edit/classes/Users.php'),
-                regex   : CLI.String.format([
-                    "class{0}MFTest_Edit_Users{0}extends{0}EditEdit{0}{",
-                    "{0}public{0}\\$fields{0}={0}array\\(",
-                    "{0}'field4'",
-                    "{0}\\){0};",
-                    "{0}}"
-                ].join(""), "[\\s\\S]*?")
+                regex   : replaceRegexWS([
+                    "class MFTest_Edit_Users extends EditEdit {",
+                    "    public $fields = array(",
+                    "        'field4'",
+                    "    ) ;",
+                    "}"
+                ])
             }],
             'textfield': [{
                 file    : path.join(targetPath, 'mods/MFTest/Edit/app/view/edit/Edit.js'),
-                regex   : CLI.String.format([
-                    "Ext\.define\({0}'MFTest\.Edit\.view\.edit\.Edit'{0},{0}{",
-                    "{0}items{0}:{0}[",
-                    "{0}{",
-                    "{0}xtype{0}:{0}'textfield'{0},",
-                    "{0}itemId{0}:{0}'field5'{0},",
-                    "{0}labelAlign{0}:{0}'top'{0},",
-                    "{0}name{0}:{0}'field5'{0},",
-                    "{0}fieldLabel{0}:{0}'field5'{0},",
-                    "{0}width{0}:{0}300",
-                    "{0}}",
-                    "{0}\);"
-                ].join(""), "[\\s\\S]*?")
+                regex   : replaceRegexWS([
+                    "Ext.define( 'MFTest.Edit.view.edit.Edit' , {",
+                    "    items : [",
+                    "    {",
+                    "        xtype : 'textfield' ,",
+                    "        itemId : 'field5' ,",
+                    "        labelAlign : 'top' ,",
+                    "        name : 'field5' ,",
+                    "        fieldLabel : 'field5' ,",
+                    "        width : 300",
+                    "    }",
+                    ");"
+                ])
             }, {
                 file    : path.join(targetPath, 'mods/MFTest/Edit/classes/Users.php'),
-                regex   : CLI.String.format([
-                    "class{0}MFTest_Edit_Users{0}extends{0}EditEdit{0}{",
-                    "{0}public{0}\\$fields{0}={0}array\\(",
-                    "{0}'field5'",
-                    "{0}\\){0};",
-                    "{0}}"
-                ].join(""), "[\\s\\S]*?")
+                regex   : replaceRegexWS([
+                    "class MFTest_Edit_Users extends EditEdit {",
+                    "    public $fields = array(",
+                    "        'field5'",
+                    "    ) ;",
+                    "}"
+                ])
             }],
             'timefield': [{
                 file    : path.join(targetPath, 'mods/MFTest/Edit/app/view/edit/Edit.js'),
-                regex   : CLI.String.format([
-                    "Ext\.define\({0}'MFTest\.Edit\.view\.edit\.Edit'{0},{0}{",
-                    "{0}items{0}:{0}[",
-                    "{0}{",
-                    "{0}xtype{0}:{0}'timefield'{0},",
-                    "{0}itemId{0}:{0}'field6'{0},",
-                    "{0}labelAlign{0}:{0}'top'{0},",
-                    "{0}name{0}:{0}'field6'{0},",
-                    "{0}fieldLabel{0}:{0}'field6'{0},",
-                    "{0}width{0}:{0}300",
-                    "{0}}",
-                    "{0}\);"
-                ].join(""), "[\\s\\S]*?")
+                regex   : replaceRegexWS([
+                    "Ext.define( 'MFTest.Edit.view.edit.Edit' , {",
+                    "    items : [",
+                    "    {",
+                    "        xtype : 'timefield' ,",
+                    "        itemId : 'field6' ,",
+                    "        labelAlign : 'top' ,",
+                    "        name : 'field6' ,",
+                    "        fieldLabel : 'field6' ,",
+                    "        width : 300",
+                    "    }",
+                    ");"
+                ])
             }, {
                 file    : path.join(targetPath, 'mods/MFTest/Edit/classes/Users.php'),
-                regex   : CLI.String.format([
-                    "class{0}MFTest_Edit_Users{0}extends{0}EditEdit{0}{",
-                    "{0}public{0}\\$fields{0}={0}array\\(",
-                    "{0}'field6'",
-                    "{0}\\){0};",
-                    "{0}}"
-                ].join(""), "[\\s\\S]*?")
+                regex   : replaceRegexWS([
+                    "class MFTest_Edit_Users extends EditEdit {",
+                    "    public $fields = array(",
+                    "        'field6'",
+                    "    ) ;",
+                    "}"
+                ])
             }],
             'triggerfield': [{
                 file    : path.join(targetPath, 'mods/MFTest/Edit/app/view/edit/Edit.js'),
-                regex   : CLI.String.format([
-                    "Ext\.define\({0}'MFTest\.Edit\.view\.edit\.Edit'{0},{0}{",
-                    "{0}items{0}:{0}[",
-                    "{0}{",
-                    "{0}xtype{0}:{0}'triggerfield'{0},",
-                    "{0}itemId{0}:{0}'field7'{0},",
-                    "{0}labelAlign{0}:{0}'top'{0},",
-                    "{0}name{0}:{0}'field7'{0},",
-                    "{0}fieldLabel{0}:{0}'field7'{0},",
-                    "{0}width{0}:{0}300",
-                    "{0}}",
-                    "{0}\);"
-                ].join(""), "[\\s\\S]*?")
+                regex   : replaceRegexWS([
+                    "Ext.define( 'MFTest.Edit.view.edit.Edit' , {",
+                    "    items : [",
+                    "    {",
+                    "        xtype : 'triggerfield' ,",
+                    "        itemId : 'field7' ,",
+                    "        labelAlign : 'top' ,",
+                    "        name : 'field7' ,",
+                    "        fieldLabel : 'field7' ,",
+                    "        width : 300",
+                    "    }",
+                    ");"
+                ])
             }, {
                 file    : path.join(targetPath, 'mods/MFTest/Edit/classes/Users.php'),
-                regex   : CLI.String.format([
-                    "class{0}MFTest_Edit_Users{0}extends{0}EditEdit{0}{",
-                    "{0}public{0}\\$fields{0}={0}array\\(",
-                    "{0}'field7'",
-                    "{0}\\){0};",
-                    "{0}}"
-                ].join(""), "[\\s\\S]*?")
+                regex   : replaceRegexWS([
+                    "class MFTest_Edit_Users extends EditEdit {",
+                    "    public $fields = array(",
+                    "        'field7'",
+                    "    ) ;",
+                    "}"
+                ])
             }]
         }
     };
@@ -269,6 +286,7 @@ describe("microfield append/remove", function() {
 
     // {{{ setup for append test
 
+    /*
     decidedIt("setup for append test", function(next) {
         execChildProcess('cat ' + currentPath + '/test/clear.sql|mysql -uroot', function(err, stdout, stderr) {
             setupAchive(rewriteBase, null, function(targetPath) {
@@ -282,6 +300,7 @@ describe("microfield append/remove", function() {
             });
         });
     });
+   */
 
     // }}}
     // {{{ define for tests

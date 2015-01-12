@@ -71,8 +71,15 @@ describe("microfield append/remove", function() {
     };
 
     fieldTests = {
+
+        // {{{ for edit
+
         'MFTest/Edit': {
+
+            // {{{ datefield
+
             'datefield': [{
+                // itemsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/Edit/app/view/edit/Edit.js'),
                 regex   : replaceRegexWS([
                     "Ext.define(",
@@ -89,6 +96,7 @@ describe("microfield append/remove", function() {
                     ");"
                 ])
             }, {
+                // $fieldsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/Edit/classes/Users.php'),
                 regex   : replaceRegexWS([
                     "class MFTest_Edit_Users extends EditEdit {",
@@ -98,7 +106,12 @@ describe("microfield append/remove", function() {
                     "}"
                 ])
             }],
+
+            // }}}
+            // {{{ htmleditor
+
             'htmleditor': [{
+                // itemsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/Edit/app/view/edit/Edit.js'),
                 regex   : replaceRegexWS([
                     "Ext.define( 'MFTest.Edit.view.edit.Edit' , {",
@@ -114,6 +127,7 @@ describe("microfield append/remove", function() {
                     ");"
                 ])
             }, {
+                // $fieldsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/Edit/classes/Users.php'),
                 regex   : replaceRegexWS([
                     "class MFTest_Edit_Users extends EditEdit {",
@@ -123,7 +137,12 @@ describe("microfield append/remove", function() {
                     "}"
                 ])
             }],
+
+            // }}}
+            // {{{ numberfield
+
             'numberfield': [{
+                // itemsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/Edit/app/view/edit/Edit.js'),
                 regex   : replaceRegexWS([
                     "Ext.define( 'MFTest.Edit.view.edit.Edit' , {",
@@ -139,6 +158,7 @@ describe("microfield append/remove", function() {
                     ");"
                 ])
             }, {
+                // $fieldsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/Edit/classes/Users.php'),
                 regex   : replaceRegexWS([
                     "class MFTest_Edit_Users extends EditEdit {",
@@ -148,7 +168,12 @@ describe("microfield append/remove", function() {
                     "}"
                 ])
             }],
+
+            // }}}
+            // {{{ textarea
+
             'textarea': [{
+                // itemsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/Edit/app/view/edit/Edit.js'),
                 regex   : replaceRegexWS([
                     "Ext.define( 'MFTest.Edit.view.edit.Edit' , {",
@@ -164,6 +189,7 @@ describe("microfield append/remove", function() {
                     ");"
                 ])
             }, {
+                // $fieldsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/Edit/classes/Users.php'),
                 regex   : replaceRegexWS([
                     "class MFTest_Edit_Users extends EditEdit {",
@@ -173,7 +199,12 @@ describe("microfield append/remove", function() {
                     "}"
                 ])
             }],
+
+            // }}}
+            // {{{ textfield
+
             'textfield': [{
+                // itemsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/Edit/app/view/edit/Edit.js'),
                 regex   : replaceRegexWS([
                     "Ext.define( 'MFTest.Edit.view.edit.Edit' , {",
@@ -189,6 +220,7 @@ describe("microfield append/remove", function() {
                     ");"
                 ])
             }, {
+                // $fieldsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/Edit/classes/Users.php'),
                 regex   : replaceRegexWS([
                     "class MFTest_Edit_Users extends EditEdit {",
@@ -198,7 +230,12 @@ describe("microfield append/remove", function() {
                     "}"
                 ])
             }],
+
+            // }}}
+            // {{{ timefield
+
             'timefield': [{
+                // itemsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/Edit/app/view/edit/Edit.js'),
                 regex   : replaceRegexWS([
                     "Ext.define( 'MFTest.Edit.view.edit.Edit' , {",
@@ -214,6 +251,7 @@ describe("microfield append/remove", function() {
                     ");"
                 ])
             }, {
+                // $fieldsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/Edit/classes/Users.php'),
                 regex   : replaceRegexWS([
                     "class MFTest_Edit_Users extends EditEdit {",
@@ -223,7 +261,12 @@ describe("microfield append/remove", function() {
                     "}"
                 ])
             }],
+
+            // }}}
+            // {{{ triggerfield
+
             'triggerfield': [{
+                // itemsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/Edit/app/view/edit/Edit.js'),
                 regex   : replaceRegexWS([
                     "Ext.define( 'MFTest.Edit.view.edit.Edit' , {",
@@ -239,6 +282,7 @@ describe("microfield append/remove", function() {
                     ");"
                 ])
             }, {
+                // $fieldsへのフィールド追加確認
                 file    : path.join(targetPath, 'mods/MFTest/Edit/classes/Users.php'),
                 regex   : replaceRegexWS([
                     "class MFTest_Edit_Users extends EditEdit {",
@@ -248,7 +292,239 @@ describe("microfield append/remove", function() {
                     "}"
                 ])
             }]
+
+            // }}}
+
+        },
+
+        // }}}
+        // {{{ for editlist
+
+        'MFTest/EditList': {
+
+            // {{{ datefield
+
+            'datefield': [{
+                // itemsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/view/edit/Edit.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define(",
+                    "    'MFTest.EditList.view.edit.Edit' , {",
+                    "        items : [",
+                    "        {",
+                    "            xtype : 'datefield' ,",
+                    "            itemId : 'field1' ,",
+                    "            labelAlign : 'top' ,",
+                    "            name : 'field1' ,",
+                    "            fieldLabel : 'field1' ,",
+                    "            width : 300",
+                    "        }",
+                    ");"
+                ])
+            }, {
+                // $fieldsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/classes/Lists.php'),
+                regex   : replaceRegexWS([
+                    "class MFTest_EditList_Lists extends EditList {",
+                    "    public $fields = array(",
+                    "        'field1'",
+                    "    ) ;",
+                    "}"
+                ])
+            }],
+
+            // }}}
+            // {{{ htmleditor
+
+            'htmleditor': [{
+                // itemsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/view/edit/Edit.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define( 'MFTest.EditList.view.edit.Edit' , {",
+                    "    items : [",
+                    "    {",
+                    "        xtype : 'htmleditor' ,",
+                    "        itemId : 'field2' ,",
+                    "        labelAlign : 'top' ,",
+                    "        name : 'field2' ,",
+                    "        fieldLabel : 'field2' ,",
+                    "        width : 300",
+                    "    }",
+                    ");"
+                ])
+            }, {
+                // $fieldsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/classes/Lists.php'),
+                regex   : replaceRegexWS([
+                    "class MFTest_EditList_Lists extends EditList {",
+                    "    public $fields = array(",
+                    "        'field2'",
+                    "    ) ;",
+                    "}"
+                ])
+            }],
+
+            // }}}
+            // {{{ numberfield
+
+            'numberfield': [{
+                // itemsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/view/edit/Edit.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define( 'MFTest.EditList.view.edit.Edit' , {",
+                    "    items : [",
+                    "    {",
+                    "        xtype : 'numberfield' ,",
+                    "        itemId : 'field3' ,",
+                    "        labelAlign : 'top' ,",
+                    "        name : 'field3' ,",
+                    "        fieldLabel : 'field3' ,",
+                    "        width : 300",
+                    "    }",
+                    ");"
+                ])
+            }, {
+                // $fieldsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/classes/Lists.php'),
+                regex   : replaceRegexWS([
+                    "class MFTest_EditList_Lists extends EditList {",
+                    "    public $fields = array(",
+                    "    'field3'",
+                    "    ) ;",
+                    "}"
+                ])
+            }],
+
+            // }}}
+            // {{{ textarea
+
+            'textarea': [{
+                // itemsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/view/edit/Edit.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define( 'MFTest.EditList.view.edit.Edit' , {",
+                    "    items : [",
+                    "    {",
+                    "        xtype : 'textareafield' ,",
+                    "        itemId : 'field4' ,",
+                    "        labelAlign : 'top' ,",
+                    "        name : 'field4' ,",
+                    "        fieldLabel : 'field4' ,",
+                    "        width : 300",
+                    "    }",
+                    ");"
+                ])
+            }, {
+                // $fieldsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/classes/Lists.php'),
+                regex   : replaceRegexWS([
+                    "class MFTest_EditList_Lists extends EditList {",
+                    "    public $fields = array(",
+                    "        'field4'",
+                    "    ) ;",
+                    "}"
+                ])
+            }],
+
+            // }}}
+            // {{{ textfield
+
+            'textfield': [{
+                // itemsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/view/edit/Edit.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define( 'MFTest.EditList.view.edit.Edit' , {",
+                    "    items : [",
+                    "    {",
+                    "        xtype : 'textfield' ,",
+                    "        itemId : 'field5' ,",
+                    "        labelAlign : 'top' ,",
+                    "        name : 'field5' ,",
+                    "        fieldLabel : 'field5' ,",
+                    "        width : 300",
+                    "    }",
+                    ");"
+                ])
+            }, {
+                // $fieldsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/classes/Lists.php'),
+                regex   : replaceRegexWS([
+                    "class MFTest_EditList_Lists extends EditList {",
+                    "    public $fields = array(",
+                    "        'field5'",
+                    "    ) ;",
+                    "}"
+                ])
+            }],
+
+            // }}}
+            // {{{ timefield
+
+            'timefield': [{
+                // itemsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/view/edit/Edit.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define( 'MFTest.EditList.view.edit.Edit' , {",
+                    "    items : [",
+                    "    {",
+                    "        xtype : 'timefield' ,",
+                    "        itemId : 'field6' ,",
+                    "        labelAlign : 'top' ,",
+                    "        name : 'field6' ,",
+                    "        fieldLabel : 'field6' ,",
+                    "        width : 300",
+                    "    }",
+                    ");"
+                ])
+            }, {
+                // $fieldsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/classes/Lists.php'),
+                regex   : replaceRegexWS([
+                    "class MFTest_EditList_Lists extends EditList {",
+                    "    public $fields = array(",
+                    "        'field6'",
+                    "    ) ;",
+                    "}"
+                ])
+            }],
+
+            // }}}
+            // {{{ triggerfield
+
+            'triggerfield': [{
+                // itemsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/app/view/edit/Edit.js'),
+                regex   : replaceRegexWS([
+                    "Ext.define( 'MFTest.EditList.view.edit.Edit' , {",
+                    "    items : [",
+                    "    {",
+                    "        xtype : 'triggerfield' ,",
+                    "        itemId : 'field7' ,",
+                    "        labelAlign : 'top' ,",
+                    "        name : 'field7' ,",
+                    "        fieldLabel : 'field7' ,",
+                    "        width : 300",
+                    "    }",
+                    ");"
+                ])
+            }, {
+                // $fieldsへのフィールド追加確認
+                file    : path.join(targetPath, 'mods/MFTest/EditList/classes/Lists.php'),
+                regex   : replaceRegexWS([
+                    "class MFTest_EditList_Lists extends EditList {",
+                    "    public $fields = array(",
+                    "        'field7'",
+                    "    ) ;",
+                    "}"
+                ])
+            }]
+
+            // }}}
+
         }
+
+        // }}}
+
     };
 
     tests = {
@@ -280,6 +556,36 @@ describe("microfield append/remove", function() {
             'triggerfield': {
                 cmd     : programPath + ' append triggerfield field7 MFTest/Edit',
                 type    : 'MFTest/Edit'
+            }
+        },
+        'append fields for editlist': {
+            'datefield': {
+                cmd     : programPath + ' append datefield field1 MFTest/EditList',
+                type    : 'MFTest/EditList'
+            },
+            'htmleditor': {
+                cmd     : programPath + ' append htmleditor field2 MFTest/EditList',
+                type    : 'MFTest/EditList'
+            },
+            'numberfield': {
+                cmd     : programPath + ' append numberfield field3 MFTest/EditList',
+                type    : 'MFTest/EditList'
+            },
+            'textarea': {
+                cmd     : programPath + ' append textarea field4 MFTest/EditList',
+                type    : 'MFTest/EditList'
+            },
+            'textfield': {
+                cmd     : programPath + ' append textfield field5 MFTest/EditList',
+                type    : 'MFTest/EditList'
+            },
+            'timefield': {
+                cmd     : programPath + ' append timefield field6 MFTest/EditList',
+                type    : 'MFTest/EditList'
+            },
+            'triggerfield': {
+                cmd     : programPath + ' append triggerfield field7 MFTest/EditList',
+                type    : 'MFTest/EditList'
             }
         }
     };

@@ -17,12 +17,20 @@ describe("microfield generate", function() {
         rewriteBase = 'micro-field-cli-test-generate',
         targetPath  = getTargetPath(rewriteBase),
         decidedIt   = ((!cfg || !cfg.releasesUrl || !cfg.accessToken) ? it.skip : it),
-        filelist    = {},
-        jsonlist    = {},
-        genTestFn, genDuplicateTestFn;
+        genTestFn, genDuplicateTestFn, dbTests, tests;
 
     // テスト実行関数
     genTestFn = function(type, callback) {
+
+        var done = function() {
+
+            // カレントディレクトリ復元
+            process.chdir(currentPath);
+
+            // コールバック
+            callback();
+
+        };
 
         return function(err, stdout, stderr) {
 
@@ -99,12 +107,62 @@ describe("microfield generate", function() {
                     assert.deepEqual(dest, comp);
                 });
 
-                // カレントディレクトリ復元
-                process.chdir(currentPath);
+                // データベーステーブルテスト
+                if (dbTests[type]) {
 
-                // コールバック
-                callback();
+                    var t = dbTests[type];
 
+                    // データベーステーブル生成テスト
+                    var dbconf = getTargetConfig(targetPath).database.default;
+
+                    // コネクションラッパー取得
+                    var conn = MicroField.database.Manager.getConnection(dbconf);
+
+                    // スキーマ取得
+                    var schema = MicroField.database.Manager.getSchema(dbconf, t.schema);
+
+                    // 接続
+                    conn.connect(schema, function() {
+
+                        // テーブル存在確認
+                        conn.existsTable(function(err, exists) {
+
+                            // 存在確認
+                            if (t.exists) {
+
+                                assert.ok(exists);
+
+                                // テーブル定義確認
+                                conn.query('SHOW CREATE TABLE ' + schema.getName(), function(err, tbl) {
+
+                                    assert.deepEqual(
+                                        tbl,
+                                        [{
+                                            Table: t.tableName,
+                                            'Create Table': t.ddl
+                                        }]
+                                    );
+
+                                    done();
+
+                                });
+
+
+                            } else {
+                                assert.ok(!exists);
+
+                                done();
+                            }
+
+                        });
+
+                    });
+
+                } else {
+
+                    done();
+
+                }
 
             });
 
@@ -146,8 +204,295 @@ describe("microfield generate", function() {
 
     };
 
-        // TODO: とりあえずテストから外すため、後で削除
-        //decidedIt = it.skip;
+    dbTests = {
+        'MFTest/Edit': {
+            exists      : true,
+            tableName   : 'edit',
+            schema: {
+                cls     : 'Edit',
+                table   : 'edit'
+            },
+            ddl         : [
+                'CREATE TABLE `edit` (',
+                '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
+                '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
+                '  `textdata` varchar(255) NOT NULL,',
+                '  `modified` datetime NOT NULL,',
+                '  `created` datetime NOT NULL,',
+                '  PRIMARY KEY (`pk`)',
+                ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
+            ].join("\n")
+        },
+        'MFTest/EditOtherName': {
+            exists      : true,
+            tableName   : 'edit',
+            schema: {
+                cls     : 'Edit',
+                table   : 'edit'
+            },
+            ddl         : [
+                'CREATE TABLE `edit` (',
+                '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
+                '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
+                '  `textdata` varchar(255) NOT NULL,',
+                '  `modified` datetime NOT NULL,',
+                '  `created` datetime NOT NULL,',
+                '  PRIMARY KEY (`pk`)',
+                ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
+            ].join("\n")
+        },
+        'MFTest/EditOtherScreenName': {
+            exists      : true,
+            tableName   : 'edit',
+            schema: {
+                cls     : 'Edit',
+                table   : 'edit'
+            },
+            ddl         : [
+                'CREATE TABLE `edit` (',
+                '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
+                '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
+                '  `textdata` varchar(255) NOT NULL,',
+                '  `modified` datetime NOT NULL,',
+                '  `created` datetime NOT NULL,',
+                '  PRIMARY KEY (`pk`)',
+                ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
+            ].join("\n")
+        },
+        'MFTest/EditOtherTable': {
+            exists      : true,
+            tableName   : 'editothertable',
+            schema: {
+                cls     : 'Edit',
+                table   : 'editothertable'
+            },
+            ddl         : [
+                'CREATE TABLE `editothertable` (',
+                '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
+                '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
+                '  `textdata` varchar(255) NOT NULL,',
+                '  `modified` datetime NOT NULL,',
+                '  `created` datetime NOT NULL,',
+                '  PRIMARY KEY (`pk`)',
+                ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
+            ].join("\n")
+        },
+        'MFTest/EditNoDB': {
+            exists      : false,
+            tableName   : 'editnodb',
+            schema: {
+                cls     : 'Edit',
+                table   : 'editnodb'
+            }
+        },
+        'MFTest/EditList': {
+            exists      : true,
+            tableName   : 'editlist',
+            schema: {
+                cls     : 'EditList',
+                table   : 'editlist'
+            },
+            ddl         : [
+                'CREATE TABLE `editlist` (',
+                '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
+                '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
+                '  `textdata` varchar(255) NOT NULL,',
+                '  `modified` datetime NOT NULL,',
+                '  `created` datetime NOT NULL,',
+                '  PRIMARY KEY (`pk`)',
+                ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
+            ].join("\n")
+        },
+        'MFTest/EditListOtherName': {
+            exists      : true,
+            tableName   : 'editlist',
+            schema: {
+                cls     : 'EditList',
+                table   : 'editlist'
+            },
+            ddl         : [
+                'CREATE TABLE `editlist` (',
+                '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
+                '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
+                '  `textdata` varchar(255) NOT NULL,',
+                '  `modified` datetime NOT NULL,',
+                '  `created` datetime NOT NULL,',
+                '  PRIMARY KEY (`pk`)',
+                ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
+            ].join("\n")
+        },
+        'MFTest/EditListOtherScreenName': {
+            exists      : true,
+            tableName   : 'editlist',
+            schema: {
+                cls     : 'EditList',
+                table   : 'editlist'
+            },
+            ddl         : [
+                'CREATE TABLE `editlist` (',
+                '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
+                '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
+                '  `textdata` varchar(255) NOT NULL,',
+                '  `modified` datetime NOT NULL,',
+                '  `created` datetime NOT NULL,',
+                '  PRIMARY KEY (`pk`)',
+                ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
+            ].join("\n")
+        },
+        'MFTest/EditListOtherTable': {
+            exists      : true,
+            tableName   : 'editlistothertable',
+            schema: {
+                cls     : 'EditList',
+                table   : 'editlistothertable'
+            },
+            ddl         : [
+                'CREATE TABLE `editlistothertable` (',
+                '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
+                '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
+                '  `textdata` varchar(255) NOT NULL,',
+                '  `modified` datetime NOT NULL,',
+                '  `created` datetime NOT NULL,',
+                '  PRIMARY KEY (`pk`)',
+                ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
+            ].join("\n")
+        },
+        'MFTest/EditListNoDB': {
+            exists      : false,
+            tableName   : 'editlistnodb',
+            schema: {
+                cls     : 'Edit',
+                table   : 'editlistnodb'
+            }
+        }
+    };
+
+    tests = {
+        'generate header': {
+            cmd     : programPath + ' generate header MFTest/Header',
+            type    : 'MFTest/Header',
+            gen     : genTestFn
+        },
+        'generate header duplicate': {
+            cmd     : programPath + ' generate header MFTest/Header',
+            type    : 'MFTest/Header',
+            gen     : genDuplicateTestFn
+        },
+        'generate footer': {
+            cmd     : programPath + ' generate footer MFTest/Footer',
+            type    : 'MFTest/Footer',
+            gen     : genTestFn
+        },
+        'generate footer duplicate': {
+            cmd     : programPath + ' generate footer MFTest/Footer',
+            type    : 'MFTest/Footer',
+            gen     : genDuplicateTestFn
+        },
+        'generate navigation': {
+            cmd     : programPath + ' generate navigation MFTest/Navigation',
+            type    : 'MFTest/Navigation',
+            gen     : genTestFn
+        },
+        'generate navigation duplicate': {
+            cmd     : programPath + ' generate footer MFTest/Navigation',
+            type    : 'MFTest/Navigation',
+            gen     : genDuplicateTestFn
+        },
+        'generate tabletnavigation': {
+            cmd     : programPath + ' generate navigation MFTest/TabletNavigation',
+            type    : 'MFTest/TabletNavigation',
+            gen     : genTestFn
+        },
+        'generate tabletnavigation duplicate': {
+            cmd     : programPath + ' generate footer MFTest/TabletNavigation',
+            type    : 'MFTest/TabletNavigation',
+            gen     : genDuplicateTestFn
+        },
+        'generate base': {
+            cmd     : programPath + ' generate base MFTest/Base',
+            type    : 'MFTest/Base',
+            gen     : genTestFn
+        },
+        'generate base other name': {
+            cmd     : programPath + ' generate base MFTest/BaseOtherName',
+            type    : 'MFTest/BaseOtherName',
+            gen     : genTestFn
+        },
+        'generate base other screen name': {
+            cmd     : programPath + ' generate base MFTest/BaseOtherScreenName --name=basesetothername',
+            type    : 'MFTest/BaseOtherScreenName',
+            gen     : genTestFn
+        },
+        'generate base duplicate': {
+            cmd     : programPath + ' generate base MFTest/Base',
+            type    : 'MFTest/Base',
+            gen     : genDuplicateTestFn
+        },
+        'generate edit': {
+            cmd     : programPath + ' generate edit MFTest/Edit',
+            type    : 'MFTest/Edit',
+            gen     : genTestFn
+        },
+        'generate edit other name': {
+            cmd     : programPath + ' generate edit MFTest/EditOtherName',
+            type    : 'MFTest/EditOtherName',
+            gen     : genTestFn
+        },
+        'generate edit other screen name': {
+            cmd     : programPath + ' generate edit MFTest/EditOtherScreenName --name=editsetothername',
+            type    : 'MFTest/EditOtherScreenName',
+            gen     : genTestFn
+        },
+        'generate edit other table': {
+            cmd     : programPath + ' generate edit MFTest/EditOtherTable --table=editothertable',
+            type    : 'MFTest/EditOtherTable',
+            gen     : genTestFn
+        },
+        'generate edit nodb': {
+            cmd     : programPath + ' generate edit MFTest/EditNoDB --table=editnodb --nodb',
+            type    : 'MFTest/EditNoDB',
+            gen     : genTestFn
+        },
+        'generate edit duplicate': {
+            cmd     : programPath + ' generate edit MFTest/Edit',
+            type    : 'MFTest/Edit',
+            gen     : genDuplicateTestFn
+        },
+        'generate editlist': {
+            cmd     : programPath + ' generate editlist MFTest/EditList',
+            type    : 'MFTest/EditList',
+            gen     : genTestFn
+        },
+        'generate editlist other name': {
+            cmd     : programPath + ' generate editlist MFTest/EditListOtherName',
+            type    : 'MFTest/EditListOtherName',
+            gen     : genTestFn
+        },
+        'generate editlist other screen name': {
+            cmd     : programPath + ' generate editlist MFTest/EditListOtherScreenName --name=editlistsetothername',
+            type    : 'MFTest/EditListOtherScreenName',
+            gen     : genTestFn
+        },
+        'generate editlist other table': {
+            cmd     : programPath + ' generate editlist MFTest/EditListOtherTable --table=editlistothertable',
+            type    : 'MFTest/EditListOtherTable',
+            gen     : genTestFn
+        },
+        'generate editlist nodb': {
+            cmd     : programPath + ' generate editlist MFTest/EditListNoDB --table=editlistnodb --nodb',
+            type    : 'MFTest/EditListNoDB',
+            gen     : genTestFn
+        },
+        'generate editlist duplicate': {
+            cmd     : programPath + ' generate editlist MFTest/EditList',
+            type    : 'MFTest/EditList',
+            gen     : genDuplicateTestFn
+        }
+    };
+
+
+    // TODO: とりあえずテストから外すため、後で削除
+    //decidedIt = it.skip;
 
     // {{{ setup for generate test
 
@@ -162,815 +507,19 @@ describe("microfield generate", function() {
    */
 
     // }}}
-    // {{{ generate header
+    // {{{ define for tests
 
-    decidedIt("generate header", function(next) {
+    CLI.iterate(tests, function(key, value) {
 
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
+        decidedIt(key, function(next) {
 
-        // テスト実行
-        execChildProcess(programPath + ' generate header MFTest/Header', genTestFn('MFTest/Header', next));
+            // 作業ディレクトリへ移動
+            process.chdir(targetPath);
 
-    });
+            // テスト実行
+            execChildProcess(value.cmd, value.gen(value.type, next));
 
-    // }}}
-    // {{{ generate header duplicate
-
-    decidedIt("generate header duplicate", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate header MFTest/Header', genDuplicateTestFn('MFTest/Header', next));
-
-    });
-
-    // }}}
-    // {{{ generate footer
-
-    decidedIt("generate footer", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate footer MFTest/Footer', genTestFn('MFTest/Footer', next));
-
-    });
-
-    // }}}
-    // {{{ generate footer duplicate
-
-    decidedIt("generate footer duplicate", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate footer MFTest/Footer', genDuplicateTestFn('MFTest/Footer', next));
-
-    });
-
-    // }}}
-    // {{{ generate navigation
-
-    decidedIt("generate navigation", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate navigation MFTest/Navigation', genTestFn('MFTest/Navigation', next));
-
-    });
-
-    // }}}
-    // {{{ generate navigation duplicate
-
-    decidedIt("generate navigation duplicate", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate navigation MFTest/Navigation', genDuplicateTestFn('MFTest/Navigation', next));
-
-    });
-
-    // }}}
-    // {{{ generate tabletnavigation
-
-    decidedIt("generate tabletnavigation", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate tabletnavigation MFTest/TabletNavigation', genTestFn('MFTest/TabletNavigatio', next));
-
-    });
-
-
-    // }}}
-    // {{{ generate tabletnavigation duplicate
-
-    decidedIt("generate tabletnavigation duplicate", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate tabletnavigation MFTest/TabletNavigation', genDuplicateTestFn('MFTest/TabletNavigation', next));
-
-    });
-
-    // }}}
-    // {{{ generate base
-
-    decidedIt("generate base", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate base MFTest/Base', genTestFn('MFTest/Base', next));
-
-    });
-
-    // }}}
-    // {{{ generate base other name
-
-    decidedIt("generate base other name", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate base MFTest/BaseOtherName', genTestFn('MFTest/BaseOtherName', next));
-
-    });
-
-    // }}}
-    // {{{ generate base other screen name
-
-    decidedIt("generate base other screen name", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate base MFTest/BaseOtherScreenName --name=basesetothername', genTestFn('MFTest/BaseOtherScreenName', next));
-
-    });
-
-    // }}}
-    // {{{ generate base duplicate
-
-    decidedIt("generate base duplicate", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate base MFTest/Base', genDuplicateTestFn('MFTest/Base', next));
-
-    });
-
-    // }}}
-    // {{{ generate edit
-
-    decidedIt("generate edit", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        execChildProcess(programPath + ' generate edit MFTest/Edit', genTestFn('MFTest/Edit', function() {
-
-            // データベーステーブル生成テスト
-            var dbconf = getTargetConfig(targetPath).database.default;
-
-            // コネクションラッパー取得
-            var conn = MicroField.database.Manager.getConnection(dbconf);
-
-            // スキーマ取得
-            var schema = MicroField.database.Manager.getSchema(dbconf, {
-                cls     : 'Edit',
-                table   : 'edit'
-            });
-
-            // 接続
-            conn.connect(schema, function() {
-
-                // テーブル存在確認
-                conn.existsTable(function(err, exists) {
-
-                    // 存在確認
-                    assert.ok(exists);
-
-                    // テーブル定義確認
-                    conn.query('SHOW CREATE TABLE ' + schema.getName(), function(err, tbl) {
-
-                        assert.deepEqual(
-                            tbl,
-                            [{
-                                Table: 'edit',
-                                'Create Table': [
-                                    'CREATE TABLE `edit` (',
-                                    '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
-                                    '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
-                                    '  `textdata` varchar(255) NOT NULL,',
-                                    '  `modified` datetime NOT NULL,',
-                                    '  `created` datetime NOT NULL,',
-                                    '  PRIMARY KEY (`pk`)',
-                                    ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
-                                ].join("\n")
-                            }]
-                        );
-
-                    });
-
-                    // カレントディレクトリ復元
-                    process.chdir(currentPath);
-
-                    next();
-
-                });
-
-            });
-
-        }));
-
-    });
-
-    // }}}
-    // {{{ generate edit other name
-
-    decidedIt("generate edit other name", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate edit MFTest/EditOtherName', genTestFn('MFTest/EditOtherName', function() {
-
-            // データベーステーブル生成テスト
-            var dbconf = getTargetConfig(targetPath).database.default;
-
-            // コネクションラッパー取得
-            var conn = MicroField.database.Manager.getConnection(dbconf);
-
-            // スキーマ取得
-            var schema = MicroField.database.Manager.getSchema(dbconf, {
-                cls     : 'Edit',
-                table   : 'edit'
-            });
-
-            // 接続
-            conn.connect(schema, function() {
-
-                // テーブル存在確認
-                conn.existsTable(function(err, exists) {
-
-                    // 存在確認
-                    assert.ok(exists);
-
-                    // テーブル定義確認
-                    conn.query('SHOW CREATE TABLE ' + schema.getName(), function(err, tbl) {
-
-                        try {
-
-                        assert.deepEqual(
-                            tbl,
-                            [{
-                                Table: 'edit',
-                                'Create Table': [
-                                    'CREATE TABLE `edit` (',
-                                    '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
-                                    '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
-                                    '  `textdata` varchar(255) NOT NULL,',
-                                    '  `modified` datetime NOT NULL,',
-                                    '  `created` datetime NOT NULL,',
-                                    '  PRIMARY KEY (`pk`)',
-                                    ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
-                                ].join("\n")
-                            }]
-                        );
-
-                        } catch(e) {
-                            console.log(e);
-                        }
-
-                    });
-
-                    // カレントディレクトリ復元
-                    process.chdir(currentPath);
-
-                    next();
-
-                });
-
-            });
-
-        }));
-
-    });
-
-    // }}}
-    // {{{ generate edit other screen name
-
-    decidedIt("generate edit other screen name", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        execChildProcess(programPath + ' generate edit MFTest/EditOtherScreenName --name=editsetothername', genTestFn('MFTest/EditOtherScreenName', function() {
-
-            // データベーステーブル生成テスト
-            var dbconf = getTargetConfig(targetPath).database.default;
-
-            // コネクションラッパー取得
-            var conn = MicroField.database.Manager.getConnection(dbconf);
-
-            // スキーマ取得
-            var schema = MicroField.database.Manager.getSchema(dbconf, {
-                cls     : 'Edit',
-                table   : 'edit'
-            });
-
-            // 接続
-            conn.connect(schema, function() {
-
-                // テーブル存在確認
-                conn.existsTable(function(err, exists) {
-
-                    // 存在確認
-                    assert.ok(exists);
-
-                    // テーブル定義確認
-                    conn.query('SHOW CREATE TABLE ' + schema.getName(), function(err, tbl) {
-
-                        assert.deepEqual(
-                            tbl,
-                            [{
-                                Table: 'edit',
-                                'Create Table': [
-                                    'CREATE TABLE `edit` (',
-                                    '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
-                                    '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
-                                    '  `textdata` varchar(255) NOT NULL,',
-                                    '  `modified` datetime NOT NULL,',
-                                    '  `created` datetime NOT NULL,',
-                                    '  PRIMARY KEY (`pk`)',
-                                    ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
-                                ].join("\n")
-                            }]
-                        );
-
-                    });
-
-                    // カレントディレクトリ復元
-                    process.chdir(currentPath);
-
-                    next();
-
-                });
-
-            });
-
-        }));
-
-    });
-
-    // }}}
-    // {{{ generate edit other table
-
-    decidedIt("generate edit other table", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate edit MFTest/EditOtherTable --table=editothertable', genTestFn('MFTest/EditOtherTable', function() {
-
-            // データベーステーブル生成テスト
-            var dbconf = getTargetConfig(targetPath).database.default;
-
-            // コネクションラッパー取得
-            var conn = MicroField.database.Manager.getConnection(dbconf);
-
-            // スキーマ取得
-            var schema = MicroField.database.Manager.getSchema(dbconf, {
-                cls     : 'Edit',
-                table   : 'editothertable'
-            });
-
-            // 接続
-            conn.connect(schema, function() {
-
-                // テーブル存在確認
-                conn.existsTable(function(err, exists) {
-
-                    // 存在確認
-                    assert.ok(exists);
-
-                    // テーブル定義確認
-                    conn.query('SHOW CREATE TABLE ' + schema.getName(), function(err, tbl) {
-
-                        assert.deepEqual(
-                            tbl,
-                            [{
-                                Table: 'editothertable',
-                                'Create Table': [
-                                    'CREATE TABLE `editothertable` (',
-                                    '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
-                                    '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
-                                    '  `textdata` varchar(255) NOT NULL,',
-                                    '  `modified` datetime NOT NULL,',
-                                    '  `created` datetime NOT NULL,',
-                                    '  PRIMARY KEY (`pk`)',
-                                    ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
-                                ].join("\n")
-                            }]
-                        );
-
-                    });
-
-                    // カレントディレクトリ復元
-                    process.chdir(currentPath);
-
-                    next();
-
-                });
-
-            });
-
-        }));
-
-    });
-
-    // }}}
-    // {{{ generate edit nodb
-
-    decidedIt("generate edit nodb", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate edit MFTest/EditNoDB --table=editnodb --nodb', genTestFn('MFTest/EditNoDB', function() {
-
-            // データベーステーブル生成テスト
-            var dbconf = getTargetConfig(targetPath).database.default;
-
-            // コネクションラッパー取得
-            var conn = MicroField.database.Manager.getConnection(dbconf);
-
-            // スキーマ取得
-            var schema = MicroField.database.Manager.getSchema(dbconf, {
-                cls     : 'Edit',
-                table   : 'editnodb'
-            });
-
-            // 接続
-            conn.connect(schema, function() {
-
-                // テーブル存在確認
-                conn.existsTable(function(err, exists) {
-
-                    // 存在確認
-                    assert.ok(!exists);
-
-                    // カレントディレクトリ復元
-                    process.chdir(currentPath);
-
-                    next();
-
-                });
-
-            });
-
-        }));
-
-    });
-
-    // }}}
-    // {{{ generate edit duplicate
-
-    decidedIt("generate edit duplicate", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate edit MFTest/Edit', genDuplicateTestFn('MFTest/Edit', next));
-
-    });
-
-    // }}}
-    // {{{ generate editlist
-
-    decidedIt("generate editlist", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate editlist MFTest/EditList', genTestFn('MFTest/EditList', function() {
-
-            // データベーステーブル生成テスト
-            var dbconf = getTargetConfig(targetPath).database.default;
-
-            // コネクションラッパー取得
-            var conn = MicroField.database.Manager.getConnection(dbconf);
-
-            // スキーマ取得
-            var schema = MicroField.database.Manager.getSchema(dbconf, {
-                cls     : 'EditList',
-                table   : 'editlist'
-            });
-
-            // 接続
-            conn.connect(schema, function() {
-
-                // テーブル存在確認
-                conn.existsTable(function(err, exists) {
-
-                    // 存在確認
-                    assert.ok(exists);
-
-                    // テーブル定義確認
-                    conn.query('SHOW CREATE TABLE ' + schema.getName(), function(err, tbl) {
-
-                        assert.deepEqual(
-                            tbl,
-                            [{
-                                Table: 'editlist',
-                                'Create Table': [
-                                    'CREATE TABLE `editlist` (',
-                                    '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
-                                    '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
-                                    '  `textdata` varchar(255) NOT NULL,',
-                                    '  `modified` datetime NOT NULL,',
-                                    '  `created` datetime NOT NULL,',
-                                    '  PRIMARY KEY (`pk`)',
-                                    ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
-                                ].join("\n")
-                            }]
-                        );
-
-                    });
-
-                    // カレントディレクトリ復元
-                    process.chdir(currentPath);
-
-                    next();
-
-                });
-
-            });
-
-        }));
-
-    });
-
-    // }}}
-    // {{{ generate editlist other name
-
-    decidedIt("generate editlist other name", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate editlist MFTest/EditListOtherName', genTestFn('MFTest/EditListOtherName', function() {
-
-            // データベーステーブル生成テスト
-            var dbconf = getTargetConfig(targetPath).database.default;
-
-            // コネクションラッパー取得
-            var conn = MicroField.database.Manager.getConnection(dbconf);
-
-            // スキーマ取得
-            var schema = MicroField.database.Manager.getSchema(dbconf, {
-                cls     : 'EditList',
-                table   : 'editlist'
-            });
-
-            // 接続
-            conn.connect(schema, function() {
-
-                // テーブル存在確認
-                conn.existsTable(function(err, exists) {
-
-                    // 存在確認
-                    assert.ok(exists);
-
-                    // テーブル定義確認
-                    conn.query('SHOW CREATE TABLE ' + schema.getName(), function(err, tbl) {
-
-                        assert.deepEqual(
-                            tbl,
-                            [{
-                                Table: 'editlist',
-                                'Create Table': [
-                                    'CREATE TABLE `editlist` (',
-                                    '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
-                                    '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
-                                    '  `textdata` varchar(255) NOT NULL,',
-                                    '  `modified` datetime NOT NULL,',
-                                    '  `created` datetime NOT NULL,',
-                                    '  PRIMARY KEY (`pk`)',
-                                    ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
-                                ].join("\n")
-                            }]
-                        );
-
-                    });
-
-                    // カレントディレクトリ復元
-                    process.chdir(currentPath);
-
-                    next();
-
-                });
-
-            });
-
-        }));
-
-    });
-
-    // }}}
-    // {{{ generate editlist other screen name
-
-    decidedIt("generate editlist other screen name", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate editlist MFTest/EditListOtherScreenName --name=editlistsetothername', genTestFn('MFTest/EditListOtherScreenName', function() {
-
-            // データベーステーブル生成テスト
-            var dbconf = getTargetConfig(targetPath).database.default;
-
-            // コネクションラッパー取得
-            var conn = MicroField.database.Manager.getConnection(dbconf);
-
-            // スキーマ取得
-            var schema = MicroField.database.Manager.getSchema(dbconf, {
-                cls     : 'EditList',
-                table   : 'editlist'
-            });
-
-            // 接続
-            conn.connect(schema, function() {
-
-                // テーブル存在確認
-                conn.existsTable(function(err, exists) {
-
-                    // 存在確認
-                    assert.ok(exists);
-
-                    // テーブル定義確認
-                    conn.query('SHOW CREATE TABLE ' + schema.getName(), function(err, tbl) {
-
-                        assert.deepEqual(
-                            tbl,
-                            [{
-                                Table: 'editlist',
-                                'Create Table': [
-                                    'CREATE TABLE `editlist` (',
-                                    '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
-                                    '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
-                                    '  `textdata` varchar(255) NOT NULL,',
-                                    '  `modified` datetime NOT NULL,',
-                                    '  `created` datetime NOT NULL,',
-                                    '  PRIMARY KEY (`pk`)',
-                                    ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
-                                ].join("\n")
-                            }]
-                        );
-
-                    });
-
-                    // カレントディレクトリ復元
-                    process.chdir(currentPath);
-
-                    next();
-
-                });
-
-            });
-
-        }));
-
-    });
-
-    // }}}
-    // {{{ generate editlist other table
-
-    decidedIt("generate editlist other table", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate editlist MFTest/EditListOtherTable --table=editlistothertable', genTestFn('MFTest/EditListOtherTable', function() {
-
-            // データベーステーブル生成テスト
-            var dbconf = getTargetConfig(targetPath).database.default;
-
-            // コネクションラッパー取得
-            var conn = MicroField.database.Manager.getConnection(dbconf);
-
-            // スキーマ取得
-            var schema = MicroField.database.Manager.getSchema(dbconf, {
-                cls     : 'EditList',
-                table   : 'editlistothertable'
-            });
-
-            // 接続
-            conn.connect(schema, function() {
-
-                // テーブル存在確認
-                conn.existsTable(function(err, exists) {
-
-                    // 存在確認
-                    assert.ok(exists);
-
-                    // テーブル定義確認
-                    conn.query('SHOW CREATE TABLE ' + schema.getName(), function(err, tbl) {
-
-                        assert.deepEqual(
-                            tbl,
-                            [{
-                                Table: 'editlistothertable',
-                                'Create Table': [
-                                    'CREATE TABLE `editlistothertable` (',
-                                    '  `pk` bigint(20) NOT NULL AUTO_INCREMENT,',
-                                    '  `status` tinyint(4) NOT NULL DEFAULT \'1\',',
-                                    '  `textdata` varchar(255) NOT NULL,',
-                                    '  `modified` datetime NOT NULL,',
-                                    '  `created` datetime NOT NULL,',
-                                    '  PRIMARY KEY (`pk`)',
-                                    ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
-                                ].join("\n")
-                            }]
-                        );
-
-                    });
-
-                    // カレントディレクトリ復元
-                    process.chdir(currentPath);
-
-                    next();
-
-                });
-
-            });
-
-        }));
-
-    });
-
-    // }}}
-    // {{{ generate editlist nodb
-
-    decidedIt("generate editlist nodb", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate editlist MFTest/EditListNoDB --table=editlistnodb --nodb', genTestFn('MFTest/EditListNoDB', function() {
-
-            // データベーステーブル生成テスト
-            var dbconf = getTargetConfig(targetPath).database.default;
-
-            // コネクションラッパー取得
-            var conn = MicroField.database.Manager.getConnection(dbconf);
-
-            // スキーマ取得
-            var schema = MicroField.database.Manager.getSchema(dbconf, {
-                cls     : 'EditList',
-                table   : 'editlistnodb'
-            });
-
-            // 接続
-            conn.connect(schema, function() {
-
-                // テーブル存在確認
-                conn.existsTable(function(err, exists) {
-
-                    // 存在確認
-                    assert.ok(!exists);
-
-                    // カレントディレクトリ復元
-                    process.chdir(currentPath);
-
-                    next();
-
-                });
-
-            });
-
-        }));
-
-    });
-
-    // }}}
-    // {{{ generate editlist duplicate
-
-    decidedIt("generate editlist duplicate", function(next) {
-
-        // 作業ディレクトリへ移動
-        process.chdir(targetPath);
-
-        // テスト実行
-        execChildProcess(programPath + ' generate editlist MFTest/EditList', genDuplicateTestFn('MFTest/EditList', next));
+        });
 
     });
 

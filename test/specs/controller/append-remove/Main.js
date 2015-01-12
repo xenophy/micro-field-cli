@@ -17,7 +17,7 @@ describe("microfield append/remove", function() {
         rewriteBase = 'micro-field-cli-test-append-remove',
         targetPath  = getTargetPath(rewriteBase),
         decidedIt   = ((!cfg || !cfg.releasesUrl || !cfg.accessToken) ? it.skip : it),
-        replaceRegexWS, genTestFn, fieldTests, tests;
+        replaceRegexWS, genAppendTestFn, genRemoveTestFn, fieldTests, tests;
 
 
     // TODO: とりあえずテストから外すため、後で削除
@@ -36,10 +36,14 @@ describe("microfield append/remove", function() {
             str = preg_quote(str);
         }
 
-        return str.replace(/ +/g, "[\\s\\S]*?");
+        str = str.replace(/ +/g, "[\\s\\S]*?");
+        str = str.replace(/(\[\\s\\S\]\*\?)+/g, "[\\s\\S]*?");
+
+        return str;
+
     };
 
-    genTestFn = function(type, fieldType, callback) {
+    genAppendTestFn = function(type, fieldType, callback) {
 
         var done = function() {
 
@@ -69,6 +73,46 @@ describe("microfield append/remove", function() {
         };
 
     };
+
+    genRemoveTestFn = function(type, fieldType, callback) {
+
+        var done = function() {
+
+            // カレントディレクトリ復元
+            process.chdir(currentPath);
+
+            // コールバック
+            callback();
+
+        };
+
+        return function(err, stdout, stderr) {
+
+            assert.equal(err, null);
+            assert.equal(stderr, '');
+
+            CLI.iterate(fieldTests[type][fieldType], function(item) {
+
+                var src = removeComment(fs.readFileSync(item.file).toString());
+
+                try {
+                    var tmp = removeComment(fs.readFileSync(item.file).toString()).match(new RegExp(item.regex));
+                } catch(e) {
+                    console.log(e);
+                }
+                assert.equal(removeComment(fs.readFileSync(item.file).toString()).match(new RegExp(item.regex)), null);
+            });
+
+            // カレントディレクトリ復元
+            process.chdir(currentPath);
+
+            // コールバック実行
+            done();
+
+        };
+
+    }
+
 
     fieldTests = {
 
@@ -713,61 +757,149 @@ describe("microfield append/remove", function() {
         'append fields for edit': {
             'datefield': {
                 cmd     : programPath + ' append datefield field1 MFTest/Edit',
-                type    : 'MFTest/Edit'
+                type    : 'MFTest/Edit',
+                gen     : genAppendTestFn
             },
             'htmleditor': {
                 cmd     : programPath + ' append htmleditor field2 MFTest/Edit',
-                type    : 'MFTest/Edit'
+                type    : 'MFTest/Edit',
+                gen     : genAppendTestFn
             },
             'numberfield': {
                 cmd     : programPath + ' append numberfield field3 MFTest/Edit',
-                type    : 'MFTest/Edit'
+                type    : 'MFTest/Edit',
+                gen     : genAppendTestFn
             },
             'textarea': {
                 cmd     : programPath + ' append textarea field4 MFTest/Edit',
-                type    : 'MFTest/Edit'
+                type    : 'MFTest/Edit',
+                gen     : genAppendTestFn
             },
             'textfield': {
                 cmd     : programPath + ' append textfield field5 MFTest/Edit',
-                type    : 'MFTest/Edit'
+                type    : 'MFTest/Edit',
+                gen     : genAppendTestFn
             },
             'timefield': {
                 cmd     : programPath + ' append timefield field6 MFTest/Edit',
-                type    : 'MFTest/Edit'
+                type    : 'MFTest/Edit',
+                gen     : genAppendTestFn
             },
             'triggerfield': {
                 cmd     : programPath + ' append triggerfield field7 MFTest/Edit',
-                type    : 'MFTest/Edit'
+                type    : 'MFTest/Edit',
+                gen     : genAppendTestFn
+            }
+        },
+        'remove fields for edit': {
+            'datefield': {
+                cmd     : programPath + ' remove field1 MFTest/Edit',
+                type    : 'MFTest/Edit',
+                gen     : genRemoveTestFn
+            },
+            'htmleditor': {
+                cmd     : programPath + ' remove field2 MFTest/Edit',
+                type    : 'MFTest/Edit',
+                gen     : genRemoveTestFn
+            },
+            'numberfield': {
+                cmd     : programPath + ' remove field3 MFTest/Edit',
+                type    : 'MFTest/Edit',
+                gen     : genRemoveTestFn
+            },
+            'textarea': {
+                cmd     : programPath + ' remove field4 MFTest/Edit',
+                type    : 'MFTest/Edit',
+                gen     : genRemoveTestFn
+            },
+            'textfield': {
+                cmd     : programPath + ' remove field5 MFTest/Edit',
+                type    : 'MFTest/Edit',
+                gen     : genRemoveTestFn
+            },
+            'timefield': {
+                cmd     : programPath + ' remove field6 MFTest/Edit',
+                type    : 'MFTest/Edit',
+                gen     : genRemoveTestFn
+            },
+            'triggerfield': {
+                cmd     : programPath + ' remove field7 MFTest/Edit',
+                type    : 'MFTest/Edit',
+                gen     : genRemoveTestFn
             }
         },
         'append fields for editlist': {
             'datefield': {
                 cmd     : programPath + ' append datefield field1 MFTest/EditList',
-                type    : 'MFTest/EditList'
+                type    : 'MFTest/EditList',
+                gen     : genAppendTestFn
             },
             'htmleditor': {
                 cmd     : programPath + ' append htmleditor field2 MFTest/EditList',
-                type    : 'MFTest/EditList'
+                type    : 'MFTest/EditList',
+                gen     : genAppendTestFn
             },
             'numberfield': {
                 cmd     : programPath + ' append numberfield field3 MFTest/EditList',
-                type    : 'MFTest/EditList'
+                type    : 'MFTest/EditList',
+                gen     : genAppendTestFn
             },
             'textarea': {
                 cmd     : programPath + ' append textarea field4 MFTest/EditList',
-                type    : 'MFTest/EditList'
+                type    : 'MFTest/EditList',
+                gen     : genAppendTestFn
             },
             'textfield': {
                 cmd     : programPath + ' append textfield field5 MFTest/EditList',
-                type    : 'MFTest/EditList'
+                type    : 'MFTest/EditList',
+                gen     : genAppendTestFn
             },
             'timefield': {
                 cmd     : programPath + ' append timefield field6 MFTest/EditList',
-                type    : 'MFTest/EditList'
+                type    : 'MFTest/EditList',
+                gen     : genAppendTestFn
             },
             'triggerfield': {
                 cmd     : programPath + ' append triggerfield field7 MFTest/EditList',
-                type    : 'MFTest/EditList'
+                type    : 'MFTest/EditList',
+                gen     : genAppendTestFn
+            }
+        },
+        'remove fields for editlist': {
+            'datefield': {
+                cmd     : programPath + ' remove field1 MFTest/EditList',
+                type    : 'MFTest/EditList',
+                gen     : genRemoveTestFn
+            },
+            'htmleditor': {
+                cmd     : programPath + ' remove field2 MFTest/EditList',
+                type    : 'MFTest/EditList',
+                gen     : genRemoveTestFn
+            },
+            'numberfield': {
+                cmd     : programPath + ' remove field3 MFTest/EditList',
+                type    : 'MFTest/EditList',
+                gen     : genRemoveTestFn
+            },
+            'textarea': {
+                cmd     : programPath + ' remove field4 MFTest/EditList',
+                type    : 'MFTest/EditList',
+                gen     : genRemoveTestFn
+            },
+            'textfield': {
+                cmd     : programPath + ' remove field5 MFTest/EditList',
+                type    : 'MFTest/EditList',
+                gen     : genRemoveTestFn
+            },
+            'timefield': {
+                cmd     : programPath + ' remove field6 MFTest/EditList',
+                type    : 'MFTest/EditList',
+                gen     : genRemoveTestFn
+            },
+            'triggerfield': {
+                cmd     : programPath + ' remove field7 MFTest/EditList',
+                type    : 'MFTest/EditList',
+                gen     : genRemoveTestFn
             }
         }
     };
@@ -805,7 +937,7 @@ describe("microfield append/remove", function() {
                     process.chdir(targetPath);
 
                     // テスト実行
-                    execChildProcess(value.cmd, genTestFn(value.type, fieldType, next));
+                    execChildProcess(value.cmd, value.gen(value.type, fieldType, next));
 
                 });
 

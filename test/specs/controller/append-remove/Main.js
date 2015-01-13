@@ -19,9 +19,8 @@ describe("microfield append/remove", function() {
         decidedIt   = ((!cfg || !cfg.releasesUrl || !cfg.accessToken) ? it.skip : it),
         replaceRegexWS, genAppendTestFn, genRemoveTestFn, fieldTests, dbTests, tests;
 
-
     // TODO: とりあえずテストから外すため、後で削除
-    //decidedIt = it.skip;
+    decidedIt = it.skip;
 
     replaceRegexWS = function(str) {
 
@@ -309,7 +308,6 @@ describe("microfield append/remove", function() {
             }
         }
     };
-
 
     fieldTests = {
 
@@ -1103,7 +1101,6 @@ describe("microfield append/remove", function() {
 
     // {{{ setup for append test
 
-    /*
     decidedIt("setup for append test", function(next) {
         execChildProcess('cat ' + currentPath + '/test/clear.sql|mysql -uroot', function(err, stdout, stderr) {
             setupAchive(rewriteBase, null, function(targetPath) {
@@ -1117,7 +1114,6 @@ describe("microfield append/remove", function() {
             });
         });
     });
-   */
 
     // }}}
     // {{{ define for tests

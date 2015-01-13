@@ -49,7 +49,7 @@ CLI.define('MicroField.upgrade.VersionFile', {
                 env.getSdkVersion(function(data) {
                     sdk = data.version;
                     hmac_object = crypto.createHmac('sha256', 'MicroFieldSDK');
-                    hmac_object.update(sdk.version);
+                    hmac_object.update('v' + sdk.version);
                     fileName = hmac_object.digest('hex');
                     filePath = path.join(MicroField.app.getApplicationDir(), '.microfield', 'vf');
                     next();

@@ -20,7 +20,7 @@ describe("microfield append/remove", function() {
         replaceRegexWS, genAppendTestFn, genRemoveTestFn, fieldTests, dbTests, tests;
 
     // TODO: とりあえずテストから外すため、後で削除
-    decidedIt = it.skip;
+    //decidedIt = it.skip;
 
     replaceRegexWS = function(str) {
 

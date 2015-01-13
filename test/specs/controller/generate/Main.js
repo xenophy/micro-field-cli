@@ -20,7 +20,7 @@ describe("microfield generate", function() {
         genTestFn, genDuplicateTestFn, dbTests, tests;
 
     // TODO: とりあえずテストから外すため、後で削除
-    decidedIt = it.skip;
+    //decidedIt = it.skip;
 
     // テスト実行関数
     genTestFn = function(type, callback) {

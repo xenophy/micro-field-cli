@@ -24,15 +24,17 @@ SPEC_DIR = $(CURRENT_DIR)/test/specs
 SPECS = $(shell find test/specs -type f -name '*.js')
 
 test:
-#	sudo rm -Rf ~/UserDir/micro-field-cli-test-setup;
-#	sudo rm -Rf ~/UserDir/micro-field-cli-test-generate;
-#	sudo rm -Rf ~/UserDir/micro-field-cli-test-append-remove;
+	sudo rm -Rf ~/UserDir/micro-field-cli-test-upgrade;
+	sudo rm -Rf ~/UserDir/micro-field-cli-test-setup;
+	sudo rm -Rf ~/UserDir/micro-field-cli-test-generate;
+	sudo rm -Rf ~/UserDir/micro-field-cli-test-append-remove;
 	$(MOCHA) $(SPECS)
 
 test-tap:
-#	sudo rm -Rf ~/UserDir/micro-field-cli-test-setup;
-#	sudo rm -Rf ~/UserDir/micro-field-cli-test-generate;
-#	sudo rm -Rf ~/UserDir/micro-field-cli-test-append-remove;
+	sudo rm -Rf ~/UserDir/micro-field-cli-test-upgrade;
+	sudo rm -Rf ~/UserDir/micro-field-cli-test-setup;
+	sudo rm -Rf ~/UserDir/micro-field-cli-test-generate;
+	sudo rm -Rf ~/UserDir/micro-field-cli-test-append-remove;
 	$(MOCHA) --reporter tap $(SPECS)
 
 .PHONY: test test-coverage

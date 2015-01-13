@@ -158,6 +158,55 @@
     };
 
     // }}}
+    // {{{ getLatestBeforeVersion
+
+    global.getLatestBeforeVersion = function(releasesUrl, accessToken, callback) {
+
+        var f = CLI.String.format;
+
+        request({
+            url     : f('{0}?access_token={1}', releasesUrl, accessToken),
+            method  : 'GET',
+            headers : {
+                'User-Agent': 'request'
+            }
+        }, function(err, res, body) {
+
+            var versions    = [],
+                data        = CLI.decode(body),
+                latest, beforeLatest;
+
+            CLI.iterate(data, function(item) {
+
+                // ドラフトは含まない
+                if (item.draft === false) {
+                    versions.push(item.tag_name);
+                }
+
+            });
+
+            var target = versions[1];
+
+            // 最新バージョンの一つ前のバージョンを算出
+            CLI.iterate(versions, function(version, num) {
+
+                latest = new CLI.Version(version);
+                latest.tarball_url = data[num].tarball_url;
+                latest.zipball_url = data[num].zipball_url;
+
+                if (latest.version === target) {
+                    beforeLatest = latest;
+                }
+
+            });
+
+            callback(beforeLatest);
+
+        });
+
+    };
+
+    // }}}
     // {{{ getArchive
 
     global.getArchive = function(latest, accessToken, callback) {
@@ -282,6 +331,81 @@
 
                         // コールバック実行
                         callback(targetPath);
+
+                    });
+
+                });
+
+            });
+
+        });
+
+    };
+
+    // }}}
+    // {{{ upgradeAchive
+
+    global.upgradeAchive = function(rewriteBase, before, callback) {
+
+        var fs          = require('fs-extra'),
+            path        = require('path'),
+            homePath    = getHomePath(),
+            cfg         = getMicroFieldConfig(),
+            userdir     = path.join('UserDir', rewriteBase),
+            targetPath  = path.join(homePath, userdir);
+
+        before = before || function(next) {
+            next();
+        };
+
+        // ターゲットディレクトリにpublic_htmlを追加
+        targetPath = path.join(targetPath, 'public_html');
+
+        // ユーザーディレクトリ作成
+        fs.mkdirsSync(targetPath);
+
+        // 最新バージョンの一つ前のバージョン情報取得
+        getLatestBeforeVersion(cfg.releasesUrl, cfg.accessToken, function(latest) {
+
+            // 最新アーカイブ取得
+            getArchive(latest, cfg.accessToken, function(archivePath) {
+
+                // アーカイブ内容をユーザーディレクトリにコピー
+                fs.copySync(archivePath, targetPath);
+
+                // .htaccessの内容取得、変更
+                fs.writeFileSync(
+                    path.join(targetPath, '.htaccess'),
+                    fs.readFileSync(
+                        path.join(targetPath, '.htaccess')
+                    ).toString().replace(
+                        /[\r\s]*RewriteBase (.*?)[\s]*\n/,
+                        "\n    RewriteBase /~" + rewriteBase + "\n\n"
+                    ),
+                    'utf8'
+                );
+
+                // カレントディレクトリ取得
+                var currentPath = process.cwd();
+
+                // 作業ディレクトリへ移動
+                process.chdir(targetPath);
+
+                // setupコマンド実行
+                execChildProcess('node ' + currentPath + '/bin/index.js setup', function(err, stdout, stderr) {
+
+                    // upgradeコマンド実行
+                    execChildProcess('node ' + currentPath + '/bin/index.js upgrade', function(err, stdout, stderr) {
+
+                        before(function() {
+
+                            // カレントディレクトリ復元
+                            process.chdir(currentPath);
+
+                            // コールバック実行
+                            callback(targetPath);
+
+                        });
 
                     });
 

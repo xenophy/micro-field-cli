@@ -107,7 +107,7 @@ CLI.define('MicroField.database.MySQL', {
             if (err) {
 
                 // [ERR] error connecting: ***************
-                MicroField.app.log.error(f('error connecting: "{0}"', err.stack));
+                MicroField.app.log.error(CLI.String.format('error connecting: "{0}"', err.stack));
 
                 return;
 

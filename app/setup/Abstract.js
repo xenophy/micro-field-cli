@@ -207,6 +207,8 @@ CLI.define('MicroField.setup.Abstract', {
 
             if (error !== null) {
 
+                console.log(stdout);
+
                 // クリーンアップ
                 me.cleanup(callback);
 

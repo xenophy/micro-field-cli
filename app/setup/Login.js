@@ -40,6 +40,7 @@ CLI.define('MicroField.setup.Login', {
     // {{{ overrideList
 
     overrideList: [
+        ['login/app.js_override', 'login/app.js'],
         ['login/app.json_override', 'login/app.json']
     ],
 

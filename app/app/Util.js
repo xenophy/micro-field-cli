@@ -247,15 +247,19 @@ CLI.define('MicroField.app.Util', {
                 src = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), src));
                 dest = CLI.resolvePath(path.join(MicroField.app.getApplicationDir(), dest));
 
-                fns.push(function(callback) {
+                if (require('fs').existsSync(src)) {
 
-                    CLI.Fs.copy(src, dest, function(err) {
-                        count++;
-                        progress(src, dest);
-                        callback();
+                    fns.push(function(callback) {
+
+                        CLI.Fs.copy(src, dest, function(err) {
+                            count++;
+                            progress(src, dest);
+                            callback();
+                        });
+
                     });
 
-                });
+                }
 
             });
 

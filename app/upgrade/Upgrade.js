@@ -67,16 +67,22 @@ CLI.define('MicroField.upgrade.Upgrade', {
                             // ファイル存在確認
                             fs.exists(t, function(exists) {
 
-                                // ファイル読み込み
-                                fs.readFile(t, function(err, data) {
+                                if (exists) {
 
-                                    if (crypto.createHmac('sha256', 'MicroFieldSDK').update(data.toString('utf8')).digest('hex') != sum) {
-                                        escapeFiles.push(file);
-                                    }
+                                    // ファイル読み込み
+                                    fs.readFile(t, function(err, data) {
 
+                                        if (crypto.createHmac('sha256', 'MicroFieldSDK').update(data.toString('utf8')).digest('hex') != sum) {
+                                            escapeFiles.push(file);
+                                        }
+
+                                        subnext();
+
+                                    });
+
+                                } else {
                                     subnext();
-
-                                });
+                                }
 
                             });
 
@@ -141,20 +147,26 @@ CLI.define('MicroField.upgrade.Upgrade', {
                             // ファイル存在確認
                             fs.exists(src, function(exists) {
 
-                                // ディレクトリ作成
-                                mkdirp(path.dirname(dest), function (err) {
+                                if (exists) {
 
-                                    // TODO: エラー処理
-
-                                    // ファイルコピー
-                                    fs.copy(src, dest, function(err) {
+                                    // ディレクトリ作成
+                                    mkdirp(path.dirname(dest), function (err) {
 
                                         // TODO: エラー処理
 
-                                        subnext();
+                                        // ファイルコピー
+                                        fs.copy(src, dest, function(err) {
+
+                                            // TODO: エラー処理
+
+                                            subnext();
+                                        });
+
                                     });
 
-                                });
+                                } else {
+                                    subnext();
+                                }
 
                             });
 

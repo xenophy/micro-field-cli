@@ -32,6 +32,7 @@ CLI.define('MicroField.setup.Login', {
 
     disusedList: [
         'login/app',
+        'login/app.js',
         'login/app.json',
         'login/index.html'
     ],

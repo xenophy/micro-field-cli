@@ -174,6 +174,40 @@ CLI.define('MicroField.upgrade.Upgrade', {
 
                     });
 
+                    // .microfield/vfディレクトリの内容を、最新版と同期
+                    series.push(function(subnext) {
+
+                        var src     = path.join(latest.tmpdir, '.microfield', 'vf'),
+                            dest    = path.join(MicroField.app.getApplicationDir(), '.microfield', 'vf');
+
+                        // ファイル存在確認
+                        fs.exists(src, function(exists) {
+
+                            if (exists) {
+
+                                // ディレクトリ作成
+                                mkdirp(path.dirname(dest), function (err) {
+
+                                    // TODO: エラー処理
+
+                                    // ファイルコピー
+                                    fs.copy(src, dest, function(err) {
+
+                                        // TODO: エラー処理
+
+                                        subnext();
+                                    });
+
+                                });
+
+                            } else {
+                                subnext();
+                            }
+
+                        });
+
+                    });
+
                     // 非同期処理実行
                     async.series(series, function() {
                         next();

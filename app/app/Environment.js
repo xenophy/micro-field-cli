@@ -410,7 +410,7 @@ CLI.define('MicroField.app.Environment', {
 
         var f = CLI.String.format;
 
-        var makeSection = function(obj, parent, level) {
+        var makeSection = function(obj, parent, level, nokey) {
 
             var ret = '';
             var objLength = Object.keys(obj).length;
@@ -428,24 +428,29 @@ CLI.define('MicroField.app.Environment', {
 
                 // コメント取得
                 var comment = '';
-                var tmp = comments[key].split("\n");
 
-                if (comments[key].length > 0) {
+                if (comments[key]) {
+                    var tmp = comments[key].split("\n");
 
-                    // コメント作成
-                    comment += "\n/**\n";
-                    tmp.forEach(function(line) {
-                        comment += " * " + line + "\n";
-                    });
-                    comment += " */\n";
+                    if (comments[key].length > 0) {
 
+                        // コメント作成
+                        comment += "\n/**\n";
+                        tmp.forEach(function(line) {
+                            comment += " * " + line + "\n";
+                        });
+                        comment += " */\n";
+
+                    }
                 }
 
                 if(comment) {
                     ret += comment;
                 }
 
-                ret += '"' + p + '": ';
+                if (nokey !== true) {
+                    ret += '"' + p + '": ';
+                }
 
                 if (obj[p].constructor == Object) {
 
@@ -495,6 +500,33 @@ CLI.define('MicroField.app.Environment', {
 
                             if (typeof line === 'string') {
                                 tmp = '"{0}"';
+                            }
+
+                            if (line.constructor == Object) {
+
+                                line = makeSection(line, null, (level + 1));
+
+                                var o = '';
+                                line.split("\n").forEach(function(item, num) {
+                                    if (num === 0) {
+                                        o += '    ' + item;
+                                    } else {
+                                        o += '        ' + item;
+                                    }
+
+                                    if (line.split("\n").length - 1 !== num) {
+                                        o += "\n";
+                                    }
+
+                                });
+                                line = o;
+
+                                line = [
+                                    '{',
+                                    '    ' + line,
+                                    '    }'
+                                ].join("\n");
+
                             }
 
                             ret += f(tmp, line);

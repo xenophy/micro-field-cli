@@ -325,6 +325,18 @@ CLI.define('MicroField.upgrade.Upgrade', {
                 });
             },
 
+            // 現状のmicrofield-sample.json取得
+            function(next) {
+
+                target  = path.join(MicroField.app.getApplicationDir(), 'mods', MicroField.app.getSampleFilename());
+
+                fs.readFile(target, function(err, data) {
+                    sdk.sample = CLI.decode(MicroField.app.removeComment(data.toString()), true);
+                    next();
+                });
+
+            },
+
             // アップグレード実行
             function(next) {
                 me.doUpgrade({
@@ -340,7 +352,7 @@ CLI.define('MicroField.upgrade.Upgrade', {
                 var series = [],
                     sample;
 
-                // microfield-sample.json取得 / 最新版初期設定マージ
+                // 最新版初期設定マージ
                 series.push(function(subnext) {
 
                     target  = path.join(MicroField.app.getApplicationDir(), 'mods', MicroField.app.getSampleFilename());
@@ -348,6 +360,7 @@ CLI.define('MicroField.upgrade.Upgrade', {
                     fs.readFile(target, function(err, data) {
                         sample = CLI.decode(MicroField.app.removeComment(data.toString()), true);
                         sample = CLI.Object.merge(sdk.initConfig, sample);
+                        sample = CLI.Object.merge(sample, sdk.sample);
                         subnext();
                     });
 
@@ -411,7 +424,7 @@ CLI.define('MicroField.upgrade.Upgrade', {
                 // microfield-sample.json保存
                 series.push(function(subnext) {
 
-                    target  = path.join(MicroField.app.getApplicationDir(), 'mods', MicroField.app.getSampleFilename());
+                    target = path.join(MicroField.app.getApplicationDir(), 'mods', MicroField.app.getSampleFilename());
 
                     fs.writeFile(target, sample, 'utf8', function(err) {
 

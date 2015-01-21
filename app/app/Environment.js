@@ -203,7 +203,7 @@ CLI.define('MicroField.app.Environment', {
 
                 }).on('data', function(chunk) {
 
-                    if (chunk && chunk.length) {
+                    if (chunk && CLI.isNumber(chunk.length) && chunk.length > 0) {
 
                         buf += chunk;
                         bar.tick(chunk.length);

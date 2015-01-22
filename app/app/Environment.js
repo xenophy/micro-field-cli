@@ -206,7 +206,10 @@ CLI.define('MicroField.app.Environment', {
                     if (chunk && CLI.isNumber(chunk.length) && chunk.length > 0) {
 
                         buf += chunk;
-                        bar.tick(chunk.length);
+
+                        try {
+                            bar.tick(chunk.length);
+                        } catch(e) {}
 
                     }
 

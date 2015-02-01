@@ -123,6 +123,11 @@ CLI.define('MicroField.upgrade.VersionFile', {
                             }
                         });
 
+                        //build.xmlは、マッチさせない
+                        if (item === 'build.xml') {
+                            match = false;
+                        }
+
                         if (!match) {
                             list.push(item);
                         }

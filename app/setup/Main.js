@@ -43,7 +43,8 @@ CLI.define('MicroField.setup.Main', {
     overrideList: [
         ['app.js_override', 'app.js'],
         ['app.json_override', 'app.json'],
-        ['mods/microfield\-sample.json', 'mods/microfield.json']
+        ['mods/microfield\-sample.json', 'mods/microfield.json'],
+        ['sass/src/view/main/Main.scss_override', 'sass/src/view/main/Main.scss'],
     ],
 
     // }}}

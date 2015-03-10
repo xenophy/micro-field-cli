@@ -15,7 +15,7 @@
 CURRENT_DIR=$(shell pwd)
 
 # mocha path
-MOCHA = mocha
+MOCHA = node_modules/.bin/mocha
 
 # Specs Dir
 SPEC_DIR = $(CURRENT_DIR)/test/specs

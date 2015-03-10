@@ -103,19 +103,22 @@ CLI.define('MicroField.setup.Setup', {
     // }}}
     // {{{ makeDirectories
 
-    makeDirectories: function(callback) {
+    makeDirectories: function(loginSettings, callback) {
 
-        var me = this,
-            async = require('async'),
-            mkdirp = require('mkdirp'),
-            fns = [];
+        var me      = this,
+            async   = require('async'),
+            mkdirp  = require('mkdirp'),
+            dirName = loginSettings['dirname'],
+            fns     = [];
 
         CLI.iterate([
             'resources/images',
-            'login/resources/images'
+            '{login}/resources/images'
         ], function(t) {
 
             fns.push((function(t) {
+
+                t = t.replace( /\{login\}/g , dirName);
 
                 return function(next) {
 
@@ -483,6 +486,11 @@ CLI.define('MicroField.setup.Setup', {
 
             },
 
+            // microfield-sample.json 解析
+            function(next) {
+                me.parseApplicationSettings(next);
+            },
+
             // .htaccess 解析
             function(next) {
 
@@ -492,16 +500,11 @@ CLI.define('MicroField.setup.Setup', {
                     main.setUrl(data.url + '/');
 
                     // ログイン設定
-                    login.setUrl(data.url + '/login/');
+                    login.setUrl(data.url + '/' + me.getAppSettings()['login']['dirname'] + '/');
 
                     next();
                 });
 
-            },
-
-            // microfield-sample.json 解析
-            function(next) {
-                me.parseApplicationSettings(next);
             },
 
             // microfield-sample.jsonのコピー
@@ -525,7 +528,7 @@ CLI.define('MicroField.setup.Setup', {
 
             // ログイン:クリーンアップ
             function(next) {
-                login.cleanup.call(login, next);
+                login.cleanup.call(login, me.getAppSettings()['login'], next);
             },
 
             // メイン:クリーンアップ
@@ -540,7 +543,7 @@ CLI.define('MicroField.setup.Setup', {
 
             // ログイン:セットアップ実行
             function(next) {
-                login.execute.call(login, next);
+                login.execute.call(login, me.getAppSettings()['login'], next);
             },
 
             // メイン:セットアップ実行
@@ -550,7 +553,7 @@ CLI.define('MicroField.setup.Setup', {
 
             // 必要ディレクトリ作成
             function(next) {
-                me.makeDirectories(next);
+                me.makeDirectories(me.getAppSettings()['login'], next);
             },
 
             // 書き込み権限変更
@@ -558,28 +561,35 @@ CLI.define('MicroField.setup.Setup', {
 
                 if (!CLI.isWindows) {
 
-                    MicroField.app.changeToWritable([
+                    var dirName = me.getAppSettings()['login']['dirname'];
+                    var list = [
                         '.htaccess',
                         'app.json',
                         'mods/MicroField/app/Application.js',
                         'mods/MicroField/app/view/center/Center.js',
                         'sass/src/view/main/Main.scss',
-                        'login/app.json',
-                        'login/sass/src/view/main/Main.scss',
-                        'login/mods/MicroField/app/view/main/Main.js',
-                        'login/mods/MicroField/app/Application.js',
+                        '{login}/app.json',
+                        '{login}/sass/src/view/main/Main.scss',
+                        '{login}/mods/MicroField/app/view/main/Main.js',
+                        '{login}/mods/MicroField/app/Application.js',
                         'resources/Readme.md',
                         'resources/favicon.ico',
-                        'login/resources/Readme.md',
-                        'login/resources/favicon.ico',
+                        '{login}/resources/Readme.md',
+                        '{login}/resources/favicon.ico',
                         'resources',
                         'resources/protected',
-                        'login/resources',
+                        '{login}/resources',
                         'resources/images',
-                        'login/resources/images',
+                        '{login}/resources/images',
                         'build/production/MicroField/resources',
                         'build/production/MicroField/resources/protected'
-                    ], function(item) {
+                    ];
+
+                    CLI.iterate(list, function(item, i) {
+                        list[i] = item.replace( /\{login\}/g , dirName);
+                    });
+
+                    MicroField.app.changeToWritable(list, function(item) {
 
                         // [INF] copied: ***************
                         MicroField.app.log.info(f('chmod: {0}', item));

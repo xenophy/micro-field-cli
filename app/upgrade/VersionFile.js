@@ -77,16 +77,16 @@ CLI.define('MicroField.upgrade.VersionFile', {
                         'cmd/tmp',
                         'cmd/vf',
                         'ext',
-                        'login/.sencha',
-                        'login/app.js',
-                        'login/app.json',
-                        'login/bootstrap.json',
-                        'login/build',
-                        'login/ext',
-                        'login/mods/MicroField/app/Application.js',
-                        'login/resources/images',
-                        'login/sass/example/bootstrap.json',
-                        'login/sass/src/view/main/Main.scss',
+                        '{login}/.sencha',
+                        '{login}/app.js',
+                        '{login}/app.json',
+                        '{login}/bootstrap.json',
+                        '{login}/build',
+                        '{login}/ext',
+                        '{login}/mods/MicroField/app/Application.js',
+                        '{login}/resources/images',
+                        '{login}/sass/example/bootstrap.json',
+                        '{login}/sass/src/view/main/Main.scss',
                         'microfield-cmd.log',
                         'microfield-cli.log',
                         'mods/microfield.json',
@@ -98,6 +98,10 @@ CLI.define('MicroField.upgrade.VersionFile', {
                         'sass/example/bootstrap.json',
                         'sass/src/view/main/Main.scss'
                     ];
+
+                    CLI.iterate(exclude, function(item, i) {
+                        exclude[i] = item.replace( /\{login\}/g , me.getAppSettings()['login']['dirname']);
+                    });
 
                     var excludeExt = [
                         '.DS_Store',
